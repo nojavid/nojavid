@@ -1,0 +1,144 @@
+/* ============================================
+   ESTILOS EXCLUSIVOS PARA PC
+   ============================================ */
+
+/* Fondo de PC */
+body {
+    background-image: url('Imagenes/fondopc.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 2rem;
+}
+
+/* ============================================
+   ESTILOS DEL MENÚ PARA PC
+   ============================================ */
+/* Mostrar el botón hamburguesa en PC */
+.menu-toggle {
+    display: block !important; /* Ahora visible */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+}
+
+.menu-toggle img {
+    width: 30px;
+    height: 30px;
+    display: block;
+}
+
+/* Navegación - oculta por defecto en PC también */
+.nav-principal {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+/* Cuando el menú está activo, se muestra */
+.nav-principal.activo {
+    display: block;
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Animación de despliegue */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Lista en PC - vertical como en móvil */
+.nav-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-lista li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-lista li:last-child {
+    border-bottom: none;
+}
+
+.nav-lista a {
+    display: block;
+    padding: 15px 25px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.nav-lista a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffd700;
+}
+
+/* ============================================
+   HEADER PARA PC
+   ============================================ */
+.header {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px 30px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: flex-end; /* Botón a la derecha */
+    align-items: center;
+}
+
+/* ============================================
+   CONTENEDOR PARA PC
+   ============================================ */
+.contenedor {
+    padding: 4rem 7rem;
+    max-width: 80%;
+}
+
+/* Texto para PC */
+p {
+    font-size: 1.5rem;
+    margin-top: 0;
+}
+
+/* Efectos adicionales para PC */
+.contenedor:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos para pantallas muy grandes */
+@media (min-width: 1200px) {
+    .contenedor {
+        padding: 5rem 8rem;
+        border-radius: 30px;
+    }
+    
+    p {
+        font-size: 2rem;
+    }
+}

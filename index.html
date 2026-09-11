@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOJAVID</title>
+
+    <!-- Css General-->
+    <link rel="stylesheet" href="index-general.css">
+        
+    <!-- CSS específico para móviles -->
+    <link rel="stylesheet" href="index-styles-movil.css" media="(max-width: 768px)">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header">
+        <!-- Menú desplegable a la izquierda -->
+        <div class="menu-container">
+            <button class="menu-btn" id="menuBtn" aria-label="Menú">
+                <span class="menu-icon">☰</span>
+            </button>
+            <!-- Menú que se desliza desde la izquierda -->
+            <div class="menu-overlay" id="menuOverlay">
+                <div class="menu-slide" id="menuSlide">
+                    <button class="menu-close" id="menuClose">✕</button>
+                    <nav class="menu-nav">
+                        <a href="#inicio" class="menu-item-full" onclick="cerrarMenuYScroll('inicio')">Inicio</a>
+                        <a href="#proyectos" class="menu-item-full" onclick="cerrarMenuYScroll('proyectos')">Proyectos</a>
+                        <a href="vales/vales.html" class="menu-item-full">Vales</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Título NOJAVID en la esquina derecha -->
+        <span class="titulo-nojavid" id="tituloNojavid">
+            <span class="noja">NOJA</span><span class="vid">VID</span>
+        </span>
+    </header>
+
+    <!-- SECCIÓN INICIO -->
+    <section id="inicio" class="seccion-inicio">
+        <!-- Contenedor de la imagen -->
+        <div class="contenedor-imagen">
+            <!-- Ondas extra -->
+            <div class="onda-extra-1"></div>
+            <div class="onda-extra-2"></div>
+            <div class="onda-extra-3"></div>
+            
+            <!-- Fondo de color -->
+            <div class="fondo-color"></div>
+            
+            <!-- Foto superpuesta con borde degradado -->
+            <div class="foto-wrapper">
+                <img src="foto.png" alt="Foto" class="foto-superpuesta" loading="lazy">
+            </div>
+        </div>
+
+        <!-- Textos debajo de la imagen -->
+        <div class="contenedor-textos">
+            <h1 class="texto-nombre">Nojavid</h1>
+            <p class="texto-subtitulo">Coach & Desarrollador</p>
+            
+            <!-- Contenedor de botones -->
+            <div class="contenedor-botones">
+                <button class="btn-proyectos" onclick="scrollToSeccion('proyectos')">PROYECTOS</button>
+                <button class="btn-portafolio">PORTAFOLIO</button>
+            </div>
+
+            <!-- Descripción -->
+            <div class="contenedor-descripcion">
+                <p class="texto-descripcion">
+                    Este sitio web ha sido creado con el propósito de compartir información personal, experiencias, proyectos e intereses, así como contenido de carácter espiritual que contribuya a la reflexión, el aprendizaje y el crecimiento personal.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN PROYECTOS -->
+    <section id="proyectos" class="seccion-proyectos">
+        <h2 class="titulo-seccion">Mis Proyectos</h2>
+        
+        <!-- Tarjeta del proyecto TANAJ -->
+        <div class="proyecto-tarjeta">
+            <a href="Tanaj/tanaj.html" class="proyecto-enlace">
+                <div class="proyecto-contenido">
+                    <span class="proyecto-titulo">TANAJ</span>
+                    <img src="tanaj.png" alt="Tanaj" class="proyecto-imagen" />
+                    <p class="proyecto-descripcion">Explora el Tanaj</p>
+                </div>
+            </a>
+        </div>
+        <!-- Tarjeta del proyecto TANAJ -->
+        <div class="proyecto-tarjeta">
+            <a href="Finix/finix.html" class="proyecto-enlace">
+                <div class="proyecto-contenido">
+                    <span class="proyecto-titulo">FINIX</span>
+                    <img src="Finix/finix.png" alt="Finix" class="proyecto-imagen" />
+                    <p class="proyecto-descripcion">Controla tus finanzas</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- SCRIPT PRINCIPAL -->
+    <script src="index-script.js"></script>
+</body>
+</html>
