@@ -1,0 +1,72 @@
+/* Reset y base: fondo blanco, tipografía limpia */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 1rem;
+}
+
+/* Título principal: #16193C, bold, tamaño 37px */
+h1 {
+    color: #16193C;
+    font-weight: 700;
+    font-size: 37px;
+    letter-spacing: 0.5px;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+}
+
+/* Contenedor de botones: flexible, se adapta */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 700px;
+}
+
+/* Estilo base de los botones: fondo y borde #16193C, texto blanco, tamaño 14px */
+button {
+    background-color: #16193C;
+    border: 2px solid #16193C;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0.75rem 1.8rem;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 4px rgba(22, 25, 60, 0.1);
+    min-width: 120px;
+}
+
+/* Efecto hover sutil */
+button:hover {
+    background-color: #1f2360;
+    border-color: #1f2360;
+    transform: scale(1.02);
+}
+
+/* El enlace que envuelve al botón mantiene el estilo del botón */
+a {
+    text-decoration: none;
+    display: inline-block;
+}
+
+a button {
+    width: 100%;
+}

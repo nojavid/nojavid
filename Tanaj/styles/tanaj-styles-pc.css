@@ -1,0 +1,21 @@
+/* ===== ESTILOS EXCLUSIVOS PARA PC (pantallas >= 769px) ===== */
+/* TODO OCULTO - mantenimiento.js se encarga de mostrar el mensaje */
+
+/* Ocultar todo el contenido en PC */
+#contenedor-principal {
+    display: none !important;
+}
+
+#menu-lateral {
+    display: none !important;
+}
+
+#overlay-menu {
+    display: none !important;
+}
+
+/* Reset del body en PC - mantenimiento.js lo maneja */
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TORAH</title>
+
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="styles/tanaj-styles.css">
+    
+    <!-- CSS específico para PC (oculta todo) -->
+    <link rel="stylesheet" href="styles/tanaj-styles-pc.css" media="screen and (min-width: 769px)">
+    
+    <!-- CSS específico para móviles -->
+    <link rel="stylesheet" href="styles/tanaj-styles-movil.css" media="screen and (max-width: 768px)">
+</head>
+<body>
+
+    <!-- ========================================== -->
+    <!-- CONTENEDOR PRINCIPAL                       -->
+    <!-- ========================================== -->
+    <div id="contenedor-principal">
+        <!-- EL CONTENIDO SE GENERA CON JAVASCRIPT -->
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MENÚ LATERAL                              -->
+    <!-- ========================================== -->
+    <div id="menu-lateral" class="menu-cerrado">
+        <div class="menu-header">
+            <h3>📚 Libros del Tanaj</h3>
+            <button id="btn-cerrar-menu" aria-label="Cerrar menú">✕</button>
+        </div>
+        <ul id="lista-libros-menu">
+            <!-- Generado por JavaScript desde tanaj.json -->
+        </ul>
+    </div>
+
+    <!-- Overlay para cerrar el menú -->
+    <div id="overlay-menu"></div>
+
+    <!-- ========================================== -->
+    <!-- SCRIPTS                                   -->
+    <!-- ========================================== -->
+    <!-- MANTENIMIENTO: Solo se carga en PC -->
+    <script src="../Tanaj/tanajScript.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,439 @@
+/* ===== RESET Y ESTILOS GENERALES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #ffffff;
+    font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+    padding: 1.5rem 1rem;
+    color: #000000;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+#contenedor-principal {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 0.2rem;
+}
+
+/* ===== TÍTULO H1 ===== */
+.titulo-libro {
+    font-size: 36px;
+    font-weight: bold;
+    color: #16193C;
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.5px;
+}
+
+/* ===== SUBTÍTULO (fondo azul oscuro) ===== */
+.subtitulo-capitulo {
+    background-color: #16193C;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    margin: 1rem 0 0.6rem 0;
+    letter-spacing: 0.4px;
+}
+
+/* ===== NOMBRE DEL CAPÍTULO (negro) ===== */
+.nombre-capitulo {
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+    text-align: center;
+    margin: 0.25rem 0 1rem 0;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 0.5rem;
+}
+
+/* ===== VERSÍCULOS ===== */
+.versiculo {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 0.3rem;
+    padding-left: 0.2rem;
+    color: #000000;
+    transition: background 0.8s ease, padding 0.8s ease, border-radius 0.8s ease, border-left 0.8s ease, box-shadow 0.8s ease;
+}
+
+.versiculo .numero {
+    color: #16193C;
+    font-weight: 600;
+    margin-right: 0.2rem;
+}
+
+/* ===== RESALTADO SUAVE Y NATURAL PARA VERSÍCULO ===== */
+.versiculo-resaltado-temporal {
+    background: #fff8e1 !important;
+    padding: 8px 15px !important;
+    border-radius: 6px !important;
+    border-left: 4px solid #16193C !important;
+    box-shadow: 0 2px 12px rgba(28, 138, 182, 0.15) !important;
+    animation: resaltarSuave 3.5s ease forwards !important;
+}
+
+/* Animación suave: aparece con calidez y se desvanece naturalmente */
+@keyframes resaltarSuave {
+    0% {
+        background: #fff8e1;
+        box-shadow: 0 2px 20px rgba(108, 117, 196, 0.25);
+        border-left: 4px solid #6c95c4;
+        transform: scale(1.01);
+    }
+    15% {
+        background: #fff3cd;
+        box-shadow: 0 4px 28px rgba(108, 117, 196, 0.25);
+        border-left: 4px solid #6c95c4;
+        transform: scale(1.015);
+    }
+    30% {
+        background: #fff8e1;
+        box-shadow: 0 2px 20px rgba(108, 117, 196, 0.25);
+        border-left: 4px solid #6c95c4;
+        transform: scale(1.01);
+    }
+    50% {
+        background: #fffde7;
+        box-shadow: 0 2px 12px rgba(108, 117, 196, 0.25);
+        border-left: 4px solid #6c95c4;
+        transform: scale(1);
+    }
+    75% {
+        background: #fffef7;
+        box-shadow: 0 1px 6px  rgba(108, 117, 196, 0.25);
+        border-left: 4px solid #6c95c4;
+        transform: scale(1);
+    }
+    100% {
+        background: transparent;
+        box-shadow: none;
+        border-left: none;
+        padding: 0;
+        border-radius: 0;
+        transform: scale(1);
+    }
+}
+
+/* Pequeño pulso suave al inicio para llamar la atención */
+@keyframes pulsoSuave {
+    0% { box-shadow: 0 0 0 0 rgba(108, 161, 196, 0.3); }
+    50% { box-shadow: 0 0 0 10px rgba(196, 154, 108, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(196, 154, 108, 0); }
+}
+
+.versiculo-resaltado-temporal {
+    animation: resaltarSuave 3.5s ease forwards, pulsoSuave 1s ease 0.3s;
+}
+
+/* ===== SEPARADOR ENTRE CAPÍTULOS ===== */
+.separador-capitulo {
+    border: 0;
+    border-top: 2px dashed #d0d0d0;
+    margin: 2.5rem 0 1.8rem 0;
+}
+
+/* ===== BOTONES DE NAVEGACIÓN ===== */
+.nav-botones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+.btn-nav {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.8rem;
+    transition: opacity 0.15s;
+    font-size: 32px;
+    color: #16193C;
+    font-weight: bold;
+}
+
+.btn-nav:hover:not(:disabled) {
+    opacity: 0.7;
+}
+
+.btn-nav:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+/* indicador de capítulo */
+.indicador-capitulo {
+    font-size: 16px;
+    font-weight: 500;
+    color: #16193C;
+    background: #f0f2f7;
+    padding: 0.3rem 1.2rem;
+    border-radius: 30px;
+    white-space: nowrap;
+}
+
+/* ===== MENÚ HAMBURGUESA ===== */
+.menu-hamburguesa {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1.2rem;
+}
+
+.boton-hamburguesa {
+    font-size: 40px;
+    font-weight: bold;
+    color: #16193C;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 1;
+    padding: 5px 10px;
+    transition: opacity 0.2s;
+    user-select: none;
+}
+
+.boton-hamburguesa:hover {
+    opacity: 0.7;
+}
+
+/* ===== MENÚ LATERAL ===== */
+#menu-lateral {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100vh;
+    background: #fdfdfd;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    overflow-y: auto;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    border-right: none;
+}
+
+#menu-lateral.menu-abierto {
+    left: 0;
+    border-right: 2px solid #01003d;
+}
+
+#menu-lateral.menu-cerrado {
+    left: -320px;
+    border-right: none;
+}
+
+.menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #16193C;
+}
+
+.menu-header h3 {
+    color: #16193C;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+#btn-cerrar-menu {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #16193C;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: transform 0.2s;
+}
+
+#btn-cerrar-menu:hover {
+    transform: rotate(90deg);
+}
+
+#lista-libros-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#lista-libros-menu li {
+    margin: 4px 0;
+}
+
+#lista-libros-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #1a2c3d;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+#lista-libros-menu a:hover {
+    background: #16193C;
+    color: #fff;
+}
+
+#lista-libros-menu a.activo {
+    background: #16193C;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ===== OVERLAY ===== */
+#overlay-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+}
+
+#overlay-menu.activo {
+    display: block;
+}
+
+/* ===== ESTADO DE CARGA / ERROR ===== */
+.mensaje-carga {
+    text-align: center;
+    padding: 3rem 1rem;
+    font-size: 1.2rem;
+    color: #16193C;
+}
+
+.mensaje-error {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #b00020;
+    background: #fce8e8;
+    border-radius: 8px;
+}
+
+/* ===== ESTILOS PARA VISTA DE LIBRO COMPLETO ===== */
+
+/* Título del libro en vista completa */
+.titulo-libro-completo {
+    font-size: 32px;
+    font-weight: bold;
+    color: #16193C;
+    text-align: center;
+    margin: 1rem 0 2rem 0;
+    letter-spacing: 0.5px;
+}
+
+/* ===== RESPONSIVE GENERAL ===== */
+@media (max-width: 768px) {
+    .titulo-libro {
+        font-size: 28px;
+    }
+    
+    .subtitulo-capitulo {
+        font-size: 13px;
+        padding: 0.5rem 0.8rem;
+        border-radius: 3px;
+    }
+    
+    .nombre-capitulo {
+        font-size: 18px;
+    }
+    
+    .versiculo {
+        font-size: 15px;
+        line-height: 1.6;
+        padding-left: 0.1rem;
+    }
+    
+    .btn-nav {
+        padding: 0.3rem 0.5rem;
+        font-size: 28px !important;
+    }
+    
+    .indicador-capitulo {
+        font-size: 14px;
+        padding: 0.25rem 1rem;
+    }
+    
+    .boton-hamburguesa {
+        font-size: 34px !important;
+    }
+    
+    .nav-botones {
+        gap: 0.5rem;
+        margin: 1.5rem 0 1rem 0;
+    }
+    
+    .separador-capitulo {
+        margin: 2rem 0 1.5rem 0;
+    }
+    
+    .titulo-libro-completo {
+        font-size: 26px;
+    }
+    
+    /* Ajustes del menú lateral en móvil */
+    #menu-lateral {
+        width: 280px;
+        left: -300px;
+    }
+    
+    #menu-lateral.menu-abierto {
+        left: 0;
+    }
+    
+    #menu-lateral.menu-cerrado {
+        left: -300px;
+    }
+}
+
+@media (max-width: 400px) {
+    .titulo-libro {
+        font-size: 24px;
+    }
+    
+    .versiculo {
+        font-size: 14px;
+    }
+    
+    .btn-nav {
+        font-size: 24px !important;
+    }
+    
+    .indicador-capitulo {
+        font-size: 12px;
+        padding: 0.2rem 0.8rem;
+    }
+    
+    .boton-hamburguesa {
+        font-size: 30px !important;
+    }
+    
+    .titulo-libro-completo {
+        font-size: 22px;
+    }
+    
+    #menu-lateral {
+        width: 260px;
+        left: -280px;
+    }
+    
+    #menu-lateral.menu-cerrado {
+        left: -280px;
+    }
+}

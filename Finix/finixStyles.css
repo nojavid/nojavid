@@ -1,0 +1,770 @@
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #000004;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 0 0 20px 0;
+}
+
+.mobile-container {
+    max-width: 375px;
+    width: 100%;
+    background-color: #000004;
+    position: relative;
+    padding: 0 0 100px 0;
+    margin: 0 auto;
+}
+
+/* ========== ENCABEZADO ========== */
+.header {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    margin-top: 8px;
+}
+
+.logo {
+    position: absolute;
+    left: 25px;
+    top: 59px;
+    width: 32px;
+    height: 26px;
+    object-fit: contain;
+}
+
+.titulo-nojavid {
+    position: absolute;
+    left: 65px;
+    top: 59px;
+    font-size: 12px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 0.3px;
+}
+
+.fecha-container {
+    position: absolute;
+    left: 65px;
+    top: 73px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.flecha {
+    color: #424242;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.fecha {
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.menu-hamburguesa {
+    position: absolute;
+    right: 20px;
+    top: 55px;
+    color: white;
+    font-size: 36px;
+    font-weight: 300;
+    cursor: pointer;
+    line-height: 0.9;
+}
+
+/* ========== TÍTULO HELLO! ========== */
+.titulo-hello {
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    text-align: center;
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+
+/* ========== TEXTO DESCRIPTIVO ========== */
+.texto-descripcion {
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+    line-height: 1.5;
+    text-align: left;
+    padding: 0 20px;
+    margin: 10px 0 20px 0;
+}
+
+/* ========== SECCIÓN ESCRITURA ========== */
+.seccion-escritura {
+    width: 100%;
+    padding: 0 20px;
+    margin: 10px 0 20px 0;
+}
+
+.fondo-escritura {
+    width: 100%;
+    max-width: 319px;
+    margin: 0 auto;
+    background-color: #1C2830;
+    border-radius: 20px;
+    padding: 15px 16px;
+}
+
+.subtitulo-empieza {
+    color: #00FFD4;
+    font-size: 10px;
+    font-weight: 800;
+    margin: 0 0 3px 0;
+}
+
+.texto-empieza {
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    margin: 0 0 8px 0;
+}
+
+.recuadro-escritura {
+    background-color: #000210;
+    width: 100%;
+    height: 117px;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+    cursor: text;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.recuadro-escritura:hover {
+    background-color: #0a1a2a;
+}
+
+.texto-animado {
+    color: #c0d0e0;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.6;
+    word-break: break-word;
+    white-space: pre-wrap;
+    min-height: 20px;
+    max-height: 100%;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+    cursor: text;
+    position: relative;
+    z-index: 1;
+    user-select: none;
+    font-family: 'Courier New', monospace;
+    width: 100%;
+}
+
+/* Efecto de cursor parpadeante durante la animación */
+.texto-animado.animando::after {
+    content: '|';
+    color: #00FFD4;
+    animation: parpadear 0.7s infinite;
+    margin-left: 2px;
+}
+
+@keyframes parpadear {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* "Procesando..." en color verde neon */
+.texto-animado.procesando {
+    color: #00FFD4 !important;
+    font-weight: 600;
+}
+
+/* Estilo para cuando el texto está en modo edición */
+.texto-animado[contenteditable="true"] {
+    color: white !important;
+    background-color: rgba(0, 210, 255, 0.05);
+    border: 1px solid #00FFD4;
+    border-radius: 4px;
+    padding: 8px !important;
+    outline: none;
+    min-height: 40px;
+    cursor: text;
+    user-select: text !important;
+    caret-color: #00FFD4;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.texto-animado[contenteditable="true"]:focus {
+    border-color: #00FFD4;
+    box-shadow: 0 0 20px rgba(0, 255, 212, 0.15);
+}
+
+/* Placeholder cuando está vacío en modo edición */
+.texto-animado[contenteditable="true"]:empty:before {
+    content: "Escribe aquí...";
+    color: #666;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* Eliminar cualquier selección cuando no está en modo edición */
+.texto-animado:not([contenteditable="true"])::selection {
+    background: transparent;
+    color: #c0d0e0;
+}
+
+/* Estilos para los items del resultado */
+.texto-animado .item-resultado {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    padding: 6px 12px;
+    margin: 3px 0;
+    animation: aparecerItem 0.5s ease-out;
+    transition: all 0.3s ease;
+}
+
+.texto-animado .item-resultado .icono {
+    font-size: 18px;
+    margin-right: 4px;
+}
+
+.texto-animado .item-resultado .texto {
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.texto-animado .item-resultado .precio {
+    color: #00FFD4;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+/* Animación de aparición */
+@keyframes aparecerItem {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* ========== BOTÓN ENVIAR ========== */
+.btn-enviar {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, #00FFD4, #00c9a7);
+    color: #000210;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 255, 212, 0.3);
+    z-index: 10;
+    animation: aparecerBoton 0.3s ease-out;
+}
+
+.btn-enviar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 255, 212, 0.6);
+}
+
+.btn-enviar:active {
+    transform: scale(0.95);
+}
+
+@keyframes aparecerBoton {
+    0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ========== BOTÓN CONFIRMAR (después de procesar con IA) ========== */
+.btn-confirmar {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, #00FF88, #00cc66);
+    color: #000210;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    z-index: 10;
+    animation: aparecerBoton 0.3s ease-out;
+}
+
+.btn-confirmar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.7);
+}
+
+.btn-confirmar:active {
+    transform: scale(0.95);
+}
+
+/* Indicador de "IA analizando" con spinner */
+.texto-animado.ia-analizando {
+    color: #00FFD4;
+    font-weight: 600;
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+}
+
+.texto-animado.ia-analizando::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid #00FFD4;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+
+/* ========== SECCIÓN AUDIO - COLOR VERDE NEÓN FOSFORESCENTE ========== */
+.seccion-audio {
+    width: 100%;
+    padding: 0 20px;
+    margin: 10px 0 10px 0;
+    cursor: pointer;
+}
+
+.fondo-audio {
+    width: 100%;
+    max-width: 319px;
+    margin: 0 auto;
+    height: 48px;
+    background-color: #1C2830;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto glow del fondo para el audio */
+.fondo-audio::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 32px;
+    background: radial-gradient(circle at 30% 50%, rgba(0, 255, 30, 0.15), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.fondo-audio:hover::before {
+    opacity: 1;
+}
+
+.fondo-audio:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 30, 0.2), inset 0 0 30px rgba(0, 255, 30, 0.05);
+    transform: scale(1.02);
+}
+
+.circulo-audio {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(0, 255, 30, 0.3), rgba(0, 255, 30, 0.1));
+    border: 2px solid #00FF1E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    animation: neonPulseVerde 2s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(0, 255, 30, 0.3), inset 0 0 20px rgba(0, 255, 30, 0.1);
+}
+
+/* Animación de pulso neón verde */
+@keyframes neonPulseVerde {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(0, 255, 30, 0.3), inset 0 0 20px rgba(0, 255, 30, 0.1);
+        border-color: #00FF1E;
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(0, 255, 30, 0.6), inset 0 0 40px rgba(0, 255, 30, 0.2);
+        border-color: #7FFF7F;
+    }
+}
+
+.circulo-audio .icono-audio {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(0, 255, 30, 0.6));
+    transition: all 0.3s ease;
+}
+
+.fondo-audio:hover .circulo-audio {
+    animation: neonPulseVerde 0.8s ease-in-out infinite;
+    transform: scale(1.1);
+}
+
+.fondo-audio:hover .icono-audio {
+    filter: drop-shadow(0 0 15px rgba(0, 255, 30, 0.9)) brightness(1.3);
+}
+
+.texto-audio {
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    margin-left: 15px;
+    text-shadow: 0 0 10px rgba(0, 255, 30, 0.1);
+    transition: all 0.3s ease;
+}
+
+.fondo-audio:hover .texto-audio {
+    text-shadow: 0 0 20px rgba(0, 255, 30, 0.3);
+}
+
+/* ========== SECCIÓN CÁMARA - COLOR MORADO NEÓN FOSFORESCENTE ========== */
+.seccion-camara {
+    width: 100%;
+    padding: 0 20px;
+    margin: 10px 0 20px 0;
+    cursor: pointer;
+}
+
+.fondo-camara {
+    width: 100%;
+    max-width: 319px;
+    margin: 0 auto;
+    height: 48px;
+    background-color: #1C2830;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto glow del fondo para la cámara */
+.fondo-camara::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 32px;
+    background: radial-gradient(circle at 30% 50%, rgba(136, 0, 255, 0.15), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.fondo-camara:hover::before {
+    opacity: 1;
+}
+
+.fondo-camara:hover {
+    box-shadow: 0 0 30px rgba(136, 0, 255, 0.2), inset 0 0 30px rgba(136, 0, 255, 0.05);
+    transform: scale(1.02);
+}
+
+.circulo-camara {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(136, 0, 255, 0.3), rgba(136, 0, 255, 0.1));
+    border: 2px solid #8800FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    animation: neonPulseMorado 2s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(136, 0, 255, 0.3), inset 0 0 20px rgba(136, 0, 255, 0.1);
+}
+
+/* Animación de pulso neón morado */
+@keyframes neonPulseMorado {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(136, 0, 255, 0.3), inset 0 0 20px rgba(136, 0, 255, 0.1);
+        border-color: #8800FF;
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(136, 0, 255, 0.6), inset 0 0 40px rgba(136, 0, 255, 0.2);
+        border-color: #BB66FF;
+    }
+}
+
+.circulo-camara .icono-camara {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(136, 0, 255, 0.6));
+    transition: all 0.3s ease;
+}
+
+.fondo-camara:hover .circulo-camara {
+    animation: neonPulseMorado 0.8s ease-in-out infinite;
+    transform: scale(1.1);
+}
+
+.fondo-camara:hover .icono-camara {
+    filter: drop-shadow(0 0 15px rgba(136, 0, 255, 0.9)) brightness(1.3);
+}
+
+.texto-camara {
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    margin-left: 15px;
+    text-shadow: 0 0 10px rgba(136, 0, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.fondo-camara:hover .texto-camara {
+    text-shadow: 0 0 20px rgba(136, 0, 255, 0.3);
+}
+
+/* ========== MENU OVERLAY ========== */
+.menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-overlay.active {
+    display: flex;
+}
+
+.menu-card {
+    background-color: #021516;
+    width: 280px;
+    border-radius: 24px;
+    padding: 28px 20px 20px 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    position: relative;
+}
+
+.menu-title {
+    color: white;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #1C2830;
+    padding-bottom: 10px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 6px;
+    border-bottom: 1px solid #1C2830;
+    text-decoration: none;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.menu-item span {
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.menu-close {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    color: #aaa;
+    font-size: 26px;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+/* ========== AUDIO POPUP ========== */
+.audio-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.audio-popup.active {
+    display: flex;
+}
+
+.audio-popup-card {
+    background-color: #021516;
+    width: 240px;
+    border-radius: 28px;
+    padding: 28px 16px 16px 16px;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.8);
+}
+
+.audio-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 8px;
+    border-bottom: 1px solid #1C2830;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.audio-option:last-child {
+    border-bottom: none;
+}
+
+.audio-option img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.audio-option span {
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.audio-close {
+    text-align: right;
+    color: #aaa;
+    font-size: 24px;
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+
+/* ========== NAVEGACIÓN INFERIOR ========== */
+.bottom-nav {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 319px;
+    height: 48px;
+    background-color: #1C2830;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    z-index: 100;
+}
+
+.bottom-nav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.bottom-nav img {
+    width: 19px;
+    height: 19px;
+    object-fit: contain;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 375px) {
+    .texto-descripcion {
+        padding: 0 15px;
+        font-size: 12px;
+    }
+    
+    .fondo-escritura,
+    .fondo-audio,
+    .fondo-camara {
+        max-width: 100%;
+    }
+    
+    .bottom-nav {
+        width: 90%;
+        max-width: 319px;
+    }
+}
+
+/* ========== SCROLLBAR PERSONALIZADA ========== */
+.texto-animado::-webkit-scrollbar {
+    width: 4px;
+}
+
+.texto-animado::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.texto-animado::-webkit-scrollbar-thumb {
+    background: #1C2830;
+    border-radius: 2px;
+}
+
+.texto-animado::-webkit-scrollbar-thumb:hover {
+    background: #2a3a4a;
+}

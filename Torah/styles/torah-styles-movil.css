@@ -1,0 +1,59 @@
+/* ----- MÓVIL (max-width: 768px) ----- */
+/* Botones: 215x42 px, border-radius: 5px, centrados, en columna */
+/* Título: 104x42 px, distancia de 43 px desde título al primer botón */
+/* Espacio entre botones: 20px (como en la imagen) */
+
+@media (max-width: 768px) {
+    body {
+        padding: 1.5rem 1rem;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    h1 {
+        font-size: 37px;
+        margin-bottom: 0;
+        width: 104px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        line-height: 1;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;              /* ESPACIO DE 20px ENTRE BOTONES */
+        max-width: 215px;
+        width: 100%;
+        margin-top: 43px;
+    }
+
+    a {
+        width: 215px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    button {
+        width: 215px;
+        height: 42px;
+        padding: 0;
+        border-radius: 5px;
+        font-size: 14px;
+        min-width: unset;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    a button {
+        width: 100%;
+        height: 100%;
+    }
+}

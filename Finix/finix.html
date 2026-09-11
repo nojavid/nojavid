@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nojavid · Finix</title>
+    <link rel="stylesheet" href="finixStyles.css">
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- ========== ENCABEZADO ========== -->
+        <div class="header">
+            <img src="./Finix/iconos/logo.png" alt="logo" class="logo" onerror="this.src='iconos/logo.png'">
+            <span class="titulo-nojavid">Nojavid</span>
+            <div class="fecha-container">
+                <span class="flecha">&lt;</span>
+                <span class="fecha" id="fechaActual">Sep de 2026</span>
+                <span class="flecha">&gt;</span>
+            </div>
+            <div class="menu-hamburguesa" id="menuHamburguesa">☰</div>
+        </div>
+
+        <!-- ========== TÍTULO HELLO! ========== -->
+        <h1 class="titulo-hello">Hello!</h1>
+
+        <!-- ========== TEXTO DESCRIPTIVO ========== -->
+        <p class="texto-descripcion">Una herramienta diseñada para facilitar la gestión de tus finanzas personales. Registra tus ingresos y gastos, controla tus movimientos y analiza cómo administras tu dinero para tomar mejores decisiones financieras. Todo desde un solo lugar, de forma simple, clara y organizada.</p>
+
+        <!-- ========== SECCIÓN ESCRITURA (Empieza Aqui) ========== -->
+        <div class="seccion-escritura">
+            <div class="fondo-escritura">
+                <h4 class="subtitulo-empieza">Empieza Aqui</h4>
+                <p class="texto-empieza">Escribe o Pega varios a la vez</p>
+                <div class="recuadro-escritura">
+                    <div id="escrituraAnimada" class="texto-animado">Almuerzo 25 mil + uber 12k</div>
+                    <button id="btnEnviar" class="btn-enviar" style="display: none;">Enviar</button>
+                    <button id="btnConfirmar" class="btn-confirmar" style="display: none;">✓ Guardar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SECCIÓN AUDIO ========== -->
+        <div id="seccionAudio" class="seccion-audio">
+            <div class="fondo-audio">
+                <div class="circulo-audio">
+                    <img src="./Finix/iconos/microfono.png" alt="micro" class="icono-audio" onerror="this.src='iconos/microfono.png'">
+                </div>
+                <span class="texto-audio">Dicta tus movimientos</span>
+            </div>
+        </div>
+
+        <!-- ========== SECCIÓN CÁMARA ========== -->
+        <a href="Camara/Camara.html" id="seccionCamara" class="seccion-camara" style="text-decoration: none; color: inherit; display: block;">
+            <div class="fondo-camara">
+                <div class="circulo-camara">
+                    <img src="./Finix/iconos/camara.png" alt="camara" class="icono-camara" onerror="this.src='iconos/camara.png'">
+                </div>
+                <span class="texto-camara">Toma foto del recibo</span>
+            </div>
+        </a>
+
+        <!-- ========== MENU OVERLAY ========== -->
+        <div id="menuOverlay" class="menu-overlay">
+            <div class="menu-card">
+                <div class="menu-close" id="menuClose">✕</div>
+                <div class="menu-title">MENU</div>
+                <a href="./Finix/finix.html" class="menu-item">
+                    <img src="./Finix/iconos/casaazul.png" alt="inicio" onerror="this.src='iconos/casaazul.png'">
+                    <span>Inicio</span>
+                </a>
+                <a href="./Finix/movimietos.html" class="menu-item">
+                    <img src="./Finix/iconos/transicionazul.png" alt="movimientos" onerror="this.src='iconos/transicionazul.png'">
+                    <span>Movimientos</span>
+                </a>
+                <a href="./Finix/deudas.html" class="menu-item">
+                    <img src="./Finix/iconos/monedaazul.png" alt="deudas" onerror="this.src='iconos/monedaazul.png'">
+                    <span>Deudas</span>
+                </a>
+                <a href="./Finix/reportes.html" class="menu-item">
+                    <img src="./Finix/iconos/informeazul.png" alt="reportes" onerror="this.src='iconos/informeazul.png'">
+                    <span>Reportes</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ========== AUDIO POPUP (INGRESO/GASTO) ========== -->
+        <div id="audioPopup" class="audio-popup">
+            <div class="audio-popup-card">
+                <div class="audio-close" id="audioPopupClose">✕</div>
+                <a href="Microfono.html" class="audio-option">
+                    <img src="./Finix/iconos/microfono.png" alt="ingreso" onerror="this.src='iconos/microfono.png'">
+                    <span>Ingreso</span>
+                </a>
+                <a href="Microfono.html" class="audio-option">
+                    <img src="./Finix/iconos/microfono.png" alt="gasto" onerror="this.src='iconos/microfono.png'">
+                    <span>Gasto</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ========== NAVEGACIÓN INFERIOR ========== -->
+        <div class="bottom-nav">
+            <a href="finix.html"><img src="./Finix/iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'"></a>
+            <a href="billetera.html"><img src="./Finix/iconos/billetera.png" alt="billetera" onerror="this.src='iconos/billetera.png'"></a>
+            <a href="reportes.html"><img src="./Finix/iconos/barra.png" alt="reportes" onerror="this.src='iconos/barra.png'"></a>
+            <a href="configuracion.html"><img src="./Finix/iconos/tuerca.png" alt="tuerca" onerror="this.src='iconos/tuerca.png'"></a>
+        </div>
+    </div>
+
+    <script src="finixjs.js"></script>
+</body>
+</html>

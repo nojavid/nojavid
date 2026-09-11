@@ -1,0 +1,649 @@
+[
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "JUICIOS CONTRA LAS NACIONES VECINAS",
+    "capitulo": "AMOS 1",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "Las palabras de Amós, uno de los dueños de ovejas en Tekoa, que vio referente a Israel ישראל en los días de Uziyahu עֻזִּיָּהו rey de Iehudáh יְהוּדָה y Yaroveam יָרָבְעָם el hijo de Yoash, rey de Israel ישראל, dos años antes del terremoto;"
+      },
+      {
+        "numero": "2",
+        "texto": "él dijo: Adonái יהוה está rugiendo desde Tziyon, relampagueando desde Ierushalaim יְרוּשָׁלַיִם; los pastizales de los pastores se enlutarán, y la cumbre del Monte Karmel está marchitada."
+      },
+      {
+        "numero": "3",
+        "texto": "Aquí está lo que dice Adonái יהוה: \"Por tres pecados de Dammesek, y por cuatro – no lo revocaré – porque ellos serrucharon con serruchos de hierro a las mujeres preñadas de Gilead con una horquilla de hierro para trillar;"
+      },
+      {
+        "numero": "4",
+        "texto": "Yo mandaré fuego a la casa de Hazael, y consumirá los palacios de Ben-Hadad."
+      },
+      {
+        "numero": "5",
+        "texto": "Yo romperé los barrotes de las puertas de Dammesek. Cortaré en pedazos a los habitantes de Bikat-Aven, y al que porta el cetro de Beit-Edem; entonces el pueblo famoso de Aram irá a cautiverio en Kir,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "6",
+        "texto": "Aquí está lo que Adonái יהוה dice: \"Por tres pecados de Azah, y por cuatro – no lo revocaré – porque ellos tomaron prisionero a la cautividad de Shlomó שׁלמה para entregarlos a Edom,"
+      },
+      {
+        "numero": "7",
+        "texto": "Yo mandaré fuego a los muros de Azah, y consumirá sus cimientos."
+      },
+      {
+        "numero": "8",
+        "texto": "Yo cortaré a los habitantes de Ashdod, y cortaré una tribu de Ashkelon. Extenderé mi mano contra Ekron, y el remanente de los Plishtim perecerá,\" dice Adonái, Adonái יהוה."
+      },
+      {
+        "numero": "9",
+        "texto": "Aquí está lo que Adonái יהוה dice: \"Por tres transgresiones de Tzor, y por cuatro, – no lo revocaré – porque ellos deportaron los prisioneros de Shlomó שׁלמה hacia Edom y no recordaron el pacto con sus hermanos;"
+      },
+      {
+        "numero": "10",
+        "texto": "Yo mandaré fuego al muro de Tzor, y devorará sus cimientos.\""
+      },
+      {
+        "numero": "11",
+        "texto": "Aquí está lo que Adonái יהוה dice: \"Por tres pecados de Edom, y por cuatro, – no lo revocaré – porque con espada él persiguió a su hermano y destruyó su madre sobre la tierra, constantemente alimentando su ira, por siempre fomentando su furia;"
+      },
+      {
+        "numero": "12",
+        "texto": "Yo mandaré fuego a Teman, y devorará los cimientos de Botzrah. [fortaleza]\""
+      },
+      {
+        "numero": "13",
+        "texto": "Aquí está lo que Adonái יהוה dice: \"Por tres pecados de los hijos de Amón, y por cuatro, – no lo revocaré – porque ellos destriparon a las mujeres preñadas de Gilead sólo para expandir su territorio,"
+      },
+      {
+        "numero": "14",
+        "texto": "Yo mandaré fuego al muro de Rabbah, y devorará sus cimientos, entre gritos en el día de la batalla, y será estremecida en el día de su destrucción."
+      },
+      {
+        "numero": "15",
+        "texto": "Sus reyes irán a cautividad, sus sacerdotes y sus príncipes juntos,\" dice Adonái יהוה."
+      }
+    ]
+  },
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "JUICIO CONTRA ISRAEL ישראל",
+    "capitulo": "AMOS 2",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "Aquí está lo que Adonái יהוה dice: \"Por tres pecados de Moav, y por cuatro, – no lo revocaré – Porque él quemó los huesos del rey de Edom, hasta calcinarlos."
+      },
+      {
+        "numero": "2",
+        "texto": "Enviaré fuego sobre Moav, y devorará los cimientos de Keriot קְרִיּוֹת [ciudades]. Moav morirá con tumulto y gritos, junto con el sonido del shofar."
+      },
+      {
+        "numero": "3",
+        "texto": "Yo cortaré al juez de entre ellos y mataré a todos sus príncipes con él,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "4",
+        "texto": "Aquí está lo que dice Adonái יהוה: \"Por tres pecados de los hijos de Iehudáh יְהוּדָה, y por cuatro, – no lo revocaré – porque ellos han rechazado la Toráh de Adonái יהוה y no han observado sus mitzvot, y los ídolos vanos que ellos han hecho, cuales sus padres siguieron los causaron errar;"
+      },
+      {
+        "numero": "5",
+        "texto": "Yo mandaré fuego a Iehudáh יְהוּדָה y devorará los cimientos de Ierushalaim יְרוּשָׁלַיִם."
+      },
+      {
+        "numero": "6",
+        "texto": "Aquí está lo que Adonái יהוה dice: \"Por tres pecados de Israel ישראל, y por cuatro, – no lo revocaré – porque ellos vendieron al justo por plata y al pobre por sandalias,"
+      },
+      {
+        "numero": "7",
+        "texto": "moliendo las cabezas de los pobres en el polvo y empujando al pequeño fuera del camino; padre e hijo duermen con la misma mujer, profanando mi Nombre Kadosh;"
+      },
+      {
+        "numero": "8",
+        "texto": "tendidos junto a cualquier altar con ropas tomadas por prenda; bebiendo vino en la casa de su Adonái יהוה comprado con extorsión que ellos impusieron."
+      },
+      {
+        "numero": "9",
+        "texto": "\"Yo corté a los Emori de delante de ellos; aunque altos como cedros y fuertes como robles, Yo destruí su fruto arriba y sus raíces abajo."
+      },
+      {
+        "numero": "10",
+        "texto": "Más que eso, Yo los saqué de Mitsraim מִצְרַיִם, los guié por cuarenta años en el desierto, para que pudieran heredar la tierra de los Emori."
+      },
+      {
+        "numero": "11",
+        "texto": "Levanté a algunos de tus hijos para que fueran profetas, otros hombres jóvenes para que fueran nezirim. ¡Hijos de Israel ישראל! ¿No es eso verdad?\" Pregunta Adonái יהוה."
+      },
+      {
+        "numero": "12",
+        "texto": "\"Pero ustedes le dieron vino a los nezirim para que bebieran y ordenaron a los profetas: '¡No profeticen!'"
+      },
+      {
+        "numero": "13",
+        "texto": "¡Suficiente! Yo haré que todo esto los aplaste, así como una carreta sobrecargada con grano aplasta lo que está debajo de ella."
+      },
+      {
+        "numero": "14",
+        "texto": "Aun hasta el ligero no podrá huir; y los fuertes no podrán usar su fuerza, los guerreros no salvarán sus vidas."
+      },
+      {
+        "numero": "15",
+        "texto": "Los arqueros no podrán pararse, los corredores más rápidos no podrán salvarse, aquellos en caballos no salvarán sus vidas."
+      },
+      {
+        "numero": "16",
+        "texto": "En aquel día los guerreros más valientes tirarán sus armas y huirán, y el desnudo huirá\" dice Adonái יהוה."
+      }
+    ]
+  },
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "EL RUGIDO DEL LEÓN",
+    "capitulo": "AMOS 3",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "Escuchen a esta palabra que Adonái יהוה ha hablado contra ustedes, O casa de Israel ישראל, contra la familia completa que Yo traje de la tierra de Mitsraim מִצְרַיִם."
+      },
+      {
+        "numero": "2",
+        "texto": "\"De todas las familias en la tierra, sólo a ti te he conocido íntimamente. Por esto tomaré venganza contra ti por todos tus pecados.\""
+      },
+      {
+        "numero": "3",
+        "texto": "¿Viajarán dos personas juntas sin haber así acordado?"
+      },
+      {
+        "numero": "4",
+        "texto": "¿Ruge el león en el bosque cuando no tiene presa? ¿Gruñe el cachorro de león en la guarida si no ha cazado nada?"
+      },
+      {
+        "numero": "5",
+        "texto": "¿Cae un pájaro en la trampa en el suelo sin que se le haya puesto cebo? ¿Salta la trampa en la tierra sin haber atrapado nada?"
+      },
+      {
+        "numero": "6",
+        "texto": "Cuando el shofar es sonado en la ciudad, ¿no se alarma la gente? ¿Puede el desastre caer sobre una ciudad sin que lo haya traído Adonái יהוה?"
+      },
+      {
+        "numero": "7",
+        "texto": "Adonái יהוה Elohím no hace nada sin revelar instrucciones a sus siervos los profetas."
+      },
+      {
+        "numero": "8",
+        "texto": "El león ha rugido. ¿Quién no se alarmará? Adonái יהוה Elohím ha hablado. ¿Quién no profetizará?"
+      },
+      {
+        "numero": "9",
+        "texto": "\"Proclámalo en las regiones de Ashur, y en las regiones de Mitsraim מִצְרַיִם, di: '¡Congréguense en la montaña de Shomron! Miren qué tumulto está hirviendo dentro de ella, cuánta opresión está siendo hecha allí.'"
+      },
+      {
+        "numero": "10",
+        "texto": "Porque ellos no saben como hacer el bien,\" dice Adonái יהוה. \"Ellos almacenan violencia y robo en sus países.\""
+      },
+      {
+        "numero": "11",
+        "texto": "Por lo tanto, aquí está lo que Adonái יהוה dice, O Tzor: \"Un enemigo desolará tu tierra. El te arrancará tu fuerza, y saqueará tu país.\""
+      },
+      {
+        "numero": "12",
+        "texto": "Esto es lo que Adonái יהוה dice: \"Como un pastor rescata de la boca de un león un par de huesos de pierna o un pedazo de oreja; así los hijos de Israel ישראל en Shomron serán rescatados, en la presencia de una tribu extranjera, y en Dammesek."
+      },
+      {
+        "numero": "13",
+        "texto": "\"Oigan, ustedes kohanim, y testifiquen contra la casa de Iaakov יַעֲקֹב,\" Dice Adonái יהוה, Elohím אֱלֹהִים Elohei Tzevaot צְבָאוֹת."
+      },
+      {
+        "numero": "14",
+        "texto": "\"Porque cuando Yo tome venganza de los pecados de Israel ישראל, Yo también tomaré venganza de los altares de Beit-El. Los cuernos del altar serán cortados, y caerán a tierra."
+      },
+      {
+        "numero": "15",
+        "texto": "Yo derrumbaré las casas de invierno como también las casas de verano; las casas adornadas con marfil serán destruidas, las mansiones ya no existirán,\" dice Adonái יהוה."
+      }
+    ]
+  },
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "AUNQUE CASTIGADO, ISRAEL ישראל NO APRENDE",
+    "capitulo": "AMOS 4",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "\"Escuchen ustedes novillas de la tierra de Bashan, que habitan en Monte Shomron, que oprimen al pobre y trituran al menesteroso, que dicen a sus amos: 'Danos algo para poder beber';"
+      },
+      {
+        "numero": "2",
+        "texto": "Adonái יהוה ha jurado por su Kedushah que tu tiempo de cierto está llegando. \"Serán arrastradas con garfios, y serán echadas en calderos hirviendo."
+      },
+      {
+        "numero": "3",
+        "texto": "Serán traídas desnudas, en la presencia de cada una, y serán echadas desde la montaña de Harmonah [palacio]\" dice Adonái יהוה."
+      },
+      {
+        "numero": "4",
+        "texto": "\"¡Vinieron a Beit-El y pecaron; a Gilgal, y multiplicaron el pecado! Trajeron sus sacrificios en la mañana y sus diezmos después de tres días [tres años de días];"
+      },
+      {
+        "numero": "5",
+        "texto": "y lean la Toráh afuera, y clama por profesiones públicas, proclama a gran voz que los hijos de Israel ישראל han amado estas cosas.\" Dice Adonái יהוה, Elohím."
+      },
+      {
+        "numero": "6",
+        "texto": "\"Yo puse inactividad de dientes en todas tus ciudades, no les dejé nada para comer en todos los pueblos; aún no han regresado a mí,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "7",
+        "texto": "\"Yo retuve de ustedes la lluvia tres meses antes de la cosecha. Yo hice que lloviera en una ciudad y en la otra no – un campo tenía lluvia, mientras que el otro, sin lluvia, se secó;"
+      },
+      {
+        "numero": "8",
+        "texto": "de dos o tres ciudades ellos iban tambaleándose a la otra por agua para beber, pero no había suficiente; aún no han regresado a mí,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "9",
+        "texto": "\"Yo te golpeé con vientos calientes y añublo, tu multiplicaste tus jardines, tus viñas y tus higueras; la oruga devoró tus higueras y olivares; aún no han regresado a mí,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "10",
+        "texto": "\"Yo mandé pestilencia sobre ustedes como la de Mitsraim מִצְרַיִם, y maté a tus jóvenes con la espada; junto con tus caballos fueron cautivos; y en mi ira contra ti prendí fuego a tus campos; aún no han regresado a mí,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "11",
+        "texto": "\"Yo los derribé, como Adonái יהוה derribó a Sedom y Amora; eran como rama quemándose arrebatada del fuego; aún no han regresado a mí,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "12",
+        "texto": "\"Por esto Yo trato contigo de esta forma, O Israel ישראל; y porque trataré contigo de esta forma, prepárate para clamar a tu Adonái יהוה, O Israel ישראל –"
+      },
+      {
+        "numero": "13",
+        "texto": "Porque, he aquí, Yo soy el que fortalece los truenos y crea el viento, y proclama a los hombres Su Mashíaj; formando la mañana y la oscuridad y anda sobre las alturas de la tierra – Adonái יהוה Elohei Tzevaot צְבָאוֹת es Su Nombre.\""
+      }
+    ]
+  },
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "LLAMAMIENTO A HACER TESHUVÁ (ARREPENTIMIENTO)",
+    "capitulo": "AMOS 5",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "Oye esta palabra que Yo tengo contra ti en lamento. La casa de Israel ישראל ha caído, no se levantará más:"
+      },
+      {
+        "numero": "2",
+        "texto": "La virgen de Israel ישראל ha caído; ella no se levantará de nuevo, ella yace abandonada en su propia tierra con nadie que la levante."
+      },
+      {
+        "numero": "3",
+        "texto": "Porque así dice Adonái יהוה, Elohím: \"La ciudad de la cual mil marcharon será dejada con cien, y de la que marcharon cien será dejada con diez de la casa de Israel ישראל.\""
+      },
+      {
+        "numero": "4",
+        "texto": "Porque aquí está lo que Adonái יהוה dice a la casa de Israel ישראל: \"Si ustedes me buscan, vivirán;"
+      },
+      {
+        "numero": "5",
+        "texto": "Pero no busquen a Beit- El, ni entren en Gilgal ni pasen por Beer-Sheva; porque Gilgal de cierto irá a cautiverio y Beit-El se convertirá en nada.\""
+      },
+      {
+        "numero": "6",
+        "texto": "Si ustedes buscan a Adonái יהוה, ustedes vivirán. De otra forma, El irrumpirá contra la casa de Iosef יוֹסֵף como fuego y lo devorará a él, con nadie que apague las llamas para la casa de Israel ישראל."
+      },
+      {
+        "numero": "7",
+        "texto": "¡Ustedes que convierten la justicia en ajenjo y echan la rectitud a tierra!"
+      },
+      {
+        "numero": "8",
+        "texto": "Aquel que hizo las Pléyades y el Orión, que trae la sombra de muerte sobre la mañana, que oscurece el día en noche, que llama al agua del mar y con ella inunda la tierra – Adonái יהוה es Su Nombre –"
+      },
+      {
+        "numero": "9",
+        "texto": "El envía destrucción sobre el fuerte, para que la destrucción invada la fortaleza."
+      },
+      {
+        "numero": "10",
+        "texto": "Ellos odian a cualquiera que promueva la justicia a la puerta de la ciudad, y aborrecieron el lenguaje Kadosh"
+      },
+      {
+        "numero": "11",
+        "texto": "Por lo tanto, porque ustedes pisotean sobre el pobre y extorsionan de ellos levas de grano; aunque hayan edificado casas de lajas de piedra, no vivirán en ellas; y aunque hayan sembrado viñas placenteras, no beberán el vino."
+      },
+      {
+        "numero": "12",
+        "texto": "Porque Yo sé de sus muchas transgresiones, y sus pecados son grandes, pisoteando al justo, tomando sobornos, volviendo a un lado [el juicio del pobre] en las puertas."
+      },
+      {
+        "numero": "13",
+        "texto": "En tiempos como éste una persona prudente se queda callada, porque es todo tiempo de maldad."
+      },
+      {
+        "numero": "14",
+        "texto": "Busquen el bien y no el mal, para que vivan. Entonces Adonái יהוה Elohei Tzevaot צְבָאוֹת estará con ustedes, como ustedes han dicho."
+      },
+      {
+        "numero": "15",
+        "texto": "Odien el mal, amen el bien, y respeten la justicia en la puerta, quizás Adonái יהוה Elohei Tzevaot צְבָאוֹת tendrá piedad del remanente de Iosef יוֹסֵף."
+      },
+      {
+        "numero": "16",
+        "texto": "Por lo tanto, así dice Adonái יהוה Elohei Tzevaot צְבָאוֹת, Adonái יהוה: \"En todas las plazas públicas habrá lamentaciones, en todas las calles ellos gritarán: '¡Oh, no!' Ellos llamarán a los campesinos a duelo y endechadores profesionales a endechar."
+      },
+      {
+        "numero": "17",
+        "texto": "Habrá aullido en todas las sendas, porque Yo pasaré por el medio de ustedes,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "18",
+        "texto": "¡Ay de ti que quieres el Día de Adonái יהוה! ¿Por qué lo quieres, este Día de Adonái יהוה? Es oscuridad, no luz;"
+      },
+      {
+        "numero": "19",
+        "texto": "como si alguien fuera a huir de un león, sólo para ser encontrado por un oso; como si entrara en una casa y pone su mano en la pared sólo para ser mordido por un serpiente."
+      },
+      {
+        "numero": "20",
+        "texto": "¿No será el Día de Adonái יהוה oscuridad y no luz. completamente oscuro, con ninguna claridad?"
+      },
+      {
+        "numero": "21",
+        "texto": "\"Yo odio, Yo rechazo sus festivales; no toleré sus ofrendas de sus asambleas solemnes."
+      },
+      {
+        "numero": "22",
+        "texto": "Si me ofrecen ofrendas de ascensión y ofrendas de grano, no las aceptaré; ni consideraré las ofrendas de Shalom de su ganado engordado en establos."
+      },
+      {
+        "numero": "23",
+        "texto": "¡Ahórrense el ruido de sus cantos! ¡No quiero oír la música de sus instrumentos!"
+      },
+      {
+        "numero": "24",
+        "texto": "La justicia brotará como el agua, y la rectitud como torrente infranqueable."
+      },
+      {
+        "numero": "25",
+        "texto": "¿Me trajiste sacrificios y ofrendas en el desierto por cuarenta años, casa de Israel ישראל?"
+      },
+      {
+        "numero": "26",
+        "texto": "Sí, tú tomaste el Mishkan de Moloj y Kiyun, tus imágenes, la estrella de tu Adonái יהוה que tú te hiciste por ti mismo."
+      },
+      {
+        "numero": "27",
+        "texto": "Y Yo te deportaré más allá de Dammesek,\" dice Adonái יהוה Elohei Tzevaot צְבָאוֹת – ese es Su Nombre."
+      }
+    ]
+  },
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "DESTRUCCIÓN DE ISRAEL ישראל",
+    "capitulo": "AMOS 6",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "Ay de aquellos que llevan una vida suave en Tziyon y aquellos que se sienten complacidos en las montañas de Shomron, hombres de renombre en esta nación de las primeras, a quién el resto de Israel ישראל viene."
+      },
+      {
+        "numero": "2",
+        "texto": "O casa de Israel ישראל, viaja a Kalneh y mira; de allí ve a Hamat la grande; entonces desciende a Gat de los Plishtim. ¿Eres tú mejor que estos reinos? ¿Es su territorio mayor que el tuyo?"
+      },
+      {
+        "numero": "3",
+        "texto": "Ustedes que se acercan al Día malo pero acercan y están adoptando Shabatot falsos."
+      },
+      {
+        "numero": "4",
+        "texto": "Se acuestan en camas de marfil y viven delicadamente en sus butacas, cenando con carne de las ovejas del rebaño y de terneros engordados en establos."
+      },
+      {
+        "numero": "5",
+        "texto": "¡Se exceden en el sonido de instrumentos musicales, lo han considerado como perdurable – no como placeres [efímeros]!"
+      },
+      {
+        "numero": "6",
+        "texto": "Beben vino por tazones y se ungen con el mejor aceite, pero no sienten dolor por la calamidad de Iosef יוֹסֵף."
+      },
+      {
+        "numero": "7",
+        "texto": "Por tanto, ellos serán los primeros en ir cautivos, del dominio de príncipes, y el relinchar de caballos será apartado de Efraim אֶפְרַ֫יִם."
+      },
+      {
+        "numero": "8",
+        "texto": "\"Adonái יהוה, Elohím אֱלֹהִים jura por El mismo,\" dice Adonái יהוה Elohei Tzevaot צְבָאוֹת. \"Porque Yo aborrezco todo el orgullo de Iaakov יַעֲקֹב, y odio sus palacios. Yo entregaré la ciudad, junto con todos los que habitan en ella."
+      },
+      {
+        "numero": "9",
+        "texto": "Cuando ese Día venga, si diez hombres quedan en una casa, ellos morirán."
+      },
+      {
+        "numero": "10",
+        "texto": "Entonces su tío o alguien que sea su pariente lo cargará para sacar los huesos de la casa, y dirá al que esté en la casa con él: “¿Se encuentra alguien más contigo en la casa?” Y él le contestará: “No hay nadie, pues perecieron porque no hacían mención del Nombre de Adonái יהוה."
+      },
+      {
+        "numero": "11",
+        "texto": "Porque cuando Adonái יהוה dé la orden, casas grandiosas serán destruidas y casas pequeñas reducidas a escombro."
+      },
+      {
+        "numero": "12",
+        "texto": "¿Corren los caballos sobre roca? ¿Puede uno arar allí con bueyes? Sin embargo, ustedes han convertido la justicia en veneno y el fruto de la rectitud en ajenjo."
+      },
+      {
+        "numero": "13",
+        "texto": "Ustedes toman placer de cosas inservibles – creen que su poder viene de su propia fuerza."
+      },
+      {
+        "numero": "14",
+        "texto": "\"Pero Yo levantaré una nación contra ustedes, O casa de Israel ישראל,\" dice Adonái יהוה Elohei Tzevaot צְבָאוֹת, \"y ellos los oprimirán desde la entrada de Hamat hasta el Valle del Aravah.\""
+      }
+    ]
+  },
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "TRES VISIONES DE DESTRUCCIÓN",
+    "capitulo": "AMOS 7",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "Aquí está lo que Adonái יהוה, Elohím me mostró: El estaba formando un enjambre de langostas al tiempo que la cosecha tardía estaba comenzando a espigar, la cosecha tardía después que el heno había sido cortado para pagar los tributos del rey."
+      },
+      {
+        "numero": "2",
+        "texto": "Mientras ellos terminaban de devorar toda la vegetación de La Tierra, yo dije: \"¡Adonái יהוה, Elohím perdona – por favor! ¿Cómo sobrevivirá el insignificante Iaakov יַעֲקֹב?"
+      },
+      {
+        "numero": "3",
+        "texto": "Así que Adonái יהוה cambió su manera de pensar acerca de esto. \"No sucederá,\" Adonái יהוה dijo."
+      },
+      {
+        "numero": "4",
+        "texto": "Después Adonái יהוה, Elohím me mostró esto: Adonái יהוה, Elohím estaba llamando a un fuego ardiente para consumir al gran abismo, y hubiera devorado La Tierra también."
+      },
+      {
+        "numero": "5",
+        "texto": "Pero yo dije: \"¡Adonái יהוה, Elohím detente – por favor! ¿Cómo sobrevivirá el insignificante Iaakov יַעֲקֹב?\""
+      },
+      {
+        "numero": "6",
+        "texto": "Adonái יהוה cambió su manera de pensar acerca de esto. \"Esto tampoco sucederá,\" dijo Adonái יהוה, Elohím."
+      },
+      {
+        "numero": "7",
+        "texto": "Entonces me mostró esto: Adonái יהוה estaba en pie por el muro hecho con una plomada, El tenía una plomada en su mano."
+      },
+      {
+        "numero": "8",
+        "texto": "Adonái יהוה me preguntó: \"Amós, ¿qué es lo que ves? Yo respondí: \"Una plomada.\" Entonces Adonái יהוה dijo: \"Yo voy a poner una plomada entre mi pueblo Israel ישראל; nunca jamás toleraré sus ofensas."
+      },
+      {
+        "numero": "9",
+        "texto": "Los lugares altos [los altares de alegría] de Itzjak יִצְחַק estarán desolados, los santuarios de Israel ישראל serán destruidos, y Yo atacaré la casa de Yaroveam יָרָבְעָם con la espada.\""
+      },
+      {
+        "numero": "10",
+        "texto": "Entonces Amatzyah el sacerdote de Beit-El envió este mensaje a Yaroveam יָרָבְעָם rey de Israel ישראל: \"Amós está conspirando contra ti allí entre el pueblo de Israel ישראל, y La Tierra no pude soportar todo lo que él está diciendo."
+      },
+      {
+        "numero": "11",
+        "texto": "Porque Amós dice: 'Yaroveam יָרָבְעָם morirá por la espada, e Israel ישראל será llevado de su tierra a la cautividad.'\""
+      },
+      {
+        "numero": "12",
+        "texto": "Amatzyah también dijo a Amós: \"¡Vete vidente!\" ¡Regresa a la tierra de Iehudáh יְהוּדָה! Gana tu sustento allá; y profetiza allá;"
+      },
+      {
+        "numero": "13",
+        "texto": "pero no profetices más en Beit-El; porque éste es el santuario מקדשׁ del rey, y es la casa real.\""
+      },
+      {
+        "numero": "14",
+        "texto": "Amós le dio esta respuesta a Amatzyah: \"Yo no estoy entrenado como profeta, ni soy uno de la línea de profetas – yo poseo ovejas e higueras."
+      },
+      {
+        "numero": "15",
+        "texto": "Pero Adonái יהוה me sacó del rebaño, y Adonái יהוה me dijo: 'Ve, profetiza a mi pueblo Israel ישראל.'"
+      },
+      {
+        "numero": "16",
+        "texto": "Así que ahora, oye lo que Adonái יהוה tiene que decir: \"No profetices contra Israel ישראל, no levantes tumulto contra la casa de Iaakov יַעֲקֹב.\""
+      },
+      {
+        "numero": "17",
+        "texto": "Por lo tanto, Adonái יהוה dice esto: \"Tu esposa se convertirá en una ramera en la ciudad, tus hijos e hijas morirán por la espada, tu tierra será dividida con una cuerda de medir, tú mismo morirás en una tierra inmunda, e Israel ישראל de cierto será deportado de su tierra.\""
+      }
+    ]
+  },
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "EL CANASTILLO DE FRUTA DE VERANO",
+    "capitulo": "AMOS 8",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "He aquí lo que Adonái יהוה Elohím me mostró: allí delante de mí había una canasta con frutas de verano."
+      },
+      {
+        "numero": "2",
+        "texto": "El preguntó: \"Amós, ¿qué es lo que ves? Yo respondí \"Una canasta de frutas [Hebreo: kayitz] de verano.\" Entonces Adonái יהוה me dijo: \"El fin [hebreo: ketz] ha llegado para mi pueblo Israel ישראל,' Yo nunca más toleraré sus ofensas."
+      },
+      {
+        "numero": "3",
+        "texto": "Cuando ese tiempo llegue, los cantos en el Templo serán endechas,\" dice Adonái יהוה, Elohím. \"Habrá muchos cuerpos muertos; en todas partes el silencio reinará.\""
+      },
+      {
+        "numero": "4",
+        "texto": "¡Escuchen, ustedes que se tragan al menesteroso y destruyen al pobre de La Tierra!"
+      },
+      {
+        "numero": "5",
+        "texto": "Ustedes dicen: \"¿Cuando se terminará el Rosh-Hodesh, para poder llevar nuestro grano al mercado? ¿Y el Shabat para poder vender el trigo? ¡Ustedes miden el grano en un eifah pequeño, pero la plata en pesados shekels, arreglando la balanza, para poder engañar,"
+      },
+      {
+        "numero": "6",
+        "texto": "comprando al menesteroso por dinero y al pobre por un par de zapatos, y barriendo el desperdicio del trigo para venderlo!\""
+      },
+      {
+        "numero": "7",
+        "texto": "Adonái יהוה jura contra el orgullo de Iaakov יַעֲקֹב, \"Yo no me olvidaré de ninguna de sus obras, nunca."
+      },
+      {
+        "numero": "8",
+        "texto": "¿No temblará La Tierra por esto, y todos los que viven en La Tierra, no harán duelo? La destrucción vendrá como un río, y descenderá como el Nilo en Mitsraim מִצְרַיִם."
+      },
+      {
+        "numero": "9",
+        "texto": "\"Cuando ese tiempo venga,\" dice Adonái יהוה, Elohím \"Yo haré que el sol descienda al mediodía y oscurezca la tierra a plena luz del día."
+      },
+      {
+        "numero": "10",
+        "texto": "Yo convertiré tus festivales en duelo y todos tus cantos en lamentaciones; Yo haré que todos se vistan de cilicio alrededor de sus cinturas y raparé sus cabezas en dolor hasta quedar calvos. Lo haré como duelo por un hijo unigénito y su fin como un día amargo."
+      },
+      {
+        "numero": "11",
+        "texto": "\"Los días vienen,\" dice Adonái יהוה, Elohím \"Cuando enviaré hambruna por La Tierra, no una hambruna por pan y sed de agua, sino de oír la Palabra de Adonái יהוה."
+      },
+      {
+        "numero": "12",
+        "texto": "La gente se tambaleará de mar a mar y de norte a este, corriendo de aquí para allá, buscando la Palabra de Adonái יהוה; pero no la encontrarán."
+      },
+      {
+        "numero": "13",
+        "texto": "Cuando ese tiempo venga, las vírgenes y hombres jóvenes desmayarán de sed."
+      },
+      {
+        "numero": "14",
+        "texto": "Aquellos que juran por el pecado de Shomron, que dicen: 'Como tu dios, O Dan דָּן, vive,' y tu dios, O Beer-Sheva, vive' – caerán y nunca más se levantarán.\""
+      }
+    ]
+  },
+  {
+    "titulo": "AMÓS",
+    "subtitulo": "LOS JUICIOS DE ADONÁI יהוה SON INELUDIBLES",
+    "capitulo": "AMOS 9",
+    "versiculo": [
+      {
+        "numero": "1",
+        "texto": "Yo vi a Adonái יהוה parado junto al altar, y Él dijo: \"¡Golpea el Propiciatorio, hasta que el umbral tiemble! ¡Machácalo en pedazos sobre las cabezas de toda la gente! Aquellos que queden, Yo mataré a espada; ni uno de ellos que tratan de huir se salvará."
+      },
+      {
+        "numero": "2",
+        "texto": "Si ellos cavan hacia abajo al Sheol, mi mano los arrastrará hasta afuera; si trepan hasta el cielo, Yo los traeré hacia abajo."
+      },
+      {
+        "numero": "3",
+        "texto": "Si se esconden en la cumbre del Karmel, Yo los buscaré y los atraparé allí; si se esconden de mí en el fondo del mar, Yo ordenaré que el serpiente los muerda allí."
+      },
+      {
+        "numero": "4",
+        "texto": "Si ellos van al cautiverio delante del rostro de sus enemigos, Yo ordenaré que la espada los mate allí. Yo pondré mis ojos sobre ellos para mal y no para bien.\""
+      },
+      {
+        "numero": "5",
+        "texto": "Porque Adonái יְהוָה Elohím אֱלֹהִים Tzevaot צְבָאוֹת es el que puede derretir la tierra con su toque, y hacer que todos los que viven en ella se enluten. La destrucción vendrá como un río, y descenderá como el Nilo en Mitsraim מִצְרַיִם."
+      },
+      {
+        "numero": "6",
+        "texto": "El edifica sus altos aposentos en el cielo y establece su promesa sobre la tierra. El llama a las aguas del mar y las derrama sobre la tierra. Adonái יהוה es Su Nombre."
+      },
+      {
+        "numero": "7",
+        "texto": "\"O hijos de Israel ישראל, ¿eres tú diferente que los hijos de Kush [Etíopes] para mí?\" Pregunta Adonái יהוה. \"Verdad, Yo saqué a Israel ישראל de Mitsraim מִצְרַיִם, pero también traje a los Plishtim de Kaftor, y a Aram de Kir."
+      },
+      {
+        "numero": "8",
+        "texto": "He aquí, los ojos de Adonái יהוה, Elohím están sobre el reino de los pecadores. Yo lo borraré de la faz de la tierra, aun Yo no destruiré completamente la casa de Iaakov יַעֲקֹב,\" dice Adonái יהוה."
+      },
+      {
+        "numero": "9",
+        "texto": "\"Porque Yo daré la orden, cerniré la casa de Israel ישראל, allí entre todos los Goyim, como uno pasa por el tamiz el grano, no dejando que ningún grano caiga a tierra."
+      },
+      {
+        "numero": "10",
+        "texto": "Todos los pecadores de mi pueblo morirán a espada, los que dicen: 'El desastre nunca nos alcanzará ni nos agarrará.'"
+      },
+      {
+        "numero": "11",
+        "texto": "\"Cuando ese Día venga, Yo levantaré la sukah caída de David דָּוִד. Yo cerraré sus brechas, levantaré sus ruinas y las reedificaré como en días antiguos,"
+      },
+      {
+        "numero": "12",
+        "texto": "para que el remanente de los hombres y todos los Goyim sobre los cuales Mi Nombre es invocado,\" puedan buscarme de todo corazón, dice Adonái יהוה, quien está haciendo todas estas cosas."
+      },
+      {
+        "numero": "13",
+        "texto": "\"Los días vendrán,\" dice Adonái יהוה, \"cuando la cosecha alcanzará la vendimia, y las uvas madurarán a la hora de la siembra de la zera. Las montañas destilarán vino dulce y todas las montañas serán plantadas."
+      },
+      {
+        "numero": "14",
+        "texto": "Yo restauraré la cautividad de mi pueblo Israel ישראל; ellos reedificarán y habitarán las ciudades arruinadas; plantarán viñas y beberán su vino, cultivarán jardines y comerán su fruto."
+      },
+      {
+        "numero": "15",
+        "texto": "Yo los plantaré en su propia Tierra, para que nunca más sean desarraigados de su tierra, la cual Yo he dado a ellos,\" dice Adonái יהוה, tu Elohím."
+      }
+    ]
+  }
+]

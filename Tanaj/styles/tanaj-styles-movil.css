@@ -1,0 +1,99 @@
+/* ===== ESTILOS EXCLUSIVOS PARA MÓVIL (pantallas <= 768px) ===== */
+
+body {
+    padding: 1rem 0.8rem;
+}
+
+#contenedor-principal {
+    padding: 0 0.3rem;
+}
+
+.titulo-libro {
+    font-size: 28px;
+}
+
+.subtitulo-capitulo {
+    font-size: 13px;
+    padding: 0.5rem 0.8rem;
+    border-radius: 3px;
+}
+
+.nombre-capitulo {
+    font-size: 18px;
+}
+
+.versiculo {
+    font-size: 15px;
+    line-height: 1.6;
+    padding-left: 0.1rem;
+}
+
+.btn-nav {
+    padding: 0.3rem 0.5rem;
+    font-size: 28px !important;
+}
+
+.indicador-capitulo {
+    font-size: 14px;
+    padding: 0.25rem 1rem;
+}
+
+.boton-hamburguesa {
+    font-size: 34px !important;
+}
+
+.nav-botones {
+    gap: 0.5rem;
+    margin: 1.5rem 0 1rem 0;
+}
+
+.separador-capitulo {
+    margin: 2rem 0 1.5rem 0;
+}
+
+/* Ajustes del menú lateral en móvil */
+#menu-lateral {
+    width: 280px;
+    left: -300px;
+}
+
+#menu-lateral.menu-abierto {
+    left: 0;
+}
+
+#menu-lateral.menu-cerrado {
+    left: -300px;
+}
+
+/* ===== PARA PANTALLAS MUY PEQUEÑAS (<= 400px) ===== */
+@media (max-width: 400px) {
+    .titulo-libro {
+        font-size: 24px;
+    }
+    
+    .versiculo {
+        font-size: 14px;
+    }
+    
+    .btn-nav {
+        font-size: 24px !important;
+    }
+    
+    .indicador-capitulo {
+        font-size: 12px;
+        padding: 0.2rem 0.8rem;
+    }
+    
+    .boton-hamburguesa {
+        font-size: 30px !important;
+    }
+    
+    #menu-lateral {
+        width: 260px;
+        left: -280px;
+    }
+    
+    #menu-lateral.menu-cerrado {
+        left: -280px;
+    }
+}

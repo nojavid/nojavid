@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Control de Plata</title>
+    <link rel="stylesheet" href="valesStyles.css" />
+</head>
+<body>
+    <div class="card" id="app">
+        <h1>
+            <span>💰</span> Control de Plata
+        </h1>
+
+        <!-- PASO 1: INICIAL -->
+        <div class="step-group">
+            <div class="step-label">Paso 1 · Número inicial</div>
+            <div class="input-row">
+                <label for="inicialInput">Inicial</label>
+                <input type="number" id="inicialInput" placeholder="Ej: 078182" />
+            </div>
+        </div>
+
+        <!-- PASO 2: FINAL -->
+        <div class="step-group">
+            <div class="step-label">Paso 2 · Número final</div>
+            <div class="input-row">
+                <label for="finalInput">Final</label>
+                <input type="number" id="finalInput" placeholder="Ej: 078258" />
+            </div>
+            <div id="personasDisplay" class="result-line mt-2" style="border-bottom: none; padding-top: 12px;">
+                <span class="result-label">👤 Personas</span>
+                <span class="result-value" id="personasValue">—</span>
+            </div>
+        </div>
+
+        <!-- PASO 3: VALES -->
+        <div class="step-group">
+            <div class="step-label">Paso 3 · Vales</div>
+            <div class="input-row">
+                <label for="valesInput">Vales</label>
+                <input type="number" id="valesInput" placeholder="Cantidad" min="0" />
+            </div>
+            <div id="personasSinValeDisplay" class="result-line mt-2" style="border-bottom: none; padding-top: 8px;">
+                <span class="result-label">🚫 Personas sin vale</span>
+                <span class="result-value" id="personasSinValeValue">—</span>
+            </div>
+            <div id="plataDisplay" class="result-line" style="border-bottom: none; padding-top: 8px;">
+                <span class="result-label">💵 Plata</span>
+                <span class="result-value" id="plataValue">$0</span>
+            </div>
+            <div id="valeWarning" class="warning hidden">⚠️ Los vales no pueden ser mayores que las personas.</div>
+        </div>
+
+        <!-- PASO 4: ADICIONALES -->
+        <div class="step-group">
+            <div class="step-label">Paso 4 · Adicionales</div>
+            <div class="input-row">
+                <label for="adicionalesInput">Adicionales ($)</label>
+                <input type="number" id="adicionalesInput" placeholder="Ej: 9000" min="0" />
+            </div>
+            <div id="totalPreview" class="result-line mt-2" style="border-bottom: none; padding-top: 8px;">
+                <span class="result-label">🧾 Total parcial</span>
+                <span class="result-value" id="totalPreviewValue">$0</span>
+            </div>
+        </div>
+
+        <!-- RESUMEN FINAL GRANDE -->
+        <div class="summary-box" id="summaryBox">
+            <div class="summary-title">📋 RESULTADO</div>
+            <div class="summary-line"><span class="slabel">Inicial</span><span class="svalue" id="sInicial">—</span></div>
+            <div class="summary-line"><span class="slabel">Final</span><span class="svalue" id="sFinal">—</span></div>
+            <div class="summary-line"><span class="slabel">Personas</span><span class="svalue" id="sPersonas">—</span></div>
+            <div class="summary-line"><span class="slabel">Vales</span><span class="svalue" id="sVales">—</span></div>
+            <div class="summary-line"><span class="slabel">Personas sin vale</span><span class="svalue" id="sSinVale">—</span></div>
+            <div class="summary-line"><span class="slabel">Plata</span><span class="svalue" id="sPlata">$0</span></div>
+            <div class="summary-line"><span class="slabel">Adicionales</span><span class="svalue" id="sAdicionales">$0</span></div>
+
+            <div class="total-box">
+                <span class="total-label">TOTAL</span>
+                <span class="total-amount" id="totalFinal">$0</span>
+            </div>
+        </div>
+
+        <button class="btn-reset" id="resetBtn">↻ Nuevo cálculo</button>
+
+        <!-- Icono de casa - Corregido con ../ para subir un nivel -->
+        <div class="home-icon">
+            <a href="../index.html" title="Ir al inicio">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <script src="valesJs.js"></script>
+</body>
+</html>
