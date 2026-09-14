@@ -1,4 +1,5 @@
-
+// ============================================
+// 1. FECHA ACTUAL
 // ============================================
 function actualizarFecha() {
     const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -271,6 +272,25 @@ function confirmarYEnviar() {
         }, 800);
     } catch (e) {
         console.error('Error al confirmar:', e);
+    }
+}
+
+// ============================================
+// GUARDAR MOVIMIENTOS EN LOCALSTORAGE
+// ============================================
+function guardarMovimientos(movimientos) {
+    try {
+        const existentes = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
+        const conFecha = movimientos.map(m => ({
+            ...m,
+            fecha: new Date().toISOString(),
+            id: Date.now() + Math.random().toString(36).slice(2, 8)
+        }));
+        const actualizados = existentes.concat(conFecha);
+        localStorage.setItem('finix_movimientos', JSON.stringify(actualizados));
+        console.log('✅ Guardados', conFecha.length, 'movimientos');
+    } catch (e) {
+        console.error('Error guardando en localStorage:', e);
     }
 }
 
@@ -649,4 +669,116 @@ setTimeout(function() {
     iniciarAnimacion();
 }, 500);
 
-console.log('✅ FinixJS cargado correctamente - IA integrada');
+// ============================================
+// 13. ANÁLISIS CON IA (vía Cloudflare Worker)
+// ============================================
+
+// URL real del Worker desplegado en Cloudflare
+const WORKER_URL = 'https://finix-ai-proxy.nojavid-finix.workers.dev';
+
+/**
+ * Envía el texto libre al Worker y devuelve un array de movimientos:
+ * [{ tipo: "gasto"|"ingreso", nombre: "Comida", precio: 30000, icono: "🍔" }]
+ */
+async function analizarConIA(texto) {
+    if (!texto || !texto.trim()) return [];
+
+    try {
+        const res = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ texto: texto.trim() }),
+        });
+
+        // Worker caído / error HTTP
+        if (!res.ok) {
+            console.error('Worker respondió con status', res.status);
+            return fallbackParser(texto);
+        }
+
+        const data = await res.json();
+
+        // JSON inválido / array vacío / respuesta no-array
+        if (!Array.isArray(data) || data.length === 0) {
+            console.warn('IA devolvió array vacío o inválido, usando fallback');
+            return fallbackParser(texto);
+        }
+
+        // Normalización defensiva final
+        return data.map(m => ({
+            tipo: m.tipo === 'ingreso' ? 'ingreso' : 'gasto',
+            nombre: String(m.nombre || 'Movimiento'),
+            precio: Math.round(Number(m.precio) || 0),
+            icono: m.icono || '📌',
+        }));
+    } catch (err) {
+        console.error('Error de red llamando al Worker:', err);
+        return fallbackParser(texto);
+    }
+}
+
+/**
+ * Parser local de respaldo: se usa si el Worker falla o no responde.
+ * Cubre casos comunes ("comida 30mil", "uber 12k", separados por + , ; o saltos).
+ */
+function fallbackParser(texto) {
+    const partes = texto
+        .split(/[+,\n;]+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+    const iconosPorCategoria = [
+        { keys: ['comida', 'almuerzo', 'cena', 'desayuno', 'restaurante', 'café'], icono: '🍔' },
+        { keys: ['gasolina', 'uber', 'taxi', 'bus', 'transporte', 'pasaje', 'moto'], icono: '⛽' },
+        { keys: ['ropa', 'zapatos', 'camisa', 'pantalón', 'tenis'], icono: '👟' },
+        { keys: ['salario', 'sueldo', 'pago', 'nómina', 'recibí', 'me pagaron'], icono: '💰' },
+        { keys: ['mercado', 'supermercado', 'tienda', 'víveres'], icono: '🛒' },
+        { keys: ['arriendo', 'renta', 'alquiler'], icono: '🏠' },
+        { keys: ['luz', 'agua', 'gas', 'internet', 'teléfono', 'servicios'], icono: '💡' },
+        { keys: ['salud', 'médico', 'farmacia', 'medicinas'], icono: '💊' },
+        { keys: ['cine', 'juego', 'netflix', 'spotify', 'entretenimiento'], icono: '🎮' },
+    ];
+
+    const palabrasIngreso = ['me pagaron', 'recibí', 'sueldo', 'salario', 'ingreso', 'me consignaron', 'cobré', 'venta'];
+
+    const resultado = [];
+
+    for (const parte of partes) {
+        const match = parte.match(/([\d.,]+)\s*(k|mil|m|millones?)?/i);
+        if (!match) continue;
+
+        let numStr = match[1].replace(/\./g, '').replace(/,/g, '.');
+        let valor = parseFloat(numStr);
+        if (isNaN(valor)) continue;
+
+        const unidad = (match[2] || '').toLowerCase();
+        if (unidad === 'k' || unidad === 'mil') valor *= 1000;
+        else if (unidad === 'm' || unidad.startsWith('millon')) valor *= 1000000;
+
+        const nombreRaw = parte.slice(0, match.index).replace(/[-:]+$/, '').trim();
+        const nombre = nombreRaw
+            ? nombreRaw.charAt(0).toUpperCase() + nombreRaw.slice(1)
+            : 'Movimiento';
+
+        let icono = '📌';
+        const lower = nombre.toLowerCase();
+        for (const cat of iconosPorCategoria) {
+            if (cat.keys.some(k => lower.includes(k))) { icono = cat.icono; break; }
+        }
+
+        const textoLower = texto.toLowerCase();
+        const tipo = palabrasIngreso.some(p => textoLower.includes(p)) ? 'ingreso' : 'gasto';
+
+        resultado.push({
+            tipo,
+            nombre,
+            precio: Math.round(valor),
+            icono,
+        });
+    }
+
+    return resultado;
+}
+
+console.log('✅ FinixJS cargado correctamente - IA integrada (gemini-3.1-flash-lite)');
+console.log('✅ Worker URL:', WORKER_URL);

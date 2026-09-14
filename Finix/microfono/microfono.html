@@ -1,0 +1,36 @@
+<!-- ========== Para ingresos ========== -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Cámara - Finix</title>
+  <link rel="stylesheet" href="microfono.css" />
+</head>
+<body>
+
+  <!-- Botón de salir (X) -->
+  <button id="btnSalir" class="btn-salir" aria-label="Salir">✕</button>
+
+  <!-- Texto descriptivo / resultado -->
+  <div id="textoPrincipal" class="texto-principal">
+    Cuéntame todos los detalles de tu transacción.
+  </div>
+
+  <!-- Animación de análisis (oculta por defecto) -->
+  <div id="analizando" class="analizando oculto">
+    <div class="spinner"></div>
+    <p>Analizando...</p>
+  </div>
+
+  <!-- Botón del micrófono dentro de un círculo -->
+  <div id="btnMicrofono" class="circulo-microfono">
+    <img src="../iconos/microfonoblanco.png" alt="Grabar" class="icono-microfono" />
+  </div>
+
+  <!-- Elemento de audio oculto para grabación -->
+  <audio id="audioReproductor" class="oculto"></audio>
+
+  <script src="microfono.js"></script>
+</body>
+</html>

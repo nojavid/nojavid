@@ -1,0 +1,13 @@
+{
+  "name": "finix-ai-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Proxy seguro para Gemini que sirve al frontend de Finix",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}
