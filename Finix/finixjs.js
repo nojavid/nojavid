@@ -130,10 +130,8 @@ async function enviarDatos() {
 
     procesandoIA = true;
 
-    // Ocultar botones
     ocultarBotones();
 
-    // Mostrar "Procesando con IA..."
     escrituraEl.innerHTML = '';
     escrituraEl.classList.add('ia-analizando');
     escrituraEl.textContent = 'Procesando con IA...';
@@ -142,7 +140,6 @@ async function enviarDatos() {
     escrituraEl.style.display = 'block';
     escrituraEl.style.padding = '8px';
 
-    // Llamar a la IA
     let movimientos = [];
     try {
         movimientos = await analizarConIA(texto);
@@ -153,7 +150,6 @@ async function enviarDatos() {
     procesandoIA = false;
     escrituraEl.classList.remove('ia-analizando');
 
-    // Si no detectó nada
     if (!movimientos || movimientos.length === 0) {
         escrituraEl.innerHTML = '<span style="color:#ff5555;">⚠️ No pude detectar movimientos. Intenta de nuevo.</span>';
         escrituraEl.style.padding = '8px';
@@ -170,7 +166,6 @@ async function enviarDatos() {
         return;
     }
 
-    // Mostrar items detectados
     mostrarItemsDetectados(movimientos);
 }
 
@@ -229,10 +224,8 @@ function mostrarItemsDetectados(movimientos) {
         }, 80 * i);
     });
 
-    // Guardar pendientes
     escrituraEl.dataset.movimientosPendientes = JSON.stringify(movimientos);
 
-    // Mostrar botón CONFIRMAR
     setTimeout(() => {
         if (btnConfirmar) btnConfirmar.style.display = 'block';
     }, 300);
@@ -253,7 +246,6 @@ function confirmarYEnviar() {
         btnConfirmar.style.background = 'linear-gradient(135deg, #00FF88, #00cc66)';
 
         setTimeout(() => {
-            // Limpiar
             escrituraEl.innerHTML = '';
             escrituraEl.dataset.textoPersonalizado = 'false';
             escrituraEl.dataset.movimientosPendientes = '';
@@ -267,7 +259,6 @@ function confirmarYEnviar() {
             btnConfirmar.textContent = '✓ Guardar';
             btnConfirmar.style.background = '';
 
-            // Redirigir
             window.location.href = 'reportes.html';
         }, 800);
     } catch (e) {
@@ -651,7 +642,6 @@ if (escrituraEl) {
     });
 }
 
-// Click fuera para salir
 document.addEventListener('click', function(e) {
     if (escrituraEl && estaEditando) {
         if (!escrituraEl.contains(e.target) &&
@@ -676,10 +666,6 @@ setTimeout(function() {
 // URL real del Worker desplegado en Cloudflare
 const WORKER_URL = 'https://finix-ai-proxy.nojavid-finix.workers.dev';
 
-/**
- * Envía el texto libre al Worker y devuelve un array de movimientos:
- * [{ tipo: "gasto"|"ingreso", nombre: "Comida", precio: 30000, icono: "🍔" }]
- */
 async function analizarConIA(texto) {
     if (!texto || !texto.trim()) return [];
 
@@ -690,7 +676,6 @@ async function analizarConIA(texto) {
             body: JSON.stringify({ texto: texto.trim() }),
         });
 
-        // Worker caído / error HTTP
         if (!res.ok) {
             console.error('Worker respondió con status', res.status);
             return fallbackParser(texto);
@@ -698,13 +683,11 @@ async function analizarConIA(texto) {
 
         const data = await res.json();
 
-        // JSON inválido / array vacío / respuesta no-array
         if (!Array.isArray(data) || data.length === 0) {
             console.warn('IA devolvió array vacío o inválido, usando fallback');
             return fallbackParser(texto);
         }
 
-        // Normalización defensiva final
         return data.map(m => ({
             tipo: m.tipo === 'ingreso' ? 'ingreso' : 'gasto',
             nombre: String(m.nombre || 'Movimiento'),
@@ -717,10 +700,6 @@ async function analizarConIA(texto) {
     }
 }
 
-/**
- * Parser local de respaldo: se usa si el Worker falla o no responde.
- * Cubre casos comunes ("comida 30mil", "uber 12k", separados por + , ; o saltos).
- */
 function fallbackParser(texto) {
     const partes = texto
         .split(/[+,\n;]+/)
