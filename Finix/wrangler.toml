@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 name = "finix-ai-proxy"
 main = "worker.js"
 compatibility_date = "2026-01-01"
 
 # El secret GEMINI_API_KEY NO se declara aquí.
+=======
+name = "finix-ai-proxy"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+# El secret GEMINI_API_KEY NO se declara aquí.
+>>>>>>> 32d5a4b36b471143dad8f5df14410a378549571a
 # Se configura con:  wrangler secret put GEMINI_API_KEY
