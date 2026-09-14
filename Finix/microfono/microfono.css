@@ -160,6 +160,8 @@ html, body {
   height: 56%;
   object-fit: contain;
   pointer-events: none;
+  position: relative;
+  z-index: 2;
 }
 
 /* ===== Animación "Analizando" ===== */
@@ -216,4 +218,37 @@ html, body {
   .btn-salir {
     top: calc(max(4dvh, 20px) + env(safe-area-inset-top));
   }
+}
+
+/* =========================================================
+   VISUALIZADOR DE ONDAS
+   (se inyecta dentro de .circulo-microfono por JS)
+   ========================================================= */
+.visualizador {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.onda-barra {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 3px;
+  transform-origin: 50% 100%;   /* gira respecto al centro del micrófono */
+  will-change: transform, opacity;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(214, 168, 255, 0.85) 45%,
+    rgba(160, 90, 255, 0) 100%
+  );
 }
