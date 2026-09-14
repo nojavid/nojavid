@@ -569,7 +569,7 @@ body {
     text-shadow: 0 0 20px rgba(136, 0, 255, 0.3);
 }
 
-/* ========== MENU OVERLAY ========== */
+/* ========== MENU OVERLAY (PANEL LATERAL DERECHO) ========== */
 .menu-overlay {
     display: none;
     position: fixed;
@@ -577,46 +577,71 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 999;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;   /* el panel queda pegado a la derecha */
+    align-items: stretch;         /* ocupa todo el alto */
+    overflow: hidden;
 }
 
 .menu-overlay.active {
     display: flex;
 }
 
+/* Panel del menú: 70% de ancho, 100% de alto, entra desde la derecha */
 .menu-card {
     background-color: #021516;
-    width: 280px;
-    border-radius: 24px;
-    padding: 28px 20px 20px 20px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    width: 70%;
+    max-width: 320px;
+    height: 100%;
+    padding: 40px 22px 20px 22px;
+    box-shadow: -10px 0 40px rgba(0,0,0,0.9);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    /* Estado inicial: fuera de pantalla por la derecha */
+    transform: translateX(100%);
+    transition: transform 0.35s ease-out;
 }
 
+/* Cuando el overlay está activo, el panel se desliza hacia su posición (0) */
+.menu-overlay.active .menu-card {
+    transform: translateX(0);
+}
+
+/* Título MENU centrado */
 .menu-title {
     color: white;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: 800;
-    letter-spacing: 0.5px;
-    margin-bottom: 18px;
+    letter-spacing: 2px;
+    text-align: center;
+    margin: 0 0 30px 0;
+    padding-bottom: 16px;
     border-bottom: 1px solid #1C2830;
-    padding-bottom: 10px;
 }
 
+/* Opciones del menú */
 .menu-item {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px 6px;
+    padding: 14px 6px;
     border-bottom: 1px solid #1C2830;
     text-decoration: none;
+    transition: all 0.25s ease;
 }
 
 .menu-item:last-child {
     border-bottom: none;
+}
+
+.menu-item:hover {
+    background-color: rgba(0, 212, 255, 0.08);
+    border-radius: 8px;
+    padding-left: 12px;
 }
 
 .menu-item img {
@@ -631,14 +656,20 @@ body {
     font-size: 16px;
 }
 
+/* Botón de cerrar */
 .menu-close {
     position: absolute;
-    top: 12px;
-    right: 20px;
+    top: 14px;
+    right: 18px;
     color: #aaa;
     font-size: 26px;
     font-weight: 300;
     cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.menu-close:hover {
+    color: #00D4FF;
 }
 
 /* ========== AUDIO POPUP ========== */
