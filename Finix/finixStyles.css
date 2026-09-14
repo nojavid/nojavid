@@ -577,7 +577,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.856);   /* 80% oscuro detrás del menú */
+    background-color: rgba(0, 0, 0, 0.8);   /* 80% oscuro detrás del menú */
     z-index: 999;
     justify-content: flex-end;   /* el panel queda pegado a la derecha */
     align-items: stretch;         /* ocupa todo el alto */
@@ -606,8 +606,8 @@ body {
 
     /* Estado inicial: fuera de pantalla por la derecha */
     transform: translateX(100%);
-    /* Animación lenta y suave: 0.100s */
-    transition: transform 0.100s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Animación lenta y suave: 0.65s */
+    transition: transform 0.65s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* Cuando el overlay está activo, el panel se desliza hacia su posición (0) */
@@ -701,7 +701,7 @@ body {
     filter: drop-shadow(0 0 14px rgba(0, 212, 255, 0.9)) brightness(1.15);
 }
 
-/* ========== AUDIO POPUP ========== */
+/* ========== AUDIO POPUP (SIN ✕, SOLO CLIC AFUERA) ========== */
 .audio-popup {
     display: none;
     position: fixed;
@@ -709,42 +709,44 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.75);
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .audio-popup.active {
     display: flex;
+    opacity: 1;
 }
 
 .audio-popup-card {
     background-color: #021516;
     width: 240px;
     border-radius: 28px;
-    padding: 28px 16px 16px 16px;
+    padding: 24px 16px;
     box-shadow: 0 20px 30px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
+/* Opción (Ingreso / Gasto) */
 .audio-option {
     display: flex;
     align-items: center;
     gap: 16px;
     padding: 14px 8px;
-    border-bottom: 1px solid #1C2830;
     text-decoration: none;
     cursor: pointer;
+    border-radius: 16px;
+    transition: background 0.25s ease;
 }
 
-.audio-option:last-child {
-    border-bottom: none;
-}
-
-.audio-option img {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
+.audio-option:hover {
+    background-color: rgba(255, 255, 255, 0.04);
 }
 
 .audio-option span {
@@ -753,12 +755,62 @@ body {
     font-size: 18px;
 }
 
-.audio-close {
-    text-align: right;
-    color: #aaa;
-    font-size: 24px;
-    margin-bottom: 6px;
-    cursor: pointer;
+/* Círculo que envuelve el micrófono */
+.circulo-option {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 70%);
+    transition: all 0.3s ease;
+}
+
+.circulo-option img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+/* ========== INGRESO → círculo verde neón ========== */
+.audio-ingreso .circulo-option {
+    border: 2px solid #00FF88;
+    box-shadow:
+        0 0 12px rgba(0, 255, 136, 0.7),
+        inset 0 0 12px rgba(0, 255, 136, 0.25);
+}
+
+.audio-ingreso .circulo-option img {
+    filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.8)) brightness(1.2);
+}
+
+.audio-ingreso:hover .circulo-option {
+    box-shadow:
+        0 0 22px rgba(0, 255, 136, 0.95),
+        inset 0 0 18px rgba(0, 255, 136, 0.4);
+    transform: scale(1.08);
+}
+
+/* ========== GASTO → círculo rojo neón ========== */
+.audio-gasto .circulo-option {
+    border: 2px solid #FF3355;
+    box-shadow:
+        0 0 12px rgba(255, 51, 85, 0.7),
+        inset 0 0 12px rgba(255, 51, 85, 0.25);
+}
+
+.audio-gasto .circulo-option img {
+    filter: drop-shadow(0 0 6px rgba(255, 51, 85, 0.8)) brightness(1.2);
+}
+
+.audio-gasto:hover .circulo-option {
+    box-shadow:
+        0 0 22px rgba(255, 51, 85, 0.95),
+        inset 0 0 18px rgba(255, 51, 85, 0.4);
+    transform: scale(1.08);
 }
 
 /* ========== NAVEGACIÓN INFERIOR ========== */
