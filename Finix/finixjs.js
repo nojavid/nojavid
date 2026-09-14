@@ -673,7 +673,7 @@ setTimeout(function() {
 // 13. ANÁLISIS CON IA (vía Cloudflare Worker)
 // ============================================
 
-// ⚠️ URL real del Worker desplegado en Cloudflare
+// URL real del Worker desplegado en Cloudflare
 const WORKER_URL = 'https://finix-ai-proxy.nojavid-finix.workers.dev';
 
 /**
