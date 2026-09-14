@@ -577,15 +577,18 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.8);   /* 80% oscuro detrás del menú */
     z-index: 999;
     justify-content: flex-end;   /* el panel queda pegado a la derecha */
     align-items: stretch;         /* ocupa todo el alto */
     overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
 
 .menu-overlay.active {
     display: flex;
+    opacity: 1;
 }
 
 /* Panel del menú: 70% de ancho, 100% de alto, entra desde la derecha */
@@ -603,8 +606,8 @@ body {
 
     /* Estado inicial: fuera de pantalla por la derecha */
     transform: translateX(100%);
-    /* Animación lenta pero con arranque rápido: 0.55s con curva ease-out pronunciada */
-    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    /* Animación lenta y suave: 0.100s */
+    transition: transform 0.100s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 /* Cuando el overlay está activo, el panel se desliza hacia su posición (0) */
@@ -681,6 +684,8 @@ body {
     display: flex;
     justify-content: center;       /* centrado horizontal */
     align-items: center;
+    text-decoration: none;         /* quita subrayado del enlace */
+    cursor: pointer;
 }
 
 .menu-user img {
@@ -689,10 +694,9 @@ body {
     object-fit: contain;
     filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
     transition: all 0.3s ease;
-    cursor: pointer;
 }
 
-.menu-user img:hover {
+.menu-user:hover img {
     transform: scale(1.15);
     filter: drop-shadow(0 0 14px rgba(0, 212, 255, 0.9)) brightness(1.15);
 }
