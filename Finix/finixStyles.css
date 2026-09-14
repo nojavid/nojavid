@@ -751,8 +751,9 @@ body {
 
 .audio-option span {
     color: white;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 18px;
+    transition: text-shadow 0.3s ease;
 }
 
 /* Círculo que envuelve el micrófono */
@@ -764,53 +765,135 @@ body {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 70%);
-    transition: all 0.3s ease;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.06), transparent 70%);
+    transition: all 0.35s ease;
 }
 
 .circulo-option img {
     width: 26px;
     height: 26px;
     object-fit: contain;
-    transition: all 0.3s ease;
+    transition: all 0.35s ease;
 }
 
-/* ========== INGRESO → círculo verde neón ========== */
+/* ============================================================
+   INGRESO → círculo VERDE NEÓN BRILLANTE
+   ============================================================ */
 .audio-ingreso .circulo-option {
     border: 2px solid #00FF88;
+    background: radial-gradient(circle at center, rgba(0, 255, 136, 0.25), rgba(0, 255, 136, 0.05) 70%);
     box-shadow:
-        0 0 12px rgba(0, 255, 136, 0.7),
-        inset 0 0 12px rgba(0, 255, 136, 0.25);
+        0 0 6px #00FF88,
+        0 0 14px #00FF88,
+        0 0 28px rgba(0, 255, 136, 0.8),
+        0 0 45px rgba(0, 255, 136, 0.5),
+        inset 0 0 14px rgba(0, 255, 136, 0.6),
+        inset 0 0 28px rgba(0, 255, 136, 0.3);
+    animation: neonVerdePulse 2s ease-in-out infinite;
 }
 
 .audio-ingreso .circulo-option img {
-    filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.8)) brightness(1.2);
+    filter:
+        drop-shadow(0 0 4px #00FF88)
+        drop-shadow(0 0 8px #00FF88)
+        drop-shadow(0 0 14px rgba(0, 255, 136, 0.9))
+        brightness(1.4);
 }
 
 .audio-ingreso:hover .circulo-option {
+    transform: scale(1.1);
     box-shadow:
-        0 0 22px rgba(0, 255, 136, 0.95),
-        inset 0 0 18px rgba(0, 255, 136, 0.4);
-    transform: scale(1.08);
+        0 0 10px #00FF88,
+        0 0 22px #00FF88,
+        0 0 40px rgba(0, 255, 136, 1),
+        0 0 70px rgba(0, 255, 136, 0.7),
+        inset 0 0 20px rgba(0, 255, 136, 0.8),
+        inset 0 0 36px rgba(0, 255, 136, 0.5);
 }
 
-/* ========== GASTO → círculo rojo neón ========== */
+.audio-ingreso:hover span {
+    text-shadow: 0 0 12px rgba(0, 255, 136, 0.9);
+}
+
+@keyframes neonVerdePulse {
+    0%, 100% {
+        box-shadow:
+            0 0 6px #00FF88,
+            0 0 14px #00FF88,
+            0 0 28px rgba(0, 255, 136, 0.8),
+            0 0 45px rgba(0, 255, 136, 0.5),
+            inset 0 0 14px rgba(0, 255, 136, 0.6),
+            inset 0 0 28px rgba(0, 255, 136, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 0 8px #00FF88,
+            0 0 20px #00FF88,
+            0 0 40px rgba(0, 255, 136, 1),
+            0 0 65px rgba(0, 255, 136, 0.7),
+            inset 0 0 20px rgba(0, 255, 136, 0.8),
+            inset 0 0 36px rgba(0, 255, 136, 0.5);
+    }
+}
+
+/* ============================================================
+   GASTO → círculo ROJO NEÓN BRILLANTE
+   ============================================================ */
 .audio-gasto .circulo-option {
     border: 2px solid #FF3355;
+    background: radial-gradient(circle at center, rgba(255, 51, 85, 0.25), rgba(255, 51, 85, 0.05) 70%);
     box-shadow:
-        0 0 12px rgba(255, 51, 85, 0.7),
-        inset 0 0 12px rgba(255, 51, 85, 0.25);
+        0 0 6px #FF3355,
+        0 0 14px #FF3355,
+        0 0 28px rgba(255, 51, 85, 0.8),
+        0 0 45px rgba(255, 51, 85, 0.5),
+        inset 0 0 14px rgba(255, 51, 85, 0.6),
+        inset 0 0 28px rgba(255, 51, 85, 0.3);
+    animation: neonRojoPulse 2s ease-in-out infinite;
 }
 
 .audio-gasto .circulo-option img {
-    filter: drop-shadow(0 0 6px rgba(255, 51, 85, 0.8)) brightness(1.2);
+    filter:
+        drop-shadow(0 0 4px #FF3355)
+        drop-shadow(0 0 8px #FF3355)
+        drop-shadow(0 0 14px rgba(255, 51, 85, 0.9))
+        brightness(1.4);
 }
 
 .audio-gasto:hover .circulo-option {
+    transform: scale(1.1);
     box-shadow:
-        0 0 22px rgba(255, 51, 85, 0.95),
-        inset 0 0 18px rgba(255, 51, 85, 0.4);
-    transform: scale(1.08);
+        0 0 10px #FF3355,
+        0 0 22px #FF3355,
+        0 0 40px rgba(255, 51, 85, 1),
+        0 0 70px rgba(255, 51, 85, 0.7),
+        inset 0 0 20px rgba(255, 51, 85, 0.8),
+        inset 0 0 36px rgba(255, 51, 85, 0.5);
+}
+
+.audio-gasto:hover span {
+    text-shadow: 0 0 12px rgba(255, 51, 85, 0.9);
+}
+
+@keyframes neonRojoPulse {
+    0%, 100% {
+        box-shadow:
+            0 0 6px #FF3355,
+            0 0 14px #FF3355,
+            0 0 28px rgba(255, 51, 85, 0.8),
+            0 0 45px rgba(255, 51, 85, 0.5),
+            inset 0 0 14px rgba(255, 51, 85, 0.6),
+            inset 0 0 28px rgba(255, 51, 85, 0.3);
+    }
+    50% {
+        box-shadow:
+            0 0 8px #FF3355,
+            0 0 20px #FF3355,
+            0 0 40px rgba(255, 51, 85, 1),
+            0 0 65px rgba(255, 51, 85, 0.7),
+            inset 0 0 20px rgba(255, 51, 85, 0.8),
+            inset 0 0 36px rgba(255, 51, 85, 0.5);
+    }
 }
 
 /* ========== NAVEGACIÓN INFERIOR ========== */

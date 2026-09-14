@@ -32,22 +32,28 @@ if (menuOverlay) {
 }
 
 // ============================================
-// 3. AUDIO POPUP
+// 3. AUDIO POPUP (se cierra solo al hacer clic afuera)
 // ============================================
 const seccionAudio = document.getElementById('seccionAudio');
 const audioPopup = document.getElementById('audioPopup');
-const audioClose = document.getElementById('audioPopupClose');
 
 function abrirAudioPopup(e) {
     if (e) e.stopPropagation();
     if (audioPopup) audioPopup.classList.add('active');
 }
+
 function cerrarAudioPopup() {
     if (audioPopup) audioPopup.classList.remove('active');
 }
 
-if (seccionAudio) seccionAudio.addEventListener('click', abrirAudioPopup);
-if (audioClose) audioClose.addEventListener('click', cerrarAudioPopup);
+if (seccionAudio) {
+    seccionAudio.addEventListener('click', function(e) {
+        e.stopPropagation();
+        abrirAudioPopup(e);
+    });
+}
+
+// Cierra el popup al hacer clic fuera de la tarjeta
 if (audioPopup) {
     audioPopup.addEventListener('click', function(e) {
         if (e.target === this) cerrarAudioPopup();
