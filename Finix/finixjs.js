@@ -797,5 +797,23 @@ if (document.readyState === 'loading') {
     marcarNavegacionActiva();
 }
 
+// ============================================
+// 15. IR A LOGIN DESDE EL ÍCONO DE USUARIO
+// ============================================
+const btnUsuario = document.getElementById('btnUsuario');
+if (btnUsuario) {
+    btnUsuario.addEventListener('click', function(e) {
+        e.preventDefault();          // evita el salto inmediato
+        cerrarMenu();                // cierra el menú lateral con animación
+
+        setTimeout(() => {
+            window.location.href = 'loguin.html';   // ajusta el nombre/ruta si es necesario
+        }, 350);                     // espera a que termine la animación de cierre
+    });
+}
+
+// ============================================
+// LOGS FINALES
+// ============================================
 console.log('✅ FinixJS cargado correctamente - IA integrada (gemini-3.1-flash-lite)');
 console.log('✅ Worker URL:', WORKER_URL);

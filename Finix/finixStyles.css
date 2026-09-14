@@ -603,7 +603,8 @@ body {
 
     /* Estado inicial: fuera de pantalla por la derecha */
     transform: translateX(100%);
-    transition: transform 0.35s ease-out;
+    /* Animación lenta pero con arranque rápido: 0.55s con curva ease-out pronunciada */
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Cuando el overlay está activo, el panel se desliza hacia su posición (0) */
@@ -634,7 +635,7 @@ body {
     transition: all 0.25s ease;
 }
 
-.menu-item:last-child {
+.menu-item:last-of-type {
     border-bottom: none;
 }
 
@@ -670,6 +671,30 @@ body {
 
 .menu-close:hover {
     color: #00D4FF;
+}
+
+/* ========== ÍCONO DE USUARIO (AL FINAL DEL MENÚ, CENTRADO) ========== */
+.menu-user {
+    margin-top: auto;              /* empuja el ícono hasta abajo del panel */
+    padding-top: 24px;
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: center;       /* centrado horizontal */
+    align-items: center;
+}
+
+.menu-user img {
+    width: 28px;                   /* mismo tamaño que los íconos del menú */
+    height: 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.menu-user img:hover {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 14px rgba(0, 212, 255, 0.9)) brightness(1.15);
 }
 
 /* ========== AUDIO POPUP ========== */
