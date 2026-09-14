@@ -759,5 +759,43 @@ function fallbackParser(texto) {
     return resultado;
 }
 
+// ============================================
+// 14. MARCAR ÍCONO ACTIVO EN NAVEGACIÓN INFERIOR
+// ============================================
+function marcarNavegacionActiva() {
+    // Obtener el nombre del archivo actual (ej: "finix.html")
+    const ruta = window.location.pathname.split('/').pop() || 'finix.html';
+    const paginaActual = ruta === '' ? 'finix.html' : ruta;
+
+    const enlaces = document.querySelectorAll('.bottom-nav a');
+
+    enlaces.forEach(enlace => {
+        // Quitar cualquier clase activa previa
+        enlace.classList.remove('active');
+
+        // Prioridad 1: comparar por data-page
+        const dataPage = enlace.getAttribute('data-page');
+        if (dataPage && dataPage === paginaActual) {
+            enlace.classList.add('active');
+            return;
+        }
+
+        // Prioridad 2: comparar por href (por si no hay data-page)
+        const href = enlace.getAttribute('href');
+        if (href && href.split('/').pop() === paginaActual) {
+            enlace.classList.add('active');
+        }
+    });
+
+    console.log('🎯 Página actual:', paginaActual);
+}
+
+// Ejecutar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', marcarNavegacionActiva);
+} else {
+    marcarNavegacionActiva();
+}
+
 console.log('✅ FinixJS cargado correctamente - IA integrada (gemini-3.1-flash-lite)');
 console.log('✅ Worker URL:', WORKER_URL);

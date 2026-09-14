@@ -724,12 +724,36 @@ body {
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    position: relative;
+    padding: 6px 14px;
+    border-radius: 10px;
+    transition: all 0.25s ease;
 }
 
 .bottom-nav img {
     width: 19px;
     height: 19px;
     object-fit: contain;
+    transition: all 0.25s ease;
+    filter: brightness(0.55) grayscale(0.5);
+}
+
+/* Íconos inactivos: hover ligero */
+.bottom-nav a:not(.active):hover img {
+    filter: brightness(1.05) grayscale(0);
+    transform: scale(1.1);
+}
+
+/* ========== ÍCONO ACTIVO (PÁGINA ACTUAL) ========== */
+.bottom-nav a.active {
+    background-color: #00D4FF;
+    border-radius: 10px;
+    box-shadow: 0 0 14px rgba(0, 212, 255, 0.7);
+}
+
+.bottom-nav a.active img {
+    filter: brightness(0) invert(1);
+    transform: scale(1.05);
 }
 
 /* ========== RESPONSIVE ========== */
