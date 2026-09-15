@@ -1,0 +1,27 @@
+﻿# Dependencias
+node_modules/
+package-lock.json
+
+# Cloudflare / Wrangler
+.wrangler/
+wrangler.toml
+worker.js
+key.txt
+worker-ia/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+
+# Entornos
+.env
+.env.local
+
+# Editor
+.vscode/
+.idea/

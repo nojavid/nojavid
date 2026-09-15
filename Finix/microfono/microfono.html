@@ -1,4 +1,3 @@
-<!-- ========== Para ingresos ========== -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,26 +8,60 @@
 </head>
 <body>
 
-  <!-- Botón de salir (X) -->
+  <!-- Botón salir -->
   <button id="btnSalir" class="btn-salir" aria-label="Salir">✕</button>
 
-  <!-- Texto descriptivo / resultado -->
+  <!-- Texto principal -->
   <div id="textoPrincipal" class="texto-principal">
     Cuéntame todos los detalles de tu transacción.
   </div>
 
-  <!-- Animación de análisis (oculta por defecto) -->
+  <!-- Lista de gastos detectados -->
+  <div id="listaGastos" class="lista-gastos oculto"></div>
+
+  <!-- Animación IA -->
   <div id="analizando" class="analizando oculto">
-    <div class="spinner"></div>
-    <p>Analizando...</p>
+    <div class="ia-spinner">
+      <div class="ia-ring"></div>
+      <div class="ia-core">🤖</div>
+    </div>
+    <p class="ia-texto">
+      Procesando tus gastos
+      <span class="puntos"><span>.</span><span>.</span><span>.</span></span>
+    </p>
   </div>
 
-  <!-- Botón del micrófono dentro de un círculo -->
+  <!-- Acciones -->
+  <div id="acciones" class="acciones oculto">
+    <button id="btnAgregarMas" class="btn-accion btn-secundario">+ Agregar más</button>
+    <button id="btnGuardar" class="btn-accion btn-primario">Guardar datos</button>
+  </div>
+
+  <!-- Micrófono -->
   <div id="btnMicrofono" class="circulo-microfono">
     <img src="../iconos/microfonoblanco.png" alt="Grabar" class="icono-microfono" />
   </div>
 
-  <!-- Elemento de audio oculto para grabación -->
+  <!-- Modal de edición -->
+  <div id="modalEdicion" class="modal oculto">
+    <div class="modal-contenido">
+      <h3>Editar movimiento</h3>
+      <label>Icono
+        <input id="editIcono" type="text" maxlength="4" />
+      </label>
+      <label>Nombre
+        <input id="editNombre" type="text" maxlength="40" />
+      </label>
+      <label>Valor (COP)
+        <input id="editValor" type="number" min="0" step="1" />
+      </label>
+      <div class="modal-botones">
+        <button id="modalCancelar" class="btn-accion btn-secundario">Cancelar</button>
+        <button id="modalGuardar" class="btn-accion btn-primario">Guardar</button>
+      </div>
+    </div>
+  </div>
+
   <audio id="audioReproductor" class="oculto"></audio>
 
   <script src="microfono.js"></script>
