@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Escanear Recibo</title>
+  <link rel="stylesheet" href="Camara.css" />
+</head>
+<body>
+
+  <div class="contenedor">
+
+    <!-- ===== Botón X para regresar ===== -->
+    <button class="btn-cerrar" id="btnCerrar" aria-label="Cerrar">
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Título -->
+    <h1 class="titulo">ESCANEAR RECIBO</h1>
+
+    <!-- ===== Sección de la cámara ===== -->
+    <section class="seccion-camara" id="seccionCamara">
+      <video id="video" autoplay playsinline muted></video>
+      <div class="mensaje-permiso" id="mensajePermiso">
+        <p>Solicitando permiso para usar la cámara...</p>
+      </div>
+    </section>
+
+    <!-- ===== Sección de vista previa (oculta al inicio) ===== -->
+    <section class="seccion-preview" id="seccionPreview">
+      <img id="imagenCapturada" alt="Foto capturada" />
+    </section>
+
+    <!-- ===== Botón de captura ===== -->
+    <button class="btn-captura" id="btnCaptura" aria-label="Tomar foto">
+      <span class="circulo-blanco"></span>
+      <img src="../iconos/camara.png" alt="Cámara" class="icono-camara" />
+    </button>
+
+    <!-- ===== Botones de acción (ocultos al inicio) ===== -->
+    <div class="acciones" id="acciones">
+      <button class="btn-accion btn-volver" id="btnVolver">Volver a tomar</button>
+      <button class="btn-accion btn-enviar" id="btnEnviar">Enviar</button>
+    </div>
+
+  </div>
+
+  <canvas id="canvas" style="display:none;"></canvas>
+  <script src="Camara.js"></script>
+</body>
+</html>

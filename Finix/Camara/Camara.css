@@ -1,0 +1,308 @@
+/* ===== Reset básico ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background: linear-gradient(
+    to bottom,
+    #01393B 0%,
+    #00F6FF 48%,
+    #01393B 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ===== Contenedor principal ===== */
+.contenedor {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  height: 100vh;
+  max-height: 932px;
+}
+
+/* ===== Botón X para regresar ===== */
+.btn-cerrar {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  z-index: 30;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn-cerrar:active {
+  transform: scale(0.9);
+  opacity: 0.7;
+}
+
+/* Las dos líneas de la X */
+.btn-cerrar span {
+  position: absolute;
+  width: 26px;
+  height: 3px;
+  background: #FFFFFF;
+  border-radius: 2px;
+}
+
+.btn-cerrar span:nth-child(1) {
+  transform: rotate(45deg);
+}
+
+.btn-cerrar span:nth-child(2) {
+  transform: rotate(-45deg);
+}
+
+/* ===== Título ===== */
+.titulo {
+  position: absolute;
+  left: 107px;
+  top: 31px;
+  width: 206px;
+  height: 36px;
+
+  font-size: 24px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 0.5px;
+  line-height: 36px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ===== Sección de la cámara ===== */
+.seccion-camara {
+  position: absolute;
+  left: 27px;
+  top: 81px;
+  width: 343px;
+  height: 626px;
+
+  border-radius: 18px;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.seccion-camara.oculta {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Mensaje mientras pide permiso */
+.mensaje-permiso {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  color: #FFFFFF;
+  font-size: 15px;
+  text-align: center;
+  padding: 20px;
+  transition: opacity 0.3s ease;
+  z-index: 5;
+}
+
+.mensaje-permiso.oculto {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ===== Sección de vista previa ===== */
+.seccion-preview {
+  position: absolute;
+  left: 27px;
+  top: 81px;
+  width: 343px;
+  height: 626px;
+
+  border-radius: 18px;
+  overflow: hidden;
+  background: #000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.seccion-preview.visible {
+  display: flex;
+}
+
+.seccion-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/* ===== Botón de captura (debajo de la cámara) ===== */
+.btn-captura {
+  position: absolute;
+  top: 707px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 105px;
+  height: 105px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  z-index: 10;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: opacity 0.3s ease;
+}
+
+.btn-captura.oculto {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Círculo blanco de fondo */
+.circulo-blanco {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  transition: transform 0.15s ease;
+}
+
+/* Ícono de cámara encima */
+.icono-camara {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Efecto al presionar */
+.btn-captura.presionado .circulo-blanco {
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+/* ===== Botones de acción (Volver / Enviar) ===== */
+.acciones {
+  position: absolute;
+  top: 707px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 343px;
+  height: 105px;
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  z-index: 20;
+  padding: 0 4px;
+}
+
+.acciones.visible {
+  display: flex;
+}
+
+.btn-accion {
+  flex: 1;
+  height: 56px;
+  border: none;
+  border-radius: 28px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.15s ease;
+}
+
+.btn-accion:active {
+  transform: scale(0.96);
+}
+
+/* Botón "Volver a tomar" */
+.btn-volver {
+  background: #FFFFFF;
+  color: #01393B;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Botón "Enviar" */
+.btn-enviar {
+  background: #00F6FF;
+  color: #01393B;
+  box-shadow: 0 4px 14px rgba(0, 246, 255, 0.55);
+}
+
+.btn-enviar:active {
+  box-shadow: 0 2px 8px rgba(0, 246, 255, 0.7);
+}
+
+/* ===== Solo móviles ===== */
+@media (min-width: 768px) {
+  body::before {
+    content: "📱 Esta interfaz solo está disponible para dispositivos móviles";
+    position: fixed;
+    inset: 0;
+    background: #01393B;
+    color: #FFFFFF;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 30px;
+    z-index: 9999;
+  }
+  .contenedor {
+    display: none;
+  }
+}
