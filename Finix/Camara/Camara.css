@@ -29,16 +29,16 @@ body {
 .contenedor {
   position: relative;
   width: 100%;
-  max-width: 430px;
-  height: 100vh;
-  max-height: 932px;
+  height: 100dvh;
+  max-width: 500px;
+  overflow: hidden;
 }
 
 /* ===== Botón X para regresar ===== */
 .btn-cerrar {
   position: absolute;
-  top: 25px;
-  left: 25px;
+  top: 3.8vh;
+  left: 6.5vw;
   width: 40px;
   height: 40px;
   background: transparent;
@@ -60,10 +60,9 @@ body {
   opacity: 0.7;
 }
 
-/* Las dos líneas de la X */
 .btn-cerrar span {
   position: absolute;
-  width: 26px;
+  width: 24px;
   height: 3px;
   background: #FFFFFF;
   border-radius: 2px;
@@ -80,16 +79,17 @@ body {
 /* ===== Título ===== */
 .titulo {
   position: absolute;
-  left: 107px;
-  top: 31px;
-  width: 206px;
-  height: 36px;
+  left: 50%;
+  top: 3.8vh;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 260px;
 
   font-size: 24px;
   font-weight: 800;
   color: #FFFFFF;
   letter-spacing: 0.5px;
-  line-height: 36px;
+  line-height: 1.2;
   text-align: center;
   white-space: nowrap;
 }
@@ -97,10 +97,12 @@ body {
 /* ===== Sección de la cámara ===== */
 .seccion-camara {
   position: absolute;
-  left: 27px;
-  top: 81px;
-  width: 343px;
-  height: 626px;
+  left: 50%;
+  top: 10vh;
+  transform: translateX(-50%);
+  width: 91.5%;
+  max-width: 400px;
+  height: 77vh;
 
   border-radius: 18px;
   overflow: hidden;
@@ -147,10 +149,12 @@ body {
 /* ===== Sección de vista previa ===== */
 .seccion-preview {
   position: absolute;
-  left: 27px;
-  top: 81px;
-  width: 343px;
-  height: 626px;
+  left: 50%;
+  top: 10vh;
+  transform: translateX(-50%);
+  width: 91.5%;
+  max-width: 400px;
+  height: 77vh;
 
   border-radius: 18px;
   overflow: hidden;
@@ -171,14 +175,16 @@ body {
   background: #000;
 }
 
-/* ===== Botón de captura (debajo de la cámara) ===== */
+/* ===== Botón de captura ===== */
 .btn-captura {
   position: absolute;
-  top: 707px;
+  top: 87vh;
   left: 50%;
   transform: translateX(-50%);
-  width: 105px;
-  height: 105px;
+  width: 15vh;
+  height: 13vh;
+  max-width: 120px;
+  max-height: 110px;
   background: transparent;
   border: none;
   padding: 0;
@@ -223,7 +229,6 @@ body {
   pointer-events: none;
 }
 
-/* Efecto al presionar */
 .btn-captura.presionado .circulo-blanco {
   transform: translate(-50%, -50%) scale(0.9);
 }
@@ -231,12 +236,13 @@ body {
 /* ===== Botones de acción (Volver / Enviar) ===== */
 .acciones {
   position: absolute;
-  top: 707px;
+  top: 87vh;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  max-width: 343px;
-  height: 105px;
+  width: 91.5%;
+  max-width: 400px;
+  height: 13vh;
+  max-height: 110px;
   display: none;
   align-items: center;
   justify-content: space-between;
@@ -251,7 +257,8 @@ body {
 
 .btn-accion {
   flex: 1;
-  height: 56px;
+  height: 52px;
+  max-height: 90%;
   border: none;
   border-radius: 28px;
   font-size: 15px;
@@ -268,14 +275,12 @@ body {
   transform: scale(0.96);
 }
 
-/* Botón "Volver a tomar" */
 .btn-volver {
   background: #FFFFFF;
   color: #01393B;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-/* Botón "Enviar" */
 .btn-enviar {
   background: #00F6FF;
   color: #01393B;
@@ -284,6 +289,28 @@ body {
 
 .btn-enviar:active {
   box-shadow: 0 2px 8px rgba(0, 246, 255, 0.7);
+}
+
+/* ===== Pantallas muy pequeñas (ajustes finos) ===== */
+@media (max-height: 700px) {
+  .titulo {
+    font-size: 20px;
+  }
+
+  .circulo-blanco {
+    width: 55px;
+    height: 55px;
+  }
+
+  .icono-camara {
+    width: 26px;
+    height: 26px;
+  }
+
+  .btn-accion {
+    height: 46px;
+    font-size: 14px;
+  }
 }
 
 /* ===== Solo móviles ===== */
