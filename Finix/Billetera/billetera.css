@@ -12,17 +12,19 @@ body {
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
-  padding-bottom: 80px; /* espacio para el bottom-nav */
+  padding-bottom: 80px;
 }
 
-/* ===== Imagen de ondas ===== */
+/* ===== Imagen de ondas responsiva ===== */
 .ondas {
   position: absolute;
   top: -122px;
   left: 0;
-  width: 393px;
-  height: 262px;
+  width: 100%;
+  height: auto;
+  min-height: 262px;
   object-fit: cover;
+  object-position: center;
   z-index: 1;
   pointer-events: none;
 }
@@ -50,12 +52,11 @@ body {
   position: absolute;
   top: 22px;
   left: 15px;
-  width: 138px;
-  height: 30px;
   font-size: 24px;
   font-weight: 800;
   color: #ffffff;
-  line-height: 30px;
+  line-height: 28px;
+  white-space: nowrap;
 }
 
 .subtitulo {
@@ -104,13 +105,11 @@ body {
   color: #9BFF8E;
 }
 
-/* ===== Secciones ===== */
+/* ===== Secciones generales ===== */
 .seccion {
   position: relative;
   z-index: 3;
-  margin: 20px 15px;
   padding: 15px;
-  background-color: rgba(0, 0, 0, 0.78);
   border-radius: 12px;
 }
 
@@ -119,6 +118,24 @@ body {
   align-items: center;
   gap: 8px;
   margin-bottom: 6px;
+}
+
+/* Círculo detrás del ícono (verde Total por defecto) */
+.icono-circulo {
+  width: 30px;
+  height: 30px;
+  background-color: #00FF88;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icono-circulo .icono-seccion {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
 }
 
 .icono-seccion {
@@ -134,21 +151,21 @@ body {
 
 .seccion-descripcion {
   font-size: 11px;
-  color: #cccccc;
+  color: #666666;
   margin-bottom: 6px;
 }
 
 .seccion-subtitulo {
   font-size: 13px;
   font-weight: 700;
-  color: #9BFF8E;
+  color: #0a5c2b;
   margin-top: 8px;
 }
 
 .seccion-valor {
   font-size: 18px;
   font-weight: 800;
-  color: #ffffff;
+  color: #000000;
   margin-top: 4px;
 }
 
@@ -159,6 +176,79 @@ body {
   margin-top: 6px;
 }
 
+/* ===== Sección Total ===== */
+.seccion.total {
+  margin: 103px 15px 0 10px;
+  width: 373px;
+  min-height: 85px;
+  background-color: #C5FFD4;
+  color: #000000;
+}
+
+.seccion.total .seccion-titulo,
+.seccion.total .seccion-valor {
+  color: #000000;
+}
+
+.seccion.total .seccion-subtitulo {
+  color: #0a5c2b;
+}
+
+/* ===== Sección Deudas ===== */
+.seccion.deudas {
+  margin: 41px 15px 0 10px;
+  width: 373px;
+  min-height: 106px;
+  background-color: #FFE4E4;
+  color: #000000;
+}
+
+.seccion.deudas .icono-circulo {
+  background-color: #FFA1A1;
+}
+
+/* ===== Sección Metas de Ahorro ===== */
+.seccion.metas {
+  margin: 41px 15px 0 10px;
+  width: 373px;
+  min-height: 106px;
+  background-color: #E4EFFF;
+  color: #000000;
+}
+
+.seccion.metas .icono-circulo {
+  background-color: #88BBF5;
+}
+
+/* ===== Sección Gastos Mensuales ===== */
+.seccion.gastos {
+  margin: 41px 15px 41px 10px;
+  width: 373px;
+  min-height: 106px;
+  background-color: #FFFBE4;
+  color: #000000;
+}
+
+.seccion.gastos .icono-circulo {
+  background-color: #F9EA7E;
+}
+
+/* ===== Colores de texto en secciones claras ===== */
+.seccion.deudas .seccion-titulo,
+.seccion.metas .seccion-titulo,
+.seccion.gastos .seccion-titulo,
+.seccion.deudas .seccion-valor,
+.seccion.metas .seccion-valor,
+.seccion.gastos .seccion-valor {
+  color: #000000;
+}
+
+.seccion.deudas .seccion-subtitulo,
+.seccion.metas .seccion-subtitulo,
+.seccion.gastos .seccion-subtitulo {
+  color: #0a5c2b;
+}
+
 /* ===== Subsecciones (items) ===== */
 .subseccion {
   display: flex;
@@ -166,41 +256,44 @@ body {
   justify-content: space-between;
   margin-top: 10px;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(255, 255, 255, 0.6);
   border-radius: 10px;
+  gap: 8px;
 }
 
 .icono-sub {
   width: 18px;
   height: 18px;
-  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 .sub-info {
   flex: 1;
+  min-width: 0;
 }
 
 .sub-titulo {
   font-size: 13px;
   font-weight: 700;
-  color: #ffffff;
+  color: #000000;
 }
 
 .sub-texto {
   font-size: 10px;
-  color: #bbbbbb;
+  color: #555555;
 }
 
 .sub-dias {
   font-size: 10px;
-  color: #9BFF8E;
+  color: #0a5c2b;
   font-weight: 700;
 }
 
 .sub-valor {
   font-size: 14px;
   font-weight: 800;
-  color: #ffffff;
+  color: #000000;
+  flex-shrink: 0;
 }
 
 /* ===== Navegación inferior ===== */
