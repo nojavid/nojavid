@@ -181,7 +181,7 @@ body {
   position: relative;
   margin: 103px 15px 0 10px;
   width: 373px;
-  height: 85px;
+  height: 95px; /* antes 85px */
   background-color: #C5FFD4;
   border-radius: 12px;
   padding: 0;
@@ -245,10 +245,10 @@ body {
 /* Línea vertical divisoria */
 .linea-divisoria {
   position: absolute;
-  top: 6px;
+  top: 8px;           /* antes 6px */
   left: 221.5px;
   width: 2px;
-  height: 70px;
+  height: 78px;       /* antes 70px */
   background-color: #A4E3AC;
   border-radius: 3px;
 }
@@ -256,18 +256,19 @@ body {
 /* ===== Bloque Ahorro ===== */
 .bloque-ahorro {
   position: absolute;
-  top: 6px;
+  top: 12px;          /* antes 6px */
   left: 282px;
   width: 77px;
+  display: flex;
+  flex-direction: column;   /* título arriba, valor abajo */
+  gap: 4px;
 }
 
 .titulo-ahorro {
   color: #004709;
-  font-size: 8px;
+  font-size: 9px;           /* antes 8px */
   font-weight: 800;
-  width: 29px;
-  height: 17px;
-  line-height: 17px;
+  line-height: 1;
   margin: 0;
 }
 
@@ -275,14 +276,13 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 3px;
 }
 
 .valor-ahorro #totalAhorro {
   color: #049E17;
-  font-size: 13px;
+  font-size: 15px;          /* antes 13px */
   font-weight: 800;
-  line-height: 17px;
+  line-height: 1;
 }
 
 /* Flecha Ahorro (SVG) */
@@ -298,18 +298,19 @@ body {
 /* ===== Bloque Deudas ===== */
 .bloque-deudas {
   position: absolute;
-  top: 51px;
+  top: 56px;          /* antes 51px */
   left: 282px;
   width: 77px;
+  display: flex;
+  flex-direction: column;   /* título arriba, valor abajo */
+  gap: 4px;
 }
 
 .titulo-deudas {
   color: #004709;
-  font-size: 8px;
+  font-size: 9px;           /* antes 8px */
   font-weight: 800;
-  width: 29px;
-  height: 17px;
-  line-height: 17px;
+  line-height: 1;
   margin: 0;
 }
 
@@ -317,14 +318,13 @@ body {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 3px;
 }
 
 .valor-deudas #totalDeudas {
   color: #970000;
-  font-size: 13px;
+  font-size: 15px;          /* antes 13px */
   font-weight: 800;
-  line-height: 17px;
+  line-height: 1;
 }
 
 /* Flecha Deudas (SVG) */
