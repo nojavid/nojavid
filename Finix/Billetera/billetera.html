@@ -39,14 +39,31 @@
     </div>
     <p class="seccion-valor" id="balanceTotal">$3.240.000</p>
 
-    <div class="fila">
-      <h3 class="seccion-subtitulo">Ahorro</h3>
-      <p class="seccion-valor" id="totalAhorro">$0</p>
+    <!-- Línea vertical divisoria -->
+    <div class="linea-divisoria"></div>
+
+    <!-- Bloque Ahorro -->
+    <div class="bloque-ahorro">
+      <h3 class="titulo-ahorro">Ahorro</h3>
+      <div class="valor-ahorro">
+        <svg class="flecha-ahorro" viewBox="0 0 15.62 8" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="4" x2="11" y2="4" stroke="#049E17" stroke-width="2" stroke-linecap="round"/>
+          <polyline points="9,1 13,4 9,7" fill="none" stroke="#049E17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="totalAhorro">$0</span>
+      </div>
     </div>
 
-    <div class="fila">
-      <h3 class="seccion-subtitulo">Deudas</h3>
-      <p class="seccion-valor" id="totalDeudas">$0</p>
+    <!-- Bloque Deudas -->
+    <div class="bloque-deudas">
+      <h3 class="titulo-deudas">Deudas</h3>
+      <div class="valor-deudas">
+        <svg class="flecha-deudas" viewBox="0 0 15.62 8" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="4" x2="11" y2="4" stroke="#970000" stroke-width="2" stroke-linecap="round"/>
+          <polyline points="9,1 13,4 9,7" fill="none" stroke="#970000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="totalDeudas">$0</span>
+      </div>
     </div>
   </section>
 
@@ -61,7 +78,6 @@
     <p class="seccion-descripcion">En lo que debes y en que va cada una</p>
     <h3 class="seccion-subtitulo">Total <span id="totalDeudasSeccion">$0</span></h3>
 
-    <!-- Subsección: dos de deudas -->
     <div class="subseccion deuda-item">
       <img src="../iconos/tarjeta.png" alt="tarjeta" class="icono-sub">
       <div class="sub-info">
@@ -83,7 +99,6 @@
     <p class="seccion-descripcion">Tus planes a futuro</p>
     <h3 class="seccion-subtitulo">Total <span id="totalMetasSeccion">$0</span></h3>
 
-    <!-- Subsección: metas -->
     <div class="subseccion meta-item">
       <img src="../iconos/Meta.png" alt="meta" class="icono-sub">
       <div class="sub-info">
@@ -104,7 +119,6 @@
     <p class="seccion-descripcion">Te espera cada mes</p>
     <h3 class="seccion-subtitulo">Total <span id="totalGastosSeccion">$0</span></h3>
 
-    <!-- Subsección: gastos -->
     <div class="subseccion gasto-item">
       <img src="../iconos/Mensual.png" alt="mensual" class="icono-sub">
       <div class="sub-info">

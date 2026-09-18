@@ -178,20 +178,163 @@ body {
 
 /* ===== Sección Total ===== */
 .seccion.total {
+  position: relative;
   margin: 103px 15px 0 10px;
   width: 373px;
-  min-height: 85px;
+  height: 85px;
   background-color: #C5FFD4;
+  border-radius: 12px;
+  padding: 0;
   color: #000000;
+  overflow: hidden;
 }
 
-.seccion.total .seccion-titulo,
+.seccion.total .seccion-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: block;
+}
+
+.seccion.total .icono-circulo {
+  position: absolute;
+  top: 14px;
+  left: 15px;
+  width: 29px;
+  height: 29px;
+  background-color: #00FF88;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seccion.total .icono-circulo .icono-seccion {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.seccion.total .seccion-titulo {
+  position: absolute;
+  top: 14px;
+  left: 53px;
+  color: #004709;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 19px;
+  margin: 0;
+}
+
 .seccion.total .seccion-valor {
+  position: absolute;
+  top: 20px;
+  left: 53px;
+  width: 150px;
+  height: 45px;
   color: #000000;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 45px;
+  margin: 0;
 }
 
-.seccion.total .seccion-subtitulo {
-  color: #0a5c2b;
+/* Línea vertical divisoria */
+.linea-divisoria {
+  position: absolute;
+  top: 6px;
+  left: 221.5px;
+  width: 2px;
+  height: 70px;
+  background-color: #A4E3AC;
+  border-radius: 3px;
+}
+
+/* ===== Bloque Ahorro ===== */
+.bloque-ahorro {
+  position: absolute;
+  top: 6px;
+  left: 282px;
+  width: 77px;
+}
+
+.titulo-ahorro {
+  color: #004709;
+  font-size: 8px;
+  font-weight: 800;
+  width: 29px;
+  height: 17px;
+  line-height: 17px;
+  margin: 0;
+}
+
+.valor-ahorro {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.valor-ahorro #totalAhorro {
+  color: #049E17;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 17px;
+}
+
+/* Flecha Ahorro (SVG) */
+.flecha-ahorro {
+  width: 15.62px;
+  height: 8px;
+  flex-shrink: 0;
+  transform: rotate(-17.47deg);
+  transform-origin: center center;
+  overflow: visible;
+}
+
+/* ===== Bloque Deudas ===== */
+.bloque-deudas {
+  position: absolute;
+  top: 51px;
+  left: 282px;
+  width: 77px;
+}
+
+.titulo-deudas {
+  color: #004709;
+  font-size: 8px;
+  font-weight: 800;
+  width: 29px;
+  height: 17px;
+  line-height: 17px;
+  margin: 0;
+}
+
+.valor-deudas {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+}
+
+.valor-deudas #totalDeudas {
+  color: #970000;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 17px;
+}
+
+/* Flecha Deudas (SVG) */
+.flecha-deudas {
+  width: 15.62px;
+  height: 8px;
+  flex-shrink: 0;
+  transform: rotate(21.44deg);
+  transform-origin: center center;
+  overflow: visible;
 }
 
 /* ===== Sección Deudas ===== */
