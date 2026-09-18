@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Billetera - Finix</title>
+  <link rel="stylesheet" href="billetera.css">
+</head>
+<body>
+
+  <!-- Imagen de ondas de fondo -->
+  <img src="../iconos/ondas.png" alt="ondas" class="ondas">
+
+  <!-- Capa oscura encima de las ondas -->
+  <div class="overlay"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <h1 class="saludo">Hola, <span id="nombreUsuario">Name</span></h1>
+    <h2 class="subtitulo">Billetera</h2>
+
+    <div class="fecha-contenedor">
+      <img src="../iconos/calendarioblanco.png" alt="calendario" class="icono-calendario">
+      <p class="fecha">
+        <span class="flecha">&lt;</span>
+        <span id="fechaActual">Sep de 2026</span>
+        <span class="flecha">&gt;</span>
+      </p>
+    </div>
+  </header>
+
+  <!-- Sección Total -->
+  <section class="seccion total">
+    <div class="seccion-header">
+      <img src="../iconos/billeteraverde.png" alt="billetera verde" class="icono-seccion">
+      <h2 class="seccion-titulo">Balance total</h2>
+    </div>
+    <p class="seccion-valor" id="balanceTotal">$3.240.000</p>
+
+    <div class="fila">
+      <h3 class="seccion-subtitulo">Ahorro</h3>
+      <p class="seccion-valor" id="totalAhorro">$0</p>
+    </div>
+
+    <div class="fila">
+      <h3 class="seccion-subtitulo">Deudas</h3>
+      <p class="seccion-valor" id="totalDeudas">$0</p>
+    </div>
+  </section>
+
+  <!-- Sección Deudas -->
+  <section class="seccion deudas">
+    <div class="seccion-header">
+      <img src="../iconos/tarjeta.png" alt="tarjeta" class="icono-seccion">
+      <h2 class="seccion-titulo">Deudas</h2>
+    </div>
+    <p class="seccion-descripcion">En lo que debes y en que va cada una</p>
+    <h3 class="seccion-subtitulo">Total <span id="totalDeudasSeccion">$0</span></h3>
+
+    <!-- Subsección: dos de deudas -->
+    <div class="subseccion deuda-item">
+      <img src="../iconos/tarjeta.png" alt="tarjeta" class="icono-sub">
+      <div class="sub-info">
+        <h4 class="sub-titulo">Nombre de la deuda</h4>
+        <p class="sub-texto">Vence 28 Sep</p>
+      </div>
+      <p class="sub-valor">$0</p>
+    </div>
+  </section>
+
+  <!-- Sección Metas de Ahorro -->
+  <section class="seccion metas">
+    <div class="seccion-header">
+      <img src="../iconos/Meta.png" alt="meta" class="icono-seccion">
+      <h2 class="seccion-titulo">Meta de ahorro</h2>
+    </div>
+    <p class="seccion-descripcion">Tus planes a futuro</p>
+    <h3 class="seccion-subtitulo">Total <span id="totalMetasSeccion">$0</span></h3>
+
+    <!-- Subsección: metas -->
+    <div class="subseccion meta-item">
+      <img src="../iconos/Meta.png" alt="meta" class="icono-sub">
+      <div class="sub-info">
+        <h4 class="sub-titulo">Nombre del plan</h4>
+      </div>
+      <p class="sub-valor">$0</p>
+    </div>
+  </section>
+
+  <!-- Sección Gastos Mensuales -->
+  <section class="seccion gastos">
+    <div class="seccion-header">
+      <img src="../iconos/Mensual.png" alt="mensual" class="icono-seccion">
+      <h2 class="seccion-titulo">Gastos mensuales</h2>
+    </div>
+    <p class="seccion-descripcion">Te espera cada mes</p>
+    <h3 class="seccion-subtitulo">Total <span id="totalGastosSeccion">$0</span></h3>
+
+    <!-- Subsección: gastos -->
+    <div class="subseccion gasto-item">
+      <img src="../iconos/Mensual.png" alt="mensual" class="icono-sub">
+      <div class="sub-info">
+        <h4 class="sub-titulo">Nombre del gasto</h4>
+        <p class="sub-texto">Para 28 Sep</p>
+        <p class="sub-dias">Faltan 5 días</p>
+      </div>
+      <p class="sub-valor">$0</p>
+    </div>
+  </section>
+
+  <!-- Navegación inferior -->
+  <div class="bottom-nav">
+    <a href="../finix.html" data-page="finix.html"><img src="../iconos/casa.png" alt="casa"></a>
+    <a href="billetera.html" data-page="billetera.html"><img src="../iconos/billetera.png" alt="billetera"></a>
+    <a href="../reportes.html" data-page="reportes.html"><img src="../iconos/barra.png" alt="reportes"></a>
+    <a href="../configuracion.html" data-page="configuracion.html"><img src="../iconos/tuerca.png" alt="tuerca"></a>
+  </div>
+
+  <script src="billetera.js"></script>
+</body>
+</html>

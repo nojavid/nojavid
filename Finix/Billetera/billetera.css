@@ -1,0 +1,233 @@
+/* ===== Reset básico ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #000004;
+  color: #ffffff;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 80px; /* espacio para el bottom-nav */
+}
+
+/* ===== Imagen de ondas ===== */
+.ondas {
+  position: absolute;
+  top: -122px;
+  left: 0;
+  width: 393px;
+  height: 262px;
+  object-fit: cover;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ===== Capa oscura encima de las ondas ===== */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.78);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ===== Header ===== */
+.header {
+  position: relative;
+  z-index: 3;
+  padding: 20px 15px 0 15px;
+}
+
+.saludo {
+  position: absolute;
+  top: 22px;
+  left: 15px;
+  width: 138px;
+  height: 30px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 30px;
+}
+
+.subtitulo {
+  position: absolute;
+  top: 55px;
+  left: 15px;
+  width: 60px;
+  height: 23px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 23px;
+}
+
+/* ===== Fecha ===== */
+.fecha-contenedor {
+  position: absolute;
+  top: 9px;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 4;
+}
+
+.icono-calendario {
+  position: absolute;
+  top: 0;
+  left: -17px;
+  width: 11.96px;
+  height: 11.96px;
+}
+
+.fecha {
+  position: relative;
+  font-size: 8px;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+
+.fecha .flecha {
+  color: #9BFF8E;
+}
+
+/* ===== Secciones ===== */
+.seccion {
+  position: relative;
+  z-index: 3;
+  margin: 20px 15px;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.78);
+  border-radius: 12px;
+}
+
+.seccion-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.icono-seccion {
+  width: 20px;
+  height: 20px;
+}
+
+.seccion-titulo {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.seccion-descripcion {
+  font-size: 11px;
+  color: #cccccc;
+  margin-bottom: 6px;
+}
+
+.seccion-subtitulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: #9BFF8E;
+  margin-top: 8px;
+}
+
+.seccion-valor {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-top: 4px;
+}
+
+.fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+/* ===== Subsecciones (items) ===== */
+.subseccion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.icono-sub {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+.sub-info {
+  flex: 1;
+}
+
+.sub-titulo {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sub-texto {
+  font-size: 10px;
+  color: #bbbbbb;
+}
+
+.sub-dias {
+  font-size: 10px;
+  color: #9BFF8E;
+  font-weight: 700;
+}
+
+.sub-valor {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* ===== Navegación inferior ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #000004;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 10;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bottom-nav a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+}
+
+.bottom-nav img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
