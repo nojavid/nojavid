@@ -17,11 +17,11 @@ html, body {
 
 body {
   position: relative;
-  padding-bottom: 90px; /* espacio para la nav inferior */
+  padding-bottom: 90px;
 }
 
 /* ============================================
-   ONDAS DE FONDO
+   ONDAS DE FONDO (globales)
    ============================================ */
 .ondas {
   position: fixed;
@@ -53,7 +53,6 @@ body {
   width: 100%;
 }
 
-/* Contenedor interno con ancho de referencia 383px centrado */
 .header-inner {
   position: relative;
   width: 100%;
@@ -63,7 +62,6 @@ body {
   padding: 0;
 }
 
-/* ---------- Saludo: "Hola, Name" ---------- */
 .saludo {
   position: absolute;
   top: 22px;
@@ -71,10 +69,10 @@ body {
   width: 138px;
   height: 30px;
   color: #0B2E34;
-  font-weight: 800; /* Extra bold */
+  font-weight: 800;
   font-size: 24px;
   line-height: 30px;
-  white-space: nowrap; /* sin salto de línea */
+  white-space: nowrap;
   letter-spacing: -0.3px;
   z-index: 11;
 }
@@ -84,7 +82,6 @@ body {
   font-weight: 800;
 }
 
-/* ---------- Subtítulo: "Billetera" ---------- */
 .subtitulo {
   position: absolute;
   top: 48px;
@@ -100,19 +97,16 @@ body {
 
 /* ============================================
    INTERRUPTOR MODO OSCURO / CLARO
-   Rectángulo 1 (luna): DEBAJO  → z-index: 1
-   Rectángulo 2 (sol):  ENCIMA  → z-index: 2
    ============================================ */
 .interruptor-tema {
   position: absolute;
   top: 24px;
-  left: 332px;          /* x: 332 */
-  width: 51px;          /* 354 + 29 - 332 = 51 */
+  left: 332px;
+  width: 51px;
   height: 12px;
   z-index: 12;
 }
 
-/* ---------- Rectángulo 1 (Luna) ---------- */
 .rectangulo-luna {
   position: absolute;
   top: 0;
@@ -121,14 +115,14 @@ body {
   height: 12px;
   background-color: #FFFFFF;
   border: 1px solid #000000;
-  border-radius: 10px 0 0 10px; /* sup-izq 10, inf-izq 10, sup-der 0, inf-der 0 */
+  border-radius: 10px 0 0 10px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;   /* ícono a la izquierda */
-  padding-left: 9px;             /* 342 - 332 - 1(borde) = 9px */
+  justify-content: flex-start;
+  padding-left: 9px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  z-index: 1;                    /* va debajo */
+  z-index: 1;
 }
 
 .icono-luna {
@@ -137,22 +131,21 @@ body {
   object-fit: contain;
 }
 
-/* ---------- Rectángulo 2 (Sol) ---------- */
 .rectangulo-sol {
   position: absolute;
   top: 0;
-  left: 22px;          /* x: 354 → 354 - 332 = 22 */
+  left: 22px;
   width: 29px;
   height: 12px;
   background-color: #185540;
   border: 1px solid #398869;
-  border-radius: 10px; /* todas las esquinas 10 */
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  z-index: 2;          /* va encima */
+  z-index: 2;
 }
 
 .icono-sol {
@@ -162,8 +155,7 @@ body {
 }
 
 /* ============================================
-   BOTÓN DE FECHA (debajo del interruptor)
-   x: 307  y: 42  w: 76  h: 18
+   BOTÓN DE FECHA
    ============================================ */
 .fecha-contenedor {
   position: absolute;
@@ -182,19 +174,15 @@ body {
   box-sizing: border-box;
 }
 
-/* Icono calendario: x: 313  y: 48  w: 9  h: 9
-   Relativo al contenedor: 313 - 307 = 6px desde el borde izq.
-   Con padding-left 3px, el icono queda a 3px del padding. */
 .icono-calendario {
   width: 9px;
   height: 9px;
   object-fit: contain;
   flex-shrink: 0;
-  margin-left: 3px;    /* 313 - 307 - 3(padding) = 3px */
-  margin-right: 3px;   /* espacio hasta la fecha: 325 - 322 = 3px */
+  margin-left: 3px;
+  margin-right: 3px;
 }
 
-/* Fecha: x: 325  y: 48  w: 39  h: 12 */
 .fecha {
   display: flex;
   align-items: center;
@@ -219,13 +207,11 @@ body {
   width: 100%;
 }
 
-/* ---------- Símbolo "^" rotado 180° ----------
-   x: 364  y: 50  w: 8  h: 10 */
 .flecha {
   display: inline-block;
   transform: rotate(180deg);
   color: #185540;
-  font-weight: 200;    /* extra light */
+  font-weight: 200;
   font-size: 14px;
   line-height: 1;
   width: 8px;
@@ -251,12 +237,6 @@ body {
   border: 1px solid #F0F0F0;
 }
 
-/* Primera sección (Total) */
-.seccion.total {
-  margin-top: 16px;
-}
-
-/* ---------- Header de sección ---------- */
 .seccion-header {
   display: flex;
   align-items: center;
@@ -310,63 +290,191 @@ body {
 }
 
 /* ============================================
-   SECCIÓN TOTAL (Balance)
+   SECCIÓN TOTAL (Balance) - 100% RESPONSIVE
+   Todos los elementos usan % relativo al contenedor.
+   Base de referencia: 373 x 83 (aspect-ratio 373/83)
    ============================================ */
-.seccion-valor {
-  color: #0B2E34;
+.seccion.total {
+  position: relative;
+  width: calc(100% - 20px);
+  max-width: 373px;
+  aspect-ratio: 373 / 83;          /* mantiene proporción en cualquier pantalla */
+  margin: 16px auto;
+  padding: 0;
+  background-color: #185540;
+  border-radius: 18px;
+  border: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+/* ---------- Ondas de fondo (x:0, y:18, w:203, h:65) ---------- */
+.ondas-total {
+  position: absolute;
+  left: 0%;
+  top: 21.69%;
+  width: 54.42%;
+  height: 78.31%;
+  object-fit: contain;
+  object-position: left center;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---------- Círculo billetera (x:13, y:11, w:29, h:29) ---------- */
+.circulo-billetera {
+  position: absolute;
+  left: 3.49%;
+  top: 13.25%;
+  width: 7.77%;
+  aspect-ratio: 1 / 1;              /* círculo perfecto */
+  border-radius: 50%;
+  background-color: #398869;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+/* Icono interno (16x16 dentro de círculo 29x29 → 55%) */
+.icono-billetera-total {
+  width: 55%;
+  height: 55%;
+  object-fit: contain;
+}
+
+/* ---------- "Balance total" (x:46, y:12, w:58, h:19) ---------- */
+.titulo-balance {
+  position: absolute;
+  left: 12.33%;
+  top: 14.46%;
+  width: 15.55%;
+  color: #FFFFFF;
+  font-weight: 500;
+  font-size: 9px;
+  line-height: 1.2;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* ---------- Valor balance (x:46, y:31, w:150, h:18) ---------- */
+.valor-balance {
+  position: absolute;
+  left: 12.33%;
+  top: 37.35%;
+  width: 40.21%;
+  color: #FFFFFF;
   font-weight: 800;
-  font-size: 26px;
-  letter-spacing: -0.5px;
-  margin: 6px 0 12px 42px;
+  font-size: 24px;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 3;
 }
 
-.linea-divisoria {
-  width: 100%;
-  height: 1px;
-  background-color: #EEEEEE;
-  margin: 12px 0;
+/* ---------- Línea vertical (x:205, y:7, w:70) ---------- */
+.linea-vertical-total {
+  position: absolute;
+  left: 54.96%;
+  top: 8.43%;
+  width: 18.77%;
+  height: 0;
+  border-top: 1px solid #A4E3AC;
+  transform: rotate(-90deg);
+  transform-origin: left center;
+  z-index: 3;
 }
 
-.bloque-ahorro,
-.bloque-deudas {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 0;
+/* ---------- Flechas (15x15) ---------- */
+.flecha-total {
+  position: absolute;
+  width: 4.02%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  z-index: 3;
 }
 
-.titulo-ahorro,
-.titulo-deudas {
-  color: #69747A;
-  font-weight: 600;
-  font-size: 12px;
+.flecha-verde-total {
+  left: 62.20%;
+  top: 14.46%;
+  transform: rotate(90deg);
 }
 
-.valor-ahorro,
-.valor-deudas {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
+.flecha-roja-total {
+  left: 62.20%;
+  top: 59.04%;
+  transform: rotate(-90deg);
+}
+
+/* ---------- "Ahorro" (x:250, y:11) ---------- */
+.titulo-ahorro-total {
+  position: absolute;
+  left: 67.02%;
+  top: 13.25%;
+  width: 7.77%;
+  color: #FFFFFF;
+  font-weight: 400;
+  font-size: 8px;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+/* ---------- Valor ahorro (x:249, y:18, w:77, h:17) ---------- */
+.valor-ahorro-total {
+  position: absolute;
+  left: 66.76%;
+  top: 21.69%;
+  width: 20.64%;
+  color: #66D6A6;
+  font-weight: 800;
   font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 3;
 }
 
-.valor-ahorro span {
-  color: #049E17;
+/* ---------- Línea horizontal (x:235, y:40, w:94) ---------- */
+.linea-horizontal-total {
+  position: absolute;
+  left: 63.00%;
+  top: 48.19%;
+  width: 25.20%;
+  height: 0;
+  border-top: 1px solid #A4E3AC;
+  z-index: 3;
 }
 
-.valor-deudas span {
-  color: #970000;
+/* ---------- "Deudas" (x:250, y:49) ---------- */
+.titulo-deudas-total {
+  position: absolute;
+  left: 67.02%;
+  top: 59.04%;
+  width: 8.31%;
+  color: #FFFFFF;
+  font-weight: 400;
+  font-size: 8px;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 3;
 }
 
-.flecha-ahorro,
-.flecha-deudas {
-  width: 14px;
-  height: 8px;
+/* ---------- Valor deudas (x:250, y:58) ---------- */
+.valor-deudas-total {
+  position: absolute;
+  left: 67.02%;
+  top: 69.88%;
+  width: 18.23%;
+  color: #FFC5C5;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 3;
 }
 
 /* ============================================
-   SUBSECCIONES (items dentro de secciones)
+   SUBSECCIONES
    ============================================ */
 .subseccion {
   display: flex;
@@ -466,6 +574,10 @@ body.dark-mode .seccion {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
+body.dark-mode .seccion.total {
+  background-color: #185540;
+}
+
 body.dark-mode .saludo,
 body.dark-mode .saludo span,
 body.dark-mode .seccion-titulo,
@@ -519,7 +631,6 @@ body.dark-mode .bottom-nav a.active {
     left: 15px;
   }
 
-  /* Ajustamos el interruptor y el botón de fecha a la derecha */
   .interruptor-tema {
     left: auto;
     right: 0;
@@ -536,6 +647,12 @@ body.dark-mode .bottom-nav a.active {
     margin-right: 15px;
     width: calc(100% - 30px);
   }
+
+  .seccion.total {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: calc(100% - 20px);
+  }
 }
 
 @media (max-width: 360px) {
@@ -548,10 +665,6 @@ body.dark-mode .bottom-nav a.active {
   .subtitulo {
     font-size: 11px;
     top: 44px;
-  }
-
-  .seccion-valor {
-    font-size: 22px;
   }
 
   .interruptor-tema {

@@ -8,12 +8,6 @@
 </head>
 <body>
 
-  <!-- Imagen de ondas de fondo -->
-  <img src="../iconos/ondas.png" alt="ondas" class="ondas">
-
-  <!-- Capa oscura encima de las ondas -->
-  <div class="overlay"></div>
-
   <!-- ============================================
        HEADER
        ============================================ -->
@@ -47,42 +41,36 @@
   </header>
 
   <!-- ============================================
-       SECCIÓN TOTAL
+       SECCIÓN TOTAL (Balance) - RESPONSIVE
        ============================================ -->
   <section class="seccion total">
-    <div class="seccion-header">
-      <div class="icono-circulo">
-        <img src="../iconos/billeteraverde.png" alt="billetera verde" class="icono-seccion">
-      </div>
-      <h2 class="seccion-titulo">Balance total</h2>
-    </div>
-    <p class="seccion-valor" id="balanceTotal">$3.240.000</p>
+    <!-- Imagen de ondas de fondo -->
+    <img src="../iconos/ondas1.png" alt="" class="ondas-total">
 
-    <div class="linea-divisoria"></div>
+    <!-- Círculo con icono de billetera -->
+    <div class="circulo-billetera">
+      <img src="../iconos/billetera1.4.png" alt="billetera" class="icono-billetera-total">
+    </div>
+
+    <!-- Título y valor del balance -->
+    <h2 class="titulo-balance">Balance total</h2>
+    <p class="valor-balance" id="balanceTotal">$3.240.000</p>
+
+    <!-- Línea vertical divisoria -->
+    <div class="linea-vertical-total"></div>
 
     <!-- Bloque Ahorro -->
-    <div class="bloque-ahorro">
-      <h3 class="titulo-ahorro">Ahorro</h3>
-      <div class="valor-ahorro">
-        <svg class="flecha-ahorro" viewBox="0 0 15.62 8" xmlns="http://www.w3.org/2000/svg">
-          <line x1="0" y1="4" x2="11" y2="4" stroke="#049E17" stroke-width="2" stroke-linecap="round"/>
-          <polyline points="9,1 13,4 9,7" fill="none" stroke="#049E17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span id="totalAhorro">$0</span>
-      </div>
-    </div>
+    <img src="../iconos/flechaverde.png" alt="ahorro" class="flecha-total flecha-verde-total">
+    <h3 class="titulo-ahorro-total">Ahorro</h3>
+    <p class="valor-ahorro-total" id="totalAhorro">$0</p>
+
+    <!-- Línea horizontal divisoria -->
+    <div class="linea-horizontal-total"></div>
 
     <!-- Bloque Deudas -->
-    <div class="bloque-deudas">
-      <h3 class="titulo-deudas">Deudas</h3>
-      <div class="valor-deudas">
-        <svg class="flecha-deudas" viewBox="0 0 15.62 8" xmlns="http://www.w3.org/2000/svg">
-          <line x1="0" y1="4" x2="11" y2="4" stroke="#970000" stroke-width="2" stroke-linecap="round"/>
-          <polyline points="9,1 13,4 9,7" fill="none" stroke="#970000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span id="totalDeudas">$0</span>
-      </div>
-    </div>
+    <img src="../iconos/flecharoga.png" alt="deudas" class="flecha-total flecha-roja-total">
+    <h3 class="titulo-deudas-total">Deudas</h3>
+    <p class="valor-deudas-total" id="totalDeudas">$0</p>
   </section>
 
   <!-- ============================================
