@@ -1,495 +1,567 @@
-/* ===== Reset básico ===== */
+/* ============================================
+   RESET Y BASE
+   ============================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
 }
 
 body {
-  background-color: #000004;
-  color: #ffffff;
   position: relative;
-  min-height: 100vh;
-  overflow-x: hidden;
-  padding-bottom: 80px;
+  padding-bottom: 90px; /* espacio para la nav inferior */
 }
 
-/* ===== Imagen de ondas responsiva ===== */
+/* ============================================
+   ONDAS DE FONDO
+   ============================================ */
 .ondas {
-  position: absolute;
-  top: -122px;
+  position: fixed;
+  top: 0;
   left: 0;
   width: 100%;
   height: auto;
-  min-height: 262px;
-  object-fit: cover;
-  object-position: center;
-  z-index: 1;
+  z-index: 0;
   pointer-events: none;
 }
 
-/* ===== Capa oscura encima de las ondas ===== */
 .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.78);
-  z-index: 2;
-  pointer-events: none;
-}
-
-/* ===== Header ===== */
-.header {
-  position: relative;
-  z-index: 3;
-  padding: 20px 15px 0 15px;
-}
-
-.saludo {
-  position: absolute;
-  top: 22px;
-  left: 15px;
-  font-size: 24px;
-  font-weight: 800;
-  color: #ffffff;
-  line-height: 28px;
-  white-space: nowrap;
-}
-
-.subtitulo {
-  position: absolute;
-  top: 55px;
-  left: 15px;
-  width: 60px;
-  height: 23px;
-  font-size: 13px;
-  font-weight: 800;
-  color: #ffffff;
-  line-height: 23px;
-}
-
-/* ===== Fecha ===== */
-.fecha-contenedor {
-  position: absolute;
-  top: 9px;
-  right: 15px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  z-index: 4;
-}
-
-.icono-calendario {
-  position: absolute;
-  top: 0;
-  left: -17px;
-  width: 11.96px;
-  height: 11.96px;
-}
-
-.fecha {
-  position: relative;
-  font-size: 8px;
-  font-weight: 800;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  white-space: nowrap;
-}
-
-.fecha .flecha {
-  color: #9BFF8E;
-}
-
-/* ===== Secciones generales ===== */
-.seccion {
-  position: relative;
-  z-index: 3;
-  padding: 15px;
-  border-radius: 12px;
-}
-
-.seccion-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-/* Círculo detrás del ícono (verde Total por defecto) */
-.icono-circulo {
-  width: 30px;
-  height: 30px;
-  background-color: #00FF88;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.icono-circulo .icono-seccion {
-  width: 16px;
-  height: 16px;
-  object-fit: contain;
-}
-
-.icono-seccion {
-  width: 20px;
-  height: 20px;
-}
-
-.seccion-titulo {
-  font-size: 16px;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-.seccion-descripcion {
-  font-size: 11px;
-  color: #666666;
-  margin-bottom: 6px;
-}
-
-.seccion-subtitulo {
-  font-size: 13px;
-  font-weight: 700;
-  color: #0a5c2b;
-  margin-top: 8px;
-}
-
-.seccion-valor {
-  font-size: 18px;
-  font-weight: 800;
-  color: #000000;
-  margin-top: 4px;
-}
-
-.fila {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 6px;
-}
-
-/* ===== Sección Total ===== */
-.seccion.total {
-  position: relative;
-  margin: 103px 15px 0 10px;
-  width: 373px;
-  height: 95px;
-  background-color: #C5FFD4;
-  border-radius: 12px;
-  padding: 0;
-  color: #000000;
-  overflow: hidden;
-}
-
-.seccion.total .seccion-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  margin: 0;
-  display: block;
+  background: transparent;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.seccion.total .icono-circulo {
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+}
+
+/* Contenedor interno con ancho de referencia 383px centrado */
+.header-inner {
+  position: relative;
+  width: 100%;
+  max-width: 383px;
+  height: 90px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* ---------- Saludo: "Hola, Name" ---------- */
+.saludo {
   position: absolute;
-  top: 14px;
+  top: 22px;
   left: 15px;
-  width: 29px;
-  height: 29px;
-  background-color: #00FF88;
-  border-radius: 50%;
+  width: 138px;
+  height: 30px;
+  color: #0B2E34;
+  font-weight: 800; /* Extra bold */
+  font-size: 24px;
+  line-height: 30px;
+  white-space: nowrap; /* sin salto de línea */
+  letter-spacing: -0.3px;
+  z-index: 11;
+}
+
+.saludo span {
+  color: #0B2E34;
+  font-weight: 800;
+}
+
+/* ---------- Subtítulo: "Billetera" ---------- */
+.subtitulo {
+  position: absolute;
+  top: 48px;
+  left: 15px;
+  width: 60px;
+  height: 23px;
+  color: #69747A;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 23px;
+  z-index: 11;
+}
+
+/* ============================================
+   INTERRUPTOR MODO OSCURO / CLARO
+   Rectángulo 1 (luna): DEBAJO  → z-index: 1
+   Rectángulo 2 (sol):  ENCIMA  → z-index: 2
+   ============================================ */
+.interruptor-tema {
+  position: absolute;
+  top: 24px;
+  left: 332px;          /* x: 332 */
+  width: 51px;          /* 354 + 29 - 332 = 51 */
+  height: 12px;
+  z-index: 12;
+}
+
+/* ---------- Rectángulo 1 (Luna) ---------- */
+.rectangulo-luna {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 42px;
+  height: 12px;
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 10px 0 0 10px; /* sup-izq 10, inf-izq 10, sup-der 0, inf-der 0 */
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;   /* ícono a la izquierda */
+  padding-left: 9px;             /* 342 - 332 - 1(borde) = 9px */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1;                    /* va debajo */
 }
 
-.seccion.total .icono-circulo .icono-seccion {
-  width: 16px;
-  height: 16px;
+.icono-luna {
+  width: 6px;
+  height: 6px;
   object-fit: contain;
 }
 
-.seccion.total .seccion-titulo {
+/* ---------- Rectángulo 2 (Sol) ---------- */
+.rectangulo-sol {
   position: absolute;
-  top: 14px;
-  left: 53px;
-  color: #004709;
-  font-size: 9px;
-  font-weight: 500;
-  line-height: 19px;
-  margin: 0;
-}
-
-.seccion.total .seccion-valor {
-  position: absolute;
-  top: 20px;
-  left: 53px;
-  width: 150px;
-  height: 45px;
-  color: #000000;
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 45px;
-  margin: 0;
-}
-
-/* Línea vertical divisoria */
-.linea-divisoria {
-  position: absolute;
-  top: 8px;
-  left: 221.5px;
-  width: 2px;
-  height: 78px;
-  background-color: #A4E3AC;
-  border-radius: 3px;
-}
-
-/* ===== Bloque Ahorro ===== */
-.bloque-ahorro {
-  position: absolute;
-  top: 12px;
-  left: 282px;
-  width: 77px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.titulo-ahorro {
-  color: #004709;
-  font-size: 9px;
-  font-weight: 800;
-  line-height: 1;
-  margin: 0;
-}
-
-.valor-ahorro {
+  top: 0;
+  left: 22px;          /* x: 354 → 354 - 332 = 22 */
+  width: 29px;
+  height: 12px;
+  background-color: #185540;
+  border: 1px solid #398869;
+  border-radius: 10px; /* todas las esquinas 10 */
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 2;          /* va encima */
 }
 
-.valor-ahorro #totalAhorro {
-  color: #049E17;
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 1;
-}
-
-/* Flecha Ahorro (SVG) */
-.flecha-ahorro {
-  width: 15.62px;
+.icono-sol {
+  width: 8px;
   height: 8px;
-  flex-shrink: 0;
-  transform: rotate(-17.47deg);
-  transform-origin: center center;
-  overflow: visible;
+  object-fit: contain;
 }
 
-/* ===== Bloque Deudas ===== */
-.bloque-deudas {
+/* ============================================
+   BOTÓN DE FECHA (debajo del interruptor)
+   x: 307  y: 42  w: 76  h: 18
+   ============================================ */
+.fecha-contenedor {
   position: absolute;
-  top: 56px;
-  left: 282px;
-  width: 77px;
+  top: 42px;
+  left: 307px;
+  width: 76px;
+  height: 18px;
+  background-color: #FFFFFF;
+  border: 1px solid #398869;
+  border-radius: 10px;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  padding: 0 4px 0 3px;
+  cursor: pointer;
+  z-index: 12;
+  box-sizing: border-box;
 }
 
-.titulo-deudas {
-  color: #004709;
-  font-size: 9px;
-  font-weight: 800;
+/* Icono calendario: x: 313  y: 48  w: 9  h: 9
+   Relativo al contenedor: 313 - 307 = 6px desde el borde izq.
+   Con padding-left 3px, el icono queda a 3px del padding. */
+.icono-calendario {
+  width: 9px;
+  height: 9px;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin-left: 3px;    /* 313 - 307 - 3(padding) = 3px */
+  margin-right: 3px;   /* espacio hasta la fecha: 325 - 322 = 3px */
+}
+
+/* Fecha: x: 325  y: 48  w: 39  h: 12 */
+.fecha {
+  display: flex;
+  align-items: center;
+  width: 39px;
+  height: 12px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 8px;
+  color: #185540;
+  white-space: nowrap;
+  overflow: hidden;
   line-height: 1;
-  margin: 0;
 }
 
+.fecha #fechaActual {
+  font-weight: 400;
+  font-size: 8px;
+  color: #185540;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+/* ---------- Símbolo "^" rotado 180° ----------
+   x: 364  y: 50  w: 8  h: 10 */
+.flecha {
+  display: inline-block;
+  transform: rotate(180deg);
+  color: #185540;
+  font-weight: 200;    /* extra light */
+  font-size: 14px;
+  line-height: 1;
+  width: 8px;
+  height: 10px;
+  text-align: center;
+  flex-shrink: 0;
+  position: relative;
+  top: -1px;
+}
+
+/* ============================================
+   SECCIONES GENERALES
+   ============================================ */
+.seccion {
+  position: relative;
+  z-index: 10;
+  max-width: 383px;
+  margin: 16px auto;
+  padding: 18px 16px;
+  background-color: #FFFFFF;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #F0F0F0;
+}
+
+/* Primera sección (Total) */
+.seccion.total {
+  margin-top: 16px;
+}
+
+/* ---------- Header de sección ---------- */
+.seccion-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.icono-circulo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #E8F5EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icono-seccion {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.seccion-titulo {
+  color: #0B2E34;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.2px;
+}
+
+.seccion-descripcion {
+  color: #69747A;
+  font-weight: 500;
+  font-size: 11px;
+  margin-bottom: 10px;
+  padding-left: 42px;
+}
+
+.seccion-subtitulo {
+  color: #0B2E34;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding-left: 42px;
+}
+
+.seccion-subtitulo span {
+  color: #185540;
+  font-weight: 800;
+}
+
+/* ============================================
+   SECCIÓN TOTAL (Balance)
+   ============================================ */
+.seccion-valor {
+  color: #0B2E34;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.5px;
+  margin: 6px 0 12px 42px;
+}
+
+.linea-divisoria {
+  width: 100%;
+  height: 1px;
+  background-color: #EEEEEE;
+  margin: 12px 0;
+}
+
+.bloque-ahorro,
+.bloque-deudas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.titulo-ahorro,
+.titulo-deudas {
+  color: #69747A;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.valor-ahorro,
 .valor-deudas {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 13px;
 }
 
-.valor-deudas #totalDeudas {
+.valor-ahorro span {
+  color: #049E17;
+}
+
+.valor-deudas span {
   color: #970000;
-  font-size: 15px;
-  font-weight: 800;
-  line-height: 1;
 }
 
-/* Flecha Deudas (SVG) */
+.flecha-ahorro,
 .flecha-deudas {
-  width: 15.62px;
+  width: 14px;
   height: 8px;
-  flex-shrink: 0;
-  transform: rotate(21.44deg);
-  transform-origin: center center;
-  overflow: visible;
 }
 
-/* ===== Sección Deudas ===== */
-.seccion.deudas {
-  margin: 41px 15px 0 10px;
-  width: 373px;
-  min-height: 106px;
-  background-color: #FFE4E4;
-  color: #000000;
-}
-
-.seccion.deudas .icono-circulo {
-  background-color: #FFA1A1;
-}
-
-/* ===== Sección Metas de Ahorro ===== */
-.seccion.metas {
-  margin: 41px 15px 0 10px;
-  width: 373px;
-  min-height: 106px;
-  background-color: #E4EFFF;
-  color: #000000;
-}
-
-.seccion.metas .icono-circulo {
-  background-color: #88BBF5;
-}
-
-/* ===== Sección Gastos Mensuales ===== */
-.seccion.gastos {
-  margin: 41px 15px 41px 10px;
-  width: 373px;
-  min-height: 106px;
-  background-color: #FFFBE4;
-  color: #000000;
-}
-
-.seccion.gastos .icono-circulo {
-  background-color: #F9EA7E;
-}
-
-/* ===== Colores de texto en secciones claras ===== */
-.seccion.deudas .seccion-titulo,
-.seccion.metas .seccion-titulo,
-.seccion.gastos .seccion-titulo,
-.seccion.deudas .seccion-valor,
-.seccion.metas .seccion-valor,
-.seccion.gastos .seccion-valor {
-  color: #000000;
-}
-
-.seccion.deudas .seccion-subtitulo,
-.seccion.metas .seccion-subtitulo,
-.seccion.gastos .seccion-subtitulo {
-  color: #0a5c2b;
-}
-
-/* ===== Subsecciones (items) ===== */
+/* ============================================
+   SUBSECCIONES (items dentro de secciones)
+   ============================================ */
 .subseccion {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 10px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.6);
-  border-radius: 10px;
-  gap: 8px;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid #F5F5F5;
 }
 
 .icono-sub {
-  width: 18px;
-  height: 18px;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
 .sub-info {
   flex: 1;
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .sub-titulo {
-  font-size: 13px;
+  color: #0B2E34;
   font-weight: 700;
-  color: #000000;
+  font-size: 12px;
 }
 
 .sub-texto {
+  color: #69747A;
+  font-weight: 500;
   font-size: 10px;
-  color: #555555;
 }
 
 .sub-dias {
+  color: #E67E22;
+  font-weight: 600;
   font-size: 10px;
-  color: #0a5c2b;
-  font-weight: 700;
 }
 
 .sub-valor {
-  font-size: 14px;
+  color: #0B2E34;
   font-weight: 800;
-  color: #000000;
+  font-size: 13px;
   flex-shrink: 0;
 }
 
-/* ========== NAVEGACIÓN INFERIOR ========== */
+/* ============================================
+   NAVEGACIÓN INFERIOR
+   ============================================ */
 .bottom-nav {
   position: fixed;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 319px;
-  height: 48px;
-  background-color: #1C2830;
-  border-radius: 40px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #FFFFFF;
+  border-top: 1px solid #EEEEEE;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 0 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
 }
 
 .bottom-nav a {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
-  position: relative;
-  padding: 6px 14px;
-  border-radius: 10px;
-  transition: all 0.25s ease;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.bottom-nav a.active {
+  background-color: #E8F5EE;
 }
 
 .bottom-nav img {
-  width: 19px;
-  height: 19px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
-  transition: all 0.25s ease;
-  filter: brightness(0.55) grayscale(0.5);
 }
 
-/* Íconos inactivos: hover ligero */
-.bottom-nav a:not(.active):hover img {
-  filter: brightness(1.05) grayscale(0);
-  transform: scale(1.1);
+/* ============================================
+   MODO OSCURO
+   ============================================ */
+body.dark-mode {
+  background-color: #0B2E34;
 }
 
-/* ========== ÍCONO ACTIVO (PÁGINA ACTUAL) ========== */
-.bottom-nav a.active {
-  background-color: #00D4FF;
-  border-radius: 10px;
-  box-shadow: 0 0 14px rgba(0, 212, 255, 0.7);
+body.dark-mode .seccion {
+  background-color: #123A42;
+  border-color: #1E4E58;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
-.bottom-nav a.active img {
-  filter: brightness(0) invert(1);
-  transform: scale(1.05);
+body.dark-mode .saludo,
+body.dark-mode .saludo span,
+body.dark-mode .seccion-titulo,
+body.dark-mode .seccion-valor,
+body.dark-mode .sub-titulo,
+body.dark-mode .sub-valor {
+  color: #FFFFFF;
+}
+
+body.dark-mode .subtitulo,
+body.dark-mode .seccion-descripcion,
+body.dark-mode .titulo-ahorro,
+body.dark-mode .titulo-deudas,
+body.dark-mode .sub-texto {
+  color: #A8B8BE;
+}
+
+body.dark-mode .fecha-contenedor {
+  background-color: #123A42;
+}
+
+body.dark-mode .fecha,
+body.dark-mode .fecha #fechaActual,
+body.dark-mode .flecha {
+  color: #FFFFFF;
+}
+
+body.dark-mode .rectangulo-luna {
+  background-color: #123A42;
+  border-color: #FFFFFF;
+}
+
+body.dark-mode .bottom-nav {
+  background-color: #123A42;
+  border-top-color: #1E4E58;
+}
+
+body.dark-mode .bottom-nav a.active {
+  background-color: #185540;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 383px) {
+  .saludo {
+    left: 15px;
+  }
+
+  .subtitulo {
+    left: 15px;
+  }
+
+  /* Ajustamos el interruptor y el botón de fecha a la derecha */
+  .interruptor-tema {
+    left: auto;
+    right: 0;
+  }
+
+  .fecha-contenedor {
+    left: auto;
+    right: 0;
+  }
+
+  .seccion {
+    max-width: 100%;
+    margin-left: 15px;
+    margin-right: 15px;
+    width: calc(100% - 30px);
+  }
+}
+
+@media (max-width: 360px) {
+  .saludo {
+    font-size: 20px;
+    height: 26px;
+    line-height: 26px;
+  }
+
+  .subtitulo {
+    font-size: 11px;
+    top: 44px;
+  }
+
+  .seccion-valor {
+    font-size: 22px;
+  }
+
+  .interruptor-tema {
+    transform: scale(0.9);
+    transform-origin: top right;
+  }
+
+  .fecha-contenedor {
+    transform: scale(0.9);
+    transform-origin: top right;
+    top: 40px;
+  }
 }

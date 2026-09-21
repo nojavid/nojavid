@@ -14,22 +14,41 @@
   <!-- Capa oscura encima de las ondas -->
   <div class="overlay"></div>
 
-  <!-- Header -->
+  <!-- ============================================
+       HEADER
+       ============================================ -->
   <header class="header">
-    <h1 class="saludo">Hola, <span id="nombreUsuario">Name</span></h1>
-    <h2 class="subtitulo">Billetera</h2>
+    <div class="header-inner">
 
-    <div class="fecha-contenedor">
-      <img src="../iconos/calendarioblanco.png" alt="calendario" class="icono-calendario">
-      <p class="fecha">
-        <span class="flecha">&lt;</span>
-        <span id="fechaActual">Sep de 2026</span>
-        <span class="flecha">&gt;</span>
-      </p>
+      <!-- Saludo -->
+      <h1 class="saludo">Hola, <span id="nombreUsuario">Name</span></h1>
+      <h2 class="subtitulo">Billetera</h2>
+
+      <!-- Interruptor modo oscuro / claro -->
+      <div class="interruptor-tema">
+        <div class="rectangulo-luna" id="btnModoClaro">
+          <img src="../iconos/luna.png" alt="luna" class="icono-luna">
+        </div>
+        <div class="rectangulo-sol" id="btnModoOscuro">
+          <img src="../iconos/solblanco.png" alt="sol" class="icono-sol">
+        </div>
+      </div>
+
+      <!-- Botón de fecha -->
+      <div class="fecha-contenedor" id="btnFecha">
+        <img src="../iconos/calendario1.4.png" alt="calendario" class="icono-calendario">
+        <p class="fecha">
+          <span id="fechaActual">Abril 2026</span>
+        </p>
+        <span class="flecha">^</span>
+      </div>
+
     </div>
   </header>
 
-  <!-- Sección Total -->
+  <!-- ============================================
+       SECCIÓN TOTAL
+       ============================================ -->
   <section class="seccion total">
     <div class="seccion-header">
       <div class="icono-circulo">
@@ -39,7 +58,6 @@
     </div>
     <p class="seccion-valor" id="balanceTotal">$3.240.000</p>
 
-    <!-- Línea vertical divisoria -->
     <div class="linea-divisoria"></div>
 
     <!-- Bloque Ahorro -->
@@ -67,7 +85,9 @@
     </div>
   </section>
 
-  <!-- Sección Deudas -->
+  <!-- ============================================
+       SECCIÓN DEUDAS
+       ============================================ -->
   <section class="seccion deudas">
     <div class="seccion-header">
       <div class="icono-circulo">
@@ -88,7 +108,9 @@
     </div>
   </section>
 
-  <!-- Sección Metas de Ahorro -->
+  <!-- ============================================
+       SECCIÓN METAS DE AHORRO
+       ============================================ -->
   <section class="seccion metas">
     <div class="seccion-header">
       <div class="icono-circulo">
@@ -108,7 +130,9 @@
     </div>
   </section>
 
-  <!-- Sección Gastos Mensuales -->
+  <!-- ============================================
+       SECCIÓN GASTOS MENSUALES
+       ============================================ -->
   <section class="seccion gastos">
     <div class="seccion-header">
       <div class="icono-circulo">
@@ -130,7 +154,9 @@
     </div>
   </section>
 
-  <!-- Navegación inferior -->
+  <!-- ============================================
+       NAVEGACIÓN INFERIOR
+       ============================================ -->
   <div class="bottom-nav">
     <a href="../finix.html" data-page="finix.html">
       <img src="../iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'">
