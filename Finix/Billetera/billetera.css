@@ -841,7 +841,8 @@ body {
   width: 100%;
   height: 70px;
   background-color: #FFFFFF;
-  border-top: 1px solid #EEEEEE;
+  /* Línea superior pegada al menú - color #185540 */
+  border-top: 1px solid #185540;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -857,16 +858,51 @@ body {
   height: 48px;
   border-radius: 12px;
   transition: background-color 0.2s ease;
+  text-decoration: none;
 }
 
 .bottom-nav a.active {
-  background-color: #E8F5EE;
+  /* El fondo activo ahora lo maneja el rectángulo interno */
+  background-color: transparent;
+  width: auto;
+  height: auto;
+  border-radius: 0;
 }
 
 .bottom-nav img {
   width: 22px;
   height: 22px;
   object-fit: contain;
+}
+
+/* --- Botón activo: rectángulo verde con icono + texto --- */
+.nav-activo-rect {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 79px;
+  height: 29px;
+  background-color: #398869;
+  border-radius: 10px; /* radio en las 4 esquinas */
+  padding-left: 5px;   /* icono a x:116 (111 + 5) */
+  box-sizing: border-box;
+  gap: 2px;            /* separación entre icono y texto */
+}
+
+.nav-activo-icono {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.nav-activo-texto {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 800; /* extra bold */
+  color: #FFFFFF;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 /* ============================================
@@ -920,11 +956,19 @@ body.dark-mode .rectangulo-luna {
 
 body.dark-mode .bottom-nav {
   background-color: #123A42;
-  border-top-color: #1E4E58;
+  border-top-color: #185540; /* se mantiene el verde */
 }
 
 body.dark-mode .bottom-nav a.active {
-  background-color: #185540;
+  background-color: transparent;
+}
+
+body.dark-mode .nav-activo-rect {
+  background-color: #398869; /* mismo verde */
+}
+
+body.dark-mode .nav-activo-texto {
+  color: #FFFFFF;
 }
 
 /* Modo oscuro para las nuevas secciones */
