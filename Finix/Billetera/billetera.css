@@ -291,14 +291,13 @@ body {
 
 /* ============================================
    SECCIÓN TOTAL (Balance) - 100% RESPONSIVE
-   Todos los elementos usan % relativo al contenedor.
    Base de referencia: 373 x 83 (aspect-ratio 373/83)
    ============================================ */
 .seccion.total {
   position: relative;
   width: calc(100% - 20px);
   max-width: 373px;
-  aspect-ratio: 373 / 83;          /* mantiene proporción en cualquier pantalla */
+  aspect-ratio: 373 / 83;
   margin: 16px auto;
   padding: 0;
   background-color: #185540;
@@ -328,7 +327,7 @@ body {
   left: 3.49%;
   top: 13.25%;
   width: 7.77%;
-  aspect-ratio: 1 / 1;              /* círculo perfecto */
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   background-color: #398869;
   display: flex;
@@ -337,14 +336,13 @@ body {
   z-index: 3;
 }
 
-/* Icono interno (16x16 dentro de círculo 29x29 → 55%) */
 .icono-billetera-total {
   width: 55%;
   height: 55%;
   object-fit: contain;
 }
 
-/* ---------- "Balance total" (x:46, y:12, w:58, h:19) ---------- */
+/* ---------- "Balance total" (x:46, y:12) ---------- */
 .titulo-balance {
   position: absolute;
   left: 12.33%;
@@ -358,7 +356,7 @@ body {
   z-index: 3;
 }
 
-/* ---------- Valor balance (x:46, y:31, w:150, h:18) ---------- */
+/* ---------- Valor balance (x:46, y:31) ---------- */
 .valor-balance {
   position: absolute;
   left: 12.33%;
@@ -372,11 +370,11 @@ body {
   z-index: 3;
 }
 
-/* ---------- Línea vertical (x:205, y:7, w:70) ---------- */
+/* ---------- Línea vertical (AJUSTADA MÁS ABAJO) ---------- */
 .linea-vertical-total {
   position: absolute;
   left: 54.96%;
-  top: 8.43%;
+  top: 92%;                         /* antes: 8.43% — bajada para centrar visualmente */
   width: 18.77%;
   height: 0;
   border-top: 1px solid #A4E3AC;
@@ -420,7 +418,7 @@ body {
   z-index: 3;
 }
 
-/* ---------- Valor ahorro (x:249, y:18, w:77, h:17) ---------- */
+/* ---------- Valor ahorro (x:249, y:18) ---------- */
 .valor-ahorro-total {
   position: absolute;
   left: 66.76%;
@@ -434,7 +432,7 @@ body {
   z-index: 3;
 }
 
-/* ---------- Línea horizontal (x:235, y:40, w:94) ---------- */
+/* ---------- Línea horizontal (x:235, y:40) ---------- */
 .linea-horizontal-total {
   position: absolute;
   left: 63.00%;
