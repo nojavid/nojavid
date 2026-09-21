@@ -44,77 +44,111 @@
        SECCIÓN TOTAL (Balance) - RESPONSIVE
        ============================================ -->
   <section class="seccion total">
-    <!-- Imagen de ondas de fondo -->
     <img src="../iconos/ondas1.png" alt="" class="ondas-total">
 
-    <!-- Círculo con icono de billetera -->
     <div class="circulo-billetera">
       <img src="../iconos/billetera1.4.png" alt="billetera" class="icono-billetera-total">
     </div>
 
-    <!-- Título y valor del balance -->
     <h2 class="titulo-balance">Balance total</h2>
     <p class="valor-balance" id="balanceTotal">$3.240.000</p>
 
-    <!-- Línea vertical divisoria -->
     <div class="linea-vertical-total"></div>
 
-    <!-- Bloque Ahorro -->
     <img src="../iconos/flechaverde.png" alt="ahorro" class="flecha-total flecha-verde-total">
     <h3 class="titulo-ahorro-total">Ahorro</h3>
     <p class="valor-ahorro-total" id="totalAhorro">$0</p>
 
-    <!-- Línea horizontal divisoria -->
     <div class="linea-horizontal-total"></div>
 
-    <!-- Bloque Deudas -->
     <img src="../iconos/flecharoga.png" alt="deudas" class="flecha-total flecha-roja-total">
     <h3 class="titulo-deudas-total">Deudas</h3>
     <p class="valor-deudas-total" id="totalDeudas">$0</p>
   </section>
 
   <!-- ============================================
-       SECCIÓN DEUDAS
+       SECCIÓN DEUDAS (REDISEÑADA)
        ============================================ -->
   <section class="seccion deudas">
-    <div class="seccion-header">
-      <div class="icono-circulo">
-        <img src="../iconos/tarjeta.png" alt="tarjeta" class="icono-seccion">
-      </div>
-      <h2 class="seccion-titulo">Deudas</h2>
-    </div>
-    <p class="seccion-descripcion">En lo que debes y en que va cada una</p>
-    <h3 class="seccion-subtitulo">Total <span id="totalDeudasSeccion">$0</span></h3>
 
-    <div class="subseccion deuda-item">
-      <img src="../iconos/tarjeta.png" alt="tarjeta" class="icono-sub">
-      <div class="sub-info">
-        <h4 class="sub-titulo">Nombre de la deuda</h4>
-        <p class="sub-texto">Vence 28 Sep</p>
+    <!-- Recuadro Total Deudas -->
+    <div class="total-deudas-box" id="totalDeudasBox">
+      Total: $0
+    </div>
+
+    <!-- Cabecera -->
+    <div class="deudas-header">
+      <div class="deudas-circulo">
+        <img src="../iconos/tarjeta.png" alt="tarjeta" class="deudas-icono">
       </div>
-      <p class="sub-valor">$0</p>
+      <h2 class="deudas-titulo">Deudas</h2>
+    </div>
+
+    <p class="deudas-descripcion">En lo que debes y en que va cada una</p>
+
+    <!-- Lista de deudas -->
+    <div class="deudas-lista" id="deudasLista">
+
+      <!-- Item de ejemplo -->
+      <div class="deuda-item">
+        <div class="deuda-item-header">
+          <div class="deuda-item-circulo">
+            <img src="../iconos/tarjeta.png" alt="tarjeta" class="deuda-item-icono">
+          </div>
+          <h4 class="deuda-item-nombre">Nombre de la deuda</h4>
+        </div>
+        <p class="deuda-item-fecha">Vence 28 Sep</p>
+        <div class="deuda-progreso-container">
+          <div class="deuda-progreso-barra">
+            <div class="deuda-progreso-relleno" style="width: 50%;"></div>
+          </div>
+          <span class="deuda-progreso-texto">50%</span>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <!-- ============================================
-       SECCIÓN METAS DE AHORRO
+       SECCIÓN METAS DE AHORRO (REDISEÑADA)
        ============================================ -->
   <section class="seccion metas">
-    <div class="seccion-header">
-      <div class="icono-circulo">
-        <img src="../iconos/Meta.png" alt="meta" class="icono-seccion">
-      </div>
-      <h2 class="seccion-titulo">Meta de ahorro</h2>
-    </div>
-    <p class="seccion-descripcion">Tus planes a futuro</p>
-    <h3 class="seccion-subtitulo">Total <span id="totalMetasSeccion">$0</span></h3>
 
-    <div class="subseccion meta-item">
-      <img src="../iconos/Meta.png" alt="meta" class="icono-sub">
-      <div class="sub-info">
-        <h4 class="sub-titulo">Nombre del plan</h4>
+    <!-- Recuadro Total Metas -->
+    <div class="total-metas-box" id="totalMetasBox">
+      Total: $0
+    </div>
+
+    <!-- Cabecera -->
+    <div class="metas-header">
+      <div class="metas-circulo">
+        <img src="../iconos/Meta.png" alt="meta" class="metas-icono">
       </div>
-      <p class="sub-valor">$0</p>
+      <h2 class="metas-titulo">Metas de Ahorro</h2>
+    </div>
+
+    <p class="metas-descripcion">Tus planes a futuro</p>
+
+    <!-- Lista de metas -->
+    <div class="metas-lista" id="metasLista">
+
+      <!-- Item de ejemplo -->
+      <div class="meta-item">
+        <div class="meta-item-header">
+          <div class="meta-item-circulo">
+            <img src="../iconos/Meta.png" alt="meta" class="meta-item-icono">
+          </div>
+          <h4 class="meta-item-nombre">Nombre del plan</h4>
+        </div>
+        <p class="meta-item-fecha">Vence 29 Sep</p>
+        <div class="meta-progreso-container">
+          <div class="meta-progreso-barra">
+            <div class="meta-progreso-relleno" style="width: 50%;"></div>
+          </div>
+          <span class="meta-progreso-texto">50%</span>
+        </div>
+      </div>
+
     </div>
   </section>
 
