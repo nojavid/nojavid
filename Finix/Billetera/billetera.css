@@ -422,7 +422,7 @@ body {
 .valor-ahorro-total {
   position: absolute;
   left: 66.76%;
-  top: 21.69%;
+  top: 25%;
   width: 20.64%;
   color: #66D6A6;
   font-weight: 800;
@@ -461,7 +461,7 @@ body {
 .valor-deudas-total {
   position: absolute;
   left: 67.02%;
-  top: 69.88%;
+  top: 71%;
   width: 18.23%;
   color: #FFC5C5;
   font-weight: 800;
