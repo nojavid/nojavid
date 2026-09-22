@@ -826,8 +826,8 @@ body {
    ============================================ */
 .btn-agregar-mas {
   position: fixed;
-  bottom: 86px;              /* 70px del menú + 16px de separación */
-  right: 10px;               /* alineado al borde derecho del contenedor */
+  bottom: 86px;
+  right: 10px;
   width: 48px;
   height: 48px;
   padding: 0;
@@ -835,12 +835,11 @@ body {
   border: none;
   background: transparent;
   cursor: pointer;
-  z-index: 110;              /* por encima del menú (z-index 100) */
+  z-index: 110;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease;
-  /* Sombra suave para que resalte sobre el fondo */
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
@@ -857,7 +856,314 @@ body {
   height: 48px;
   object-fit: contain;
   display: block;
-  pointer-events: none;      /* el click lo recibe el botón, no la imagen */
+  pointer-events: none;
+}
+
+/* ============================================
+   MODAL NUEVO REGISTRO (ANIMADO DE ABAJO HACIA ARRIBA)
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 200;
+  overflow-y: auto;
+  /* Estado inicial: oculto pero sin display:none para permitir transición */
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.modal-overlay.activo {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal-registro {
+  position: relative;
+  width: 100%;
+  max-width: 383px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: #FFFFFF;
+  border-radius: 22px 22px 0 0;
+  padding: 20px 18px 26px 18px;
+  box-shadow: 0 -6px 30px rgba(0, 0, 0, 0.2);
+  /* Estado inicial: fuera de vista, abajo */
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.modal-overlay.activo .modal-registro {
+  transform: translateY(0);
+}
+
+/* Animación de bajada al cerrar */
+.modal-overlay.cerrando .modal-registro {
+  transform: translateY(100%);
+}
+
+.modal-overlay.cerrando {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Cabecera del modal */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-titulo {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0B2E34;
+  letter-spacing: -0.3px;
+}
+
+.modal-cerrar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #F0F0F0;
+  border: none;
+  color: #0B2E34;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.modal-cerrar:hover {
+  background-color: #E0E0E0;
+  transform: scale(1.05);
+}
+
+/* Formulario */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0B2E34;
+  letter-spacing: -0.1px;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #0B2E34;
+  background-color: #FFFFFF;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: #398869;
+  box-shadow: 0 0 0 3px rgba(57, 136, 105, 0.15);
+}
+
+.form-input::placeholder {
+  color: #A0A8AD;
+  font-weight: 400;
+}
+
+.form-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2369747A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  padding-right: 32px;
+  cursor: pointer;
+}
+
+/* Campos para nueva sección */
+.form-nueva-seccion {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  padding: 12px;
+  background-color: #F8FAFB;
+  border-radius: 12px;
+  border: 1px dashed #C8D4D9;
+}
+
+.form-nueva-seccion.activo {
+  display: flex;
+}
+
+.form-color-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-color {
+  width: 42px;
+  height: 42px;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 10px;
+  cursor: pointer;
+  background: none;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.form-color-texto {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0B2E34;
+  letter-spacing: 0.5px;
+}
+
+/* Recordatorio */
+.form-recordatorio {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.radio-opcion {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  flex: 1;
+  min-width: 0;
+  justify-content: center;
+}
+
+.radio-opcion:hover {
+  border-color: #398869;
+}
+
+.radio-opcion input[type="radio"] {
+  display: none;
+}
+
+.radio-custom {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #C0C8CC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease;
+}
+
+.radio-custom::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #398869;
+  transform: scale(0);
+  transition: transform 0.2s ease;
+}
+
+.radio-opcion input[type="radio"]:checked + .radio-custom {
+  border-color: #398869;
+}
+
+.radio-opcion input[type="radio"]:checked + .radio-custom::after {
+  transform: scale(1);
+}
+
+.radio-opcion input[type="radio"]:checked ~ .radio-texto {
+  color: #185540;
+  font-weight: 700;
+}
+
+.radio-texto {
+  font-size: 11px;
+  font-weight: 500;
+  color: #69747A;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+/* Botones del formulario */
+.form-botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-cancelar,
+.btn-guardar {
+  flex: 1;
+  height: 44px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-cancelar {
+  background-color: #F0F0F0;
+  color: #69747A;
+}
+
+.btn-cancelar:hover {
+  background-color: #E4E4E4;
+}
+
+.btn-guardar {
+  background-color: #185540;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(24, 85, 64, 0.3);
+}
+
+.btn-guardar:hover {
+  background-color: #1E6B50;
+  transform: translateY(-1px);
+}
+
+.btn-cancelar:active,
+.btn-guardar:active {
+  transform: scale(0.97);
 }
 
 /* ============================================
@@ -902,7 +1208,6 @@ body {
   object-fit: contain;
 }
 
-/* --- Botón activo: rectángulo verde con icono + texto --- */
 .nav-activo-rect {
   display: flex;
   align-items: center;
@@ -1026,6 +1331,62 @@ body.dark-mode .metas-descripcion {
   color: #FFFFFF;
 }
 
+/* Modo oscuro para el modal */
+body.dark-mode .modal-registro {
+  background-color: #123A42;
+}
+
+body.dark-mode .modal-titulo {
+  color: #FFFFFF;
+}
+
+body.dark-mode .modal-cerrar {
+  background-color: #1E4E58;
+  color: #FFFFFF;
+}
+
+body.dark-mode .form-label {
+  color: #FFFFFF;
+}
+
+body.dark-mode .form-input,
+body.dark-mode .form-select {
+  background-color: #1E4E58;
+  border-color: #2A5A66;
+  color: #FFFFFF;
+}
+
+body.dark-mode .form-input::placeholder {
+  color: #7A8F96;
+}
+
+body.dark-mode .form-nueva-seccion {
+  background-color: #1A3A42;
+  border-color: #2A5A66;
+}
+
+body.dark-mode .form-color-texto {
+  color: #FFFFFF;
+}
+
+body.dark-mode .radio-opcion {
+  border-color: #2A5A66;
+  background-color: #1E4E58;
+}
+
+body.dark-mode .radio-texto {
+  color: #A8B8BE;
+}
+
+body.dark-mode .radio-opcion input[type="radio"]:checked ~ .radio-texto {
+  color: #66D6A6;
+}
+
+body.dark-mode .btn-cancelar {
+  background-color: #1E4E58;
+  color: #A8B8BE;
+}
+
 /* ============================================
    RESPONSIVE
    ============================================ */
@@ -1107,5 +1468,17 @@ body.dark-mode .metas-descripcion {
   .icono-mas {
     width: 44px;
     height: 44px;
+  }
+
+  .form-recordatorio {
+    gap: 6px;
+  }
+
+  .radio-opcion {
+    padding: 7px 8px;
+  }
+
+  .radio-texto {
+    font-size: 10px;
   }
 }

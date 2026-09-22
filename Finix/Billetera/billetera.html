@@ -160,6 +160,105 @@
   </button>
 
   <!-- ============================================
+       MODAL NUEVO REGISTRO
+       ============================================ -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-registro" id="modalRegistro">
+
+      <!-- Cabecera del modal -->
+      <div class="modal-header">
+        <h2 class="modal-titulo">Nuevo registro</h2>
+        <button class="modal-cerrar" id="btnCerrarModal" aria-label="Cerrar">✕</button>
+      </div>
+
+      <!-- Formulario -->
+      <form class="modal-form" id="formRegistro">
+
+        <!-- Seleccionar sección -->
+        <div class="form-grupo">
+          <label class="form-label" for="selectSeccion">Sección</label>
+          <select class="form-select" id="selectSeccion" required>
+            <option value="" disabled selected>Selecciona una sección</option>
+            <option value="deudas">Deudas</option>
+            <option value="ahorro">Ahorro</option>
+            <option value="nueva">+ Agregar nueva sección</option>
+          </select>
+        </div>
+
+        <!-- Campos para nueva sección (ocultos por defecto) -->
+        <div class="form-nueva-seccion" id="camposNuevaSeccion">
+          <div class="form-grupo">
+            <label class="form-label" for="inputNombreSeccion">Nombre de la sección</label>
+            <input type="text" class="form-input" id="inputNombreSeccion" placeholder="Ej: Inversiones">
+          </div>
+          <div class="form-grupo">
+            <label class="form-label" for="inputColorSeccion">Color de la sección</label>
+            <div class="form-color-wrapper">
+              <input type="color" class="form-color" id="inputColorSeccion" value="#398869">
+              <span class="form-color-texto" id="colorTexto">#398869</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nombre del registro -->
+        <div class="form-grupo">
+          <label class="form-label" for="inputNombre">Nombre</label>
+          <input type="text" class="form-input" id="inputNombre" placeholder="Ej: Pago tarjeta" required>
+        </div>
+
+        <!-- Monto -->
+        <div class="form-grupo">
+          <label class="form-label" for="inputMonto">Monto</label>
+          <input type="number" class="form-input" id="inputMonto" placeholder="Ej: 150000" min="0" step="any" required>
+        </div>
+
+        <!-- Fecha -->
+        <div class="form-grupo">
+          <label class="form-label" for="inputFecha">Fecha</label>
+          <input type="date" class="form-input" id="inputFecha" required>
+        </div>
+
+        <!-- Recordatorio -->
+        <div class="form-grupo">
+          <label class="form-label">Recordatorio</label>
+          <div class="form-recordatorio">
+            <label class="radio-opcion">
+              <input type="radio" name="recordatorio" value="diario" checked>
+              <span class="radio-custom"></span>
+              <span class="radio-texto">Diario</span>
+            </label>
+            <label class="radio-opcion">
+              <input type="radio" name="recordatorio" value="semanal">
+              <span class="radio-custom"></span>
+              <span class="radio-texto">Semanal</span>
+            </label>
+            <label class="radio-opcion">
+              <input type="radio" name="recordatorio" value="mensual">
+              <span class="radio-custom"></span>
+              <span class="radio-texto">Mensual</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Día del recordatorio -->
+        <div class="form-grupo" id="grupoDiaRecordatorio">
+          <label class="form-label" for="selectDiaRecordatorio">¿Qué día recordar?</label>
+          <select class="form-select" id="selectDiaRecordatorio">
+            <!-- Opciones dinámicas según el tipo de recordatorio -->
+          </select>
+        </div>
+
+        <!-- Botones -->
+        <div class="form-botones">
+          <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+          <button type="submit" class="btn-guardar">Guardar</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================
        NAVEGACIÓN INFERIOR
        ============================================ -->
   <div class="bottom-nav">
