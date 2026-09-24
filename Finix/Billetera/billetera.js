@@ -240,7 +240,7 @@ function inicializarModal() {
     if (inputFecha) inputFecha.value = hoy;
   });
 
-  // ---- Cerrar modal (con animación hacia abajo) ----
+  // ---- Cerrar modal ----
   function cerrarModal() {
     modalOverlay.classList.add("cerrando");
     document.body.style.overflow = "";
@@ -368,9 +368,144 @@ function inicializarModal() {
 }
 
 // ============================================
+// SWITCH DE TEMA (CLARO / OSCURO) CON DRAG
+// ============================================
+function inicializarSwitchTema() {
+  const track = document.getElementById("switchTrack");
+  const thumb = document.getElementById("switchThumb");
+  const thumbIcono = document.getElementById("thumbIcono");
+
+  if (!track || !thumb) return;
+
+  const esModoOscuro = document.body.classList.contains("dark-mode");
+
+  // Constantes de geometría
+  const TRACK_WIDTH = 61;
+  const THUMB_WIDTH = 16;
+  const PADDING = 2;
+  const MAX_LEFT = TRACK_WIDTH - THUMB_WIDTH - PADDING * 2; // = 41
+
+  // ---- Aplicar estado inicial sin animación ----
+  function aplicarEstadoInicial() {
+    if (esModoOscuro) {
+      document.body.classList.add("dark-mode");
+      if (thumbIcono) thumbIcono.src = "../iconos/luna.png";
+      thumb.style.transition = "none";
+      thumb.style.left = MAX_LEFT + "px";
+      void thumb.offsetWidth;
+      thumb.style.transition = "";
+    } else {
+      document.body.classList.remove("dark-mode");
+      if (thumbIcono) thumbIcono.src = "../iconos/sol.png";
+      thumb.style.transition = "none";
+      thumb.style.left = PADDING + "px";
+      void thumb.offsetWidth;
+      thumb.style.transition = "";
+    }
+  }
+
+  aplicarEstadoInicial();
+
+  let arrastrando = false;
+  let startX = 0;
+  let thumbStartLeft = 0;
+  const movimientoMinimo = 5;
+
+  // ---- Cambiar de tema y redirigir ----
+  function cambiarTema(nuevoModoOscuro) {
+    const temaActualOscuro = document.body.classList.contains("dark-mode");
+    if (nuevoModoOscuro === temaActualOscuro) return;
+
+    localStorage.setItem("finix_tema", nuevoModoOscuro ? "oscuro" : "claro");
+
+    if (nuevoModoOscuro) {
+      window.location.href = "Black.html";
+    } else {
+      window.location.href = "billetera.html";
+    }
+  }
+
+  // ---- Clic en el track ----
+  track.addEventListener("click", (e) => {
+    if (arrastrando) return;
+    const estaOscuro = document.body.classList.contains("dark-mode");
+    cambiarTema(!estaOscuro);
+  });
+
+  // ---- Iniciar drag ----
+  thumb.addEventListener("mousedown", iniciarDrag);
+  thumb.addEventListener("touchstart", iniciarDrag, { passive: true });
+
+  function iniciarDrag(e) {
+    arrastrando = false;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    startX = clientX;
+    thumbStartLeft = parseInt(thumb.style.left) || PADDING;
+    track.classList.add("dragging");
+
+    document.addEventListener("mousemove", moverDrag);
+    document.addEventListener("touchmove", moverDrag, { passive: false });
+    document.addEventListener("mouseup", terminarDrag);
+    document.addEventListener("touchend", terminarDrag);
+  }
+
+  function moverDrag(e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const delta = clientX - startX;
+
+    if (Math.abs(delta) > movimientoMinimo) {
+      arrastrando = true;
+    }
+
+    if (!arrastrando) return;
+
+    let nuevoLeft = thumbStartLeft + delta;
+    nuevoLeft = Math.max(PADDING, Math.min(MAX_LEFT, nuevoLeft));
+    thumb.style.left = nuevoLeft + "px";
+  }
+
+  function terminarDrag(e) {
+    document.removeEventListener("mousemove", moverDrag);
+    document.removeEventListener("touchmove", moverDrag);
+    document.removeEventListener("mouseup", terminarDrag);
+    document.removeEventListener("touchend", terminarDrag);
+    track.classList.remove("dragging");
+
+    if (!arrastrando) return;
+
+    const leftActual = parseInt(thumb.style.left) || PADDING;
+    const centro = MAX_LEFT / 2;
+    const debeIrOscuro = leftActual > centro;
+
+    // Animación suave hacia el lado correspondiente
+    thumb.style.left = (debeIrOscuro ? MAX_LEFT : PADDING) + "px";
+
+    // Esperar a que se vea la animación antes de redirigir
+    setTimeout(() => {
+      cambiarTema(debeIrOscuro);
+    }, 180);
+
+    arrastrando = false;
+  }
+}
+
+// ============================================
 // INICIALIZAR TODO
 // ============================================
 document.addEventListener("DOMContentLoaded", () => {
+  // ---- Redirección automática según tema guardado ----
+  const temaGuardado = localStorage.getItem("finix_tema");
+  const esBlack = window.location.pathname.includes("Black");
+
+  if (temaGuardado === "oscuro" && !esBlack) {
+    window.location.href = "Black.html";
+    return;
+  }
+  if (temaGuardado === "claro" && esBlack) {
+    window.location.href = "billetera.html";
+    return;
+  }
+
   actualizarFecha();
   cargarNombre();
   marcarActivo();
@@ -381,4 +516,5 @@ document.addEventListener("DOMContentLoaded", () => {
   actualizarTotales();
 
   inicializarModal();
+  inicializarSwitchTema();
 });
