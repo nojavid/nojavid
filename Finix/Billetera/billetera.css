@@ -823,13 +823,12 @@ body {
 
 /* ============================================
    BOTÓN LÁPIZ (ir a registros.html)
-   Posición indicada: x:345 y:703 w:26 h:26
-   Encima del botón agregar (mas.png)
+   Anclado ENCIMA del botón agregar (mas.png)
    ============================================ */
 .btn-lapiz {
   position: fixed;
-  top: 703px;
-  left: 345px;
+  bottom: 140px;      /* 86px del + + 48px de alto + 6px de separación */
+  right: 21px;        /* centrado respecto al botón + (que mide 48px y está en right:10px) */
   width: 26px;
   height: 26px;
   padding: 0;
@@ -837,7 +836,7 @@ body {
   border: none;
   background: transparent;
   cursor: pointer;
-  z-index: 115; /* mayor que btn-agregar-mas (110) */
+  z-index: 115;       /* mayor que btn-agregar-mas (110) para quedar encima */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1466,13 +1465,12 @@ body.dark-mode .btn-cancelar {
     bottom: 84px;
   }
 
-  /* Ajuste del botón lápiz en pantallas pequeñas:
-     lo colocamos justo encima del botón + */
+  /* Lápiz justo encima del + */
   .btn-lapiz {
     top: auto;
     left: auto;
-    right: 10px;
-    bottom: 138px; /* 84 + 48 (alto del +) + 6 de separación */
+    right: 21px;
+    bottom: 138px; /* 84 + 48 + 6 */
   }
 }
 
@@ -1514,7 +1512,7 @@ body.dark-mode .btn-cancelar {
   .btn-lapiz {
     width: 24px;
     height: 24px;
-    right: 8px;
+    right: 18px;   /* centrado con el + de 44px en right:8px */
     bottom: 132px; /* 82 + 44 + 6 */
   }
 
