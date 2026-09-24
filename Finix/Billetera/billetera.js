@@ -254,7 +254,7 @@ function inicializarModal() {
       actualizarDiasRecordatorio("diario");
       const inputFecha = document.getElementById("inputFecha");
       if (inputFecha) inputFecha.value = new Date().toISOString().split("T")[0];
-    }, 400); // coincide con la duración de la transición
+    }, 400);
   }
 
   if (btnCerrarModal) btnCerrarModal.addEventListener("click", cerrarModal);
