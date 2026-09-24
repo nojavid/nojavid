@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Billetera - Finix (Black)</title>
-  <link rel="stylesheet" href="billetera.css">
+  <link rel="stylesheet" href="Black.css">
 </head>
 <body class="dark-mode">
 
@@ -14,11 +14,9 @@
   <header class="header">
     <div class="header-inner">
 
-      <!-- Saludo -->
       <h1 class="saludo">Hola, <span id="nombreUsuario">Name</span></h1>
       <h2 class="subtitulo">Billetera</h2>
 
-      <!-- Interruptor modo oscuro / claro (switch animado) -->
       <div class="interruptor-tema" id="interruptorTema">
         <div class="switch-track" id="switchTrack">
           <img src="../iconos/sol.png" alt="sol" class="switch-icon switch-icon-sol">
@@ -29,21 +27,23 @@
         </div>
       </div>
 
-      <!-- Botón de fecha -->
+      <!-- Botón de fecha (selector de mes) -->
       <div class="fecha-contenedor" id="btnFecha">
         <img src="../iconos/calendario1.4.png" alt="calendario" class="icono-calendario">
         <p class="fecha">
-          <span id="fechaActual">Abril 2026</span>
+          <span id="fechaActual">Todos</span>
         </p>
         <span class="flecha">^</span>
+
+        <!-- Dropdown de meses -->
+        <div class="meses-dropdown" id="mesesDropdown">
+        </div>
       </div>
 
     </div>
   </header>
 
-  <!-- ============================================
-       SECCIÓN TOTAL (Balance)
-       ============================================ -->
+  <!-- SECCIÓN TOTAL -->
   <section class="seccion total">
     <img src="../iconos/ondas1.png" alt="" class="ondas-total">
 
@@ -67,101 +67,43 @@
     <p class="valor-deudas-total" id="totalDeudas">$0</p>
   </section>
 
-  <!-- ============================================
-       SECCIÓN DEUDAS
-       ============================================ -->
+  <!-- SECCIÓN DEUDAS -->
   <section class="seccion deudas">
-
-    <div class="total-deudas-box" id="totalDeudasBox">
-      Total: $0
-    </div>
-
+    <div class="total-deudas-box" id="totalDeudasBox">Total: $0</div>
     <div class="deudas-header">
       <div class="deudas-circulo">
         <img src="../iconos/tarjeta.png" alt="tarjeta" class="deudas-icono">
       </div>
       <h2 class="deudas-titulo">Deudas</h2>
     </div>
-
     <p class="deudas-descripcion">En lo que debes y en que va cada una</p>
-
-    <div class="deudas-lista" id="deudasLista">
-
-      <div class="deuda-item">
-        <div class="deuda-item-header">
-          <div class="deuda-item-circulo">
-            <img src="../iconos/tarjeta.png" alt="tarjeta" class="deuda-item-icono">
-          </div>
-          <h4 class="deuda-item-nombre">Nombre de la deuda</h4>
-        </div>
-        <p class="deuda-item-fecha">Vence 28 Sep</p>
-        <div class="deuda-progreso-container">
-          <div class="deuda-progreso-barra">
-            <div class="deuda-progreso-relleno" style="width: 50%;"></div>
-          </div>
-          <span class="deuda-progreso-texto">50%</span>
-        </div>
-      </div>
-
-    </div>
+    <div class="deudas-lista" id="deudasLista"></div>
   </section>
 
-  <!-- ============================================
-       SECCIÓN METAS DE AHORRO
-       ============================================ -->
+  <!-- SECCIÓN METAS -->
   <section class="seccion metas">
-
-    <div class="total-metas-box" id="totalMetasBox">
-      Total: $0
-    </div>
-
+    <div class="total-metas-box" id="totalMetasBox">Total: $0</div>
     <div class="metas-header">
       <div class="metas-circulo">
         <img src="../iconos/Meta.png" alt="meta" class="metas-icono">
       </div>
       <h2 class="metas-titulo">Metas de Ahorro</h2>
     </div>
-
     <p class="metas-descripcion">Tus planes a futuro</p>
-
-    <div class="metas-lista" id="metasLista">
-
-      <div class="meta-item">
-        <div class="meta-item-header">
-          <div class="meta-item-circulo">
-            <img src="../iconos/Meta.png" alt="meta" class="meta-item-icono">
-          </div>
-          <h4 class="meta-item-nombre">Nombre del plan</h4>
-        </div>
-        <p class="meta-item-fecha">Vence 29 Sep</p>
-        <div class="meta-progreso-container">
-          <div class="meta-progreso-barra">
-            <div class="meta-progreso-relleno" style="width: 50%;"></div>
-          </div>
-          <span class="meta-progreso-texto">50%</span>
-        </div>
-      </div>
-
-    </div>
+    <div class="metas-lista" id="metasLista"></div>
   </section>
 
-  <!-- ============================================
-       BOTÓN LÁPIZ
-       ============================================ -->
+  <!-- BOTÓN LÁPIZ -->
   <a href="registros.html" class="btn-lapiz" id="btnLapiz" aria-label="Registros">
     <img src="../iconos/lapiz.png" alt="Registros" class="icono-lapiz">
   </a>
 
-  <!-- ============================================
-       BOTÓN AGREGAR
-       ============================================ -->
+  <!-- BOTÓN AGREGAR -->
   <button class="btn-agregar-mas" id="btnAgregar" aria-label="Agregar">
     <img src="../iconos/mas.png" alt="Agregar" class="icono-mas">
   </button>
 
-  <!-- ============================================
-       MODAL NUEVO REGISTRO
-       ============================================ -->
+  <!-- MODAL NUEVO REGISTRO -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-registro" id="modalRegistro">
 
@@ -247,9 +189,7 @@
     </div>
   </div>
 
-  <!-- ============================================
-       NAVEGACIÓN INFERIOR
-       ============================================ -->
+  <!-- NAVEGACIÓN INFERIOR -->
   <div class="bottom-nav">
     <a href="../finix.html" data-page="finix.html">
       <img src="../iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'">
@@ -270,6 +210,6 @@
     </a>
   </div>
 
-  <script src="billetera.js"></script>
+  <script src="Black.js"></script>
 </body>
 </html>

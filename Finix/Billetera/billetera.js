@@ -1,21 +1,18 @@
 // ============================================
-// FECHA ACTUAL EN FORMATO: Mes de Año
+// SELECTOR DE MESES
 // ============================================
-function actualizarFecha() {
-  const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
-                 "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-  const hoy = new Date();
-  const mes = meses[hoy.getMonth()];
-  const anio = hoy.getFullYear();
-  document.getElementById("fechaActual").textContent = `${mes} de ${anio}`;
-}
+let mesSeleccionado = "todos";  // "todos" o "2026-04"
+
+const MESES_NOMBRES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
+                       "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
 // ============================================
 // NOMBRE DEL USUARIO
 // ============================================
 function cargarNombre() {
   const nombre = localStorage.getItem("nombreUsuario") || "Name";
-  document.getElementById("nombreUsuario").textContent = nombre;
+  const el = document.getElementById("nombreUsuario");
+  if (el) el.textContent = nombre;
 }
 
 // ============================================
@@ -60,7 +57,7 @@ function formatearMonto(valor) {
 }
 
 // ============================================
-// CALCULAR PORCENTAJE (para barra de progreso)
+// CALCULAR PORCENTAJE
 // ============================================
 function calcularPorcentaje(registro) {
   if (registro.montoTotal && registro.montoPagado) {
@@ -74,12 +71,151 @@ function calcularPorcentaje(registro) {
 // ============================================
 function formatearFecha(fechaISO) {
   if (!fechaISO) return "Sin fecha";
-  const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
-                 "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
   const fecha = new Date(fechaISO + "T00:00:00");
   const dia = fecha.getDate();
-  const mes = meses[fecha.getMonth()];
+  const mes = MESES_NOMBRES[fecha.getMonth()];
   return `${dia} ${mes}`;
+}
+
+// ============================================
+// FILTRAR REGISTROS POR MES SELECCIONADO
+// ============================================
+function filtrarRegistrosPorMes(registros) {
+  if (mesSeleccionado === "todos") return registros;
+
+  return registros.filter(r => {
+    if (!r.fecha) return false;
+    const fecha = new Date(r.fecha + "T00:00:00");
+    const clave = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}`;
+    return clave === mesSeleccionado;
+  });
+}
+
+// ============================================
+// OBTENER MESES CON DATOS
+// ============================================
+function obtenerMesesConDatos() {
+  const registros = obtenerRegistros();
+  const meses = new Set();
+
+  registros.forEach(r => {
+    if (r.fecha) {
+      const fecha = new Date(r.fecha + "T00:00:00");
+      const clave = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}`;
+      meses.add(clave);
+    }
+  });
+
+  return [...meses].sort().reverse();
+}
+
+function formatearMesClave(clave) {
+  const [anio, mes] = clave.split("-");
+  return `${MESES_NOMBRES[parseInt(mes) - 1]} ${anio}`;
+}
+
+// ============================================
+// RENDERIZAR DROPDOWN DE MESES
+// ============================================
+function renderizarDropdownMeses() {
+  const dropdown = document.getElementById("mesesDropdown");
+  if (!dropdown) return;
+
+  dropdown.innerHTML = "";
+
+  // Opción "Todos"
+  const btnTodos = document.createElement("button");
+  btnTodos.className = "mes-opcion" + (mesSeleccionado === "todos" ? " seleccionado" : "");
+  btnTodos.textContent = "Todos los meses";
+  btnTodos.dataset.mes = "todos";
+  btnTodos.addEventListener("click", (e) => {
+    e.stopPropagation();
+    seleccionarMes("todos");
+  });
+  dropdown.appendChild(btnTodos);
+
+  // Meses con datos
+  const meses = obtenerMesesConDatos();
+
+  if (meses.length === 0) {
+    const vacio = document.createElement("div");
+    vacio.className = "mes-opcion vacio";
+    vacio.textContent = "Sin registros";
+    dropdown.appendChild(vacio);
+    return;
+  }
+
+  meses.forEach(clave => {
+    const btn = document.createElement("button");
+    btn.className = "mes-opcion" + (mesSeleccionado === clave ? " seleccionado" : "");
+    btn.textContent = formatearMesClave(clave);
+    btn.dataset.mes = clave;
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      seleccionarMes(clave);
+    });
+    dropdown.appendChild(btn);
+  });
+}
+
+// ============================================
+// SELECCIONAR MES
+// ============================================
+function seleccionarMes(clave) {
+  mesSeleccionado = clave;
+
+  const elFecha = document.getElementById("fechaActual");
+  if (elFecha) {
+    elFecha.textContent = clave === "todos" ? "Todos" : formatearMesClave(clave);
+  }
+
+  const dropdown = document.getElementById("mesesDropdown");
+  const contenedor = document.getElementById("btnFecha");
+  if (dropdown) dropdown.classList.remove("activo");
+  if (contenedor) contenedor.classList.remove("abierto");
+
+  renderizarDeudas();
+  renderizarMetas();
+  actualizarTotales();
+}
+
+// ============================================
+// INICIALIZAR SELECTOR DE MESES
+// ============================================
+function inicializarSelectorMes() {
+  const btnFecha = document.getElementById("btnFecha");
+  const dropdown = document.getElementById("mesesDropdown");
+
+  if (!btnFecha || !dropdown) return;
+
+  renderizarDropdownMeses();
+
+  btnFecha.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const abierto = dropdown.classList.contains("activo");
+    if (abierto) {
+      dropdown.classList.remove("activo");
+      btnFecha.classList.remove("abierto");
+    } else {
+      renderizarDropdownMeses();
+      dropdown.classList.add("activo");
+      btnFecha.classList.add("abierto");
+    }
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!btnFecha.contains(e.target)) {
+      dropdown.classList.remove("activo");
+      btnFecha.classList.remove("abierto");
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      dropdown.classList.remove("activo");
+      btnFecha.classList.remove("abierto");
+    }
+  });
 }
 
 // ============================================
@@ -89,7 +225,9 @@ function renderizarDeudas() {
   const lista = document.getElementById("deudasLista");
   if (!lista) return;
 
-  const registros = obtenerRegistros().filter(r => r.seccion === "deudas");
+  const registros = filtrarRegistrosPorMes(
+    obtenerRegistros().filter(r => r.seccion === "deudas")
+  );
   lista.innerHTML = "";
 
   if (registros.length === 0) {
@@ -131,7 +269,9 @@ function renderizarMetas() {
   const lista = document.getElementById("metasLista");
   if (!lista) return;
 
-  const registros = obtenerRegistros().filter(r => r.seccion === "ahorro");
+  const registros = filtrarRegistrosPorMes(
+    obtenerRegistros().filter(r => r.seccion === "ahorro")
+  );
   lista.innerHTML = "";
 
   if (registros.length === 0) {
@@ -180,10 +320,10 @@ function renderizarSeccionesPersonalizadas() {
 }
 
 // ============================================
-// ACTUALIZAR TOTALES (Balance, Ahorro, Deudas)
+// ACTUALIZAR TOTALES
 // ============================================
 function actualizarTotales() {
-  const registros = obtenerRegistros();
+  const registros = filtrarRegistrosPorMes(obtenerRegistros());
 
   const totalDeudas = registros
     .filter(r => r.seccion === "deudas")
@@ -231,7 +371,6 @@ function inicializarModal() {
 
   if (!btnAgregar || !modalOverlay) return;
 
-  // ---- Abrir modal ----
   btnAgregar.addEventListener("click", () => {
     modalOverlay.classList.add("activo");
     document.body.style.overflow = "hidden";
@@ -240,7 +379,6 @@ function inicializarModal() {
     if (inputFecha) inputFecha.value = hoy;
   });
 
-  // ---- Cerrar modal ----
   function cerrarModal() {
     modalOverlay.classList.add("cerrando");
     document.body.style.overflow = "";
@@ -270,7 +408,6 @@ function inicializarModal() {
     }
   });
 
-  // ---- Mostrar / ocultar campos de nueva sección ----
   if (selectSeccion) {
     selectSeccion.addEventListener("change", () => {
       if (selectSeccion.value === "nueva") {
@@ -284,14 +421,12 @@ function inicializarModal() {
     });
   }
 
-  // ---- Actualizar texto del color ----
   if (inputColorSeccion) {
     inputColorSeccion.addEventListener("input", () => {
       if (colorTexto) colorTexto.textContent = inputColorSeccion.value.toUpperCase();
     });
   }
 
-  // ---- Días del recordatorio según tipo ----
   function actualizarDiasRecordatorio(tipo) {
     if (!selectDiaRecordatorio) return;
     selectDiaRecordatorio.innerHTML = "";
@@ -330,7 +465,6 @@ function inicializarModal() {
     });
   });
 
-  // ---- Enviar formulario ----
   if (formRegistro) {
     formRegistro.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -359,6 +493,7 @@ function inicializarModal() {
       renderizarMetas();
       renderizarSeccionesPersonalizadas();
       actualizarTotales();
+      renderizarDropdownMeses();
 
       console.log("Nuevo registro guardado:", nuevoRegistro);
 
@@ -379,13 +514,9 @@ function inicializarSwitchTema() {
 
   const esModoOscuro = document.body.classList.contains("dark-mode");
 
-  // Constantes de geometría
-  const TRACK_WIDTH = 61;
-  const THUMB_WIDTH = 16;
-  const PADDING = 2;
-  const MAX_LEFT = TRACK_WIDTH - THUMB_WIDTH - PADDING * 2; // = 41
+  const MIN_LEFT = 2;
+  const MAX_LEFT = 32;
 
-  // ---- Aplicar estado inicial sin animación ----
   function aplicarEstadoInicial() {
     if (esModoOscuro) {
       document.body.classList.add("dark-mode");
@@ -398,7 +529,7 @@ function inicializarSwitchTema() {
       document.body.classList.remove("dark-mode");
       if (thumbIcono) thumbIcono.src = "../iconos/sol.png";
       thumb.style.transition = "none";
-      thumb.style.left = PADDING + "px";
+      thumb.style.left = MIN_LEFT + "px";
       void thumb.offsetWidth;
       thumb.style.transition = "";
     }
@@ -411,7 +542,6 @@ function inicializarSwitchTema() {
   let thumbStartLeft = 0;
   const movimientoMinimo = 5;
 
-  // ---- Cambiar de tema y redirigir ----
   function cambiarTema(nuevoModoOscuro) {
     const temaActualOscuro = document.body.classList.contains("dark-mode");
     if (nuevoModoOscuro === temaActualOscuro) return;
@@ -425,14 +555,12 @@ function inicializarSwitchTema() {
     }
   }
 
-  // ---- Clic en el track ----
-  track.addEventListener("click", (e) => {
+  track.addEventListener("click", () => {
     if (arrastrando) return;
     const estaOscuro = document.body.classList.contains("dark-mode");
     cambiarTema(!estaOscuro);
   });
 
-  // ---- Iniciar drag ----
   thumb.addEventListener("mousedown", iniciarDrag);
   thumb.addEventListener("touchstart", iniciarDrag, { passive: true });
 
@@ -440,7 +568,7 @@ function inicializarSwitchTema() {
     arrastrando = false;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     startX = clientX;
-    thumbStartLeft = parseInt(thumb.style.left) || PADDING;
+    thumbStartLeft = parseInt(thumb.style.left) || MIN_LEFT;
     track.classList.add("dragging");
 
     document.addEventListener("mousemove", moverDrag);
@@ -460,11 +588,11 @@ function inicializarSwitchTema() {
     if (!arrastrando) return;
 
     let nuevoLeft = thumbStartLeft + delta;
-    nuevoLeft = Math.max(PADDING, Math.min(MAX_LEFT, nuevoLeft));
+    nuevoLeft = Math.max(MIN_LEFT, Math.min(MAX_LEFT, nuevoLeft));
     thumb.style.left = nuevoLeft + "px";
   }
 
-  function terminarDrag(e) {
+  function terminarDrag() {
     document.removeEventListener("mousemove", moverDrag);
     document.removeEventListener("touchmove", moverDrag);
     document.removeEventListener("mouseup", terminarDrag);
@@ -473,14 +601,12 @@ function inicializarSwitchTema() {
 
     if (!arrastrando) return;
 
-    const leftActual = parseInt(thumb.style.left) || PADDING;
-    const centro = MAX_LEFT / 2;
+    const leftActual = parseInt(thumb.style.left) || MIN_LEFT;
+    const centro = (MIN_LEFT + MAX_LEFT) / 2;
     const debeIrOscuro = leftActual > centro;
 
-    // Animación suave hacia el lado correspondiente
-    thumb.style.left = (debeIrOscuro ? MAX_LEFT : PADDING) + "px";
+    thumb.style.left = (debeIrOscuro ? MAX_LEFT : MIN_LEFT) + "px";
 
-    // Esperar a que se vea la animación antes de redirigir
     setTimeout(() => {
       cambiarTema(debeIrOscuro);
     }, 180);
@@ -506,7 +632,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  actualizarFecha();
   cargarNombre();
   marcarActivo();
 
@@ -517,4 +642,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
   inicializarModal();
   inicializarSwitchTema();
+  inicializarSelectorMes();
 });

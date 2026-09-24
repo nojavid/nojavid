@@ -49,7 +49,7 @@ body {
    ============================================ */
 .header {
   position: relative;
-  z-index: 10;
+  z-index: 50;
   width: 100%;
 }
 
@@ -60,6 +60,7 @@ body {
   height: 90px;
   margin: 0 auto;
   padding: 0;
+  z-index: 50;
 }
 
 .saludo {
@@ -100,44 +101,42 @@ body {
    ============================================ */
 .interruptor-tema {
   position: absolute;
-  top: 22px;
-  left: 322px;
-  width: 61px;
-  height: 22px;
+  top: 18px;
+  left: 313px;
+  width: 70px;
+  height: 26px;
   z-index: 12;
   user-select: none;
   -webkit-user-select: none;
 }
 
-/* Pista (track) del switch */
 .switch-track {
   position: relative;
-  width: 61px;
-  height: 22px;
-  border-radius: 12px;
-  background: #185540;
-  border: 1px solid #398869;
+  width: 70px;
+  height: 26px;
+  border-radius: 13px;
+  background: #FFFFFF;
+  border: 1.5px solid #185540;
   box-sizing: border-box;
   cursor: pointer;
-  transition: background 0.4s ease, border-color 0.4s ease;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
-/* Modo oscuro: la pista se oscurece un poco más */
 body.dark-mode .switch-track {
-  background: #0B2E34;
-  border-color: #398869;
+  background: #FFFFFF;
+  border-color: #185540;
 }
 
-/* Iconos dentro de la pista (sol a la izquierda, luna a la derecha) */
 .switch-icon {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   object-fit: contain;
-  opacity: 0.5;
+  opacity: 0.35;
   transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: 1;
@@ -151,66 +150,53 @@ body.dark-mode .switch-track {
   right: 5px;
 }
 
-/* El icono activo se ilumina */
 body:not(.dark-mode) .switch-icon-sol,
 body.dark-mode .switch-icon-luna {
-  opacity: 1;
+  opacity: 0.5;
 }
 
-body:not(.dark-mode) .switch-icon-luna,
-body.dark-mode .switch-icon-sol {
-  opacity: 0.35;
-}
-
-/* Pulgar (thumb) deslizante */
 .switch-thumb {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  width: 34px;
+  height: 19px;
+  border-radius: 10px;
+  background: #185540;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 0.4s ease;
+  transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: grab;
   z-index: 2;
-  will-change: left;
 }
 
 .switch-thumb:active {
   cursor: grabbing;
 }
 
-/* Cuando el tema es oscuro, el thumb se mueve a la derecha */
 body.dark-mode .switch-thumb {
-  left: 41px;
-  background: #E8F5EE;
+  left: 32px;
 }
 
-/* Icono pequeño dentro del thumb */
 .switch-thumb img {
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   object-fit: contain;
   pointer-events: none;
+  filter: brightness(0) invert(1);
 }
 
-/* Deshabilitar transición mientras se arrastra */
 .switch-track.dragging .switch-thumb {
   transition: none;
 }
 
 /* ============================================
-   BOTÓN DE FECHA
+   BOTÓN DE FECHA — SELECTOR DE MES
    ============================================ */
 .fecha-contenedor {
   position: absolute;
-  top: 42px;
+  top: 46px;
   left: 307px;
   width: 76px;
   height: 18px;
@@ -221,8 +207,17 @@ body.dark-mode .switch-thumb {
   align-items: center;
   padding: 0 4px 0 3px;
   cursor: pointer;
-  z-index: 12;
+  z-index: 999;
   box-sizing: border-box;
+  transition: background-color 0.2s ease;
+}
+
+.fecha-contenedor:hover {
+  background-color: #F5FAF7;
+}
+
+body.dark-mode .fecha-contenedor:hover {
+  background-color: #1A3A42;
 }
 
 .icono-calendario {
@@ -271,6 +266,110 @@ body.dark-mode .switch-thumb {
   flex-shrink: 0;
   position: relative;
   top: -1px;
+  transition: transform 0.25s ease;
+}
+
+.fecha-contenedor.abierto .flecha {
+  transform: rotate(0deg);
+}
+
+/* Dropdown de meses */
+.meses-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 130px;
+  max-height: 220px;
+  overflow-y: auto;
+  background-color: #FFFFFF;
+  border: 1px solid #398869;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 999;
+  box-sizing: border-box;
+}
+
+.meses-dropdown.activo {
+  display: flex;
+  animation: fadeInDropdown 0.2s ease;
+}
+
+@keyframes fadeInDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mes-opcion {
+  padding: 6px 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #185540;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+  text-align: left;
+  border: none;
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mes-opcion:hover {
+  background-color: #E8F5EE;
+}
+
+.mes-opcion.seleccionado {
+  background-color: #185540;
+  color: #FFFFFF;
+}
+
+.mes-opcion.vacio {
+  color: #A0A8AD;
+  font-style: italic;
+  cursor: default;
+}
+
+.mes-opcion.vacio:hover {
+  background-color: transparent;
+}
+
+body.dark-mode .meses-dropdown {
+  background-color: #123A42;
+  border-color: #398869;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .mes-opcion {
+  color: #FFFFFF;
+}
+
+body.dark-mode .mes-opcion:hover {
+  background-color: #1E4E58;
+}
+
+body.dark-mode .mes-opcion.seleccionado {
+  background-color: #398869;
+  color: #FFFFFF;
+}
+
+body.dark-mode .mes-opcion.vacio {
+  color: #7A8F96;
+}
+
+body.dark-mode .mes-opcion.vacio:hover {
+  background-color: transparent;
 }
 
 /* ============================================
@@ -511,7 +610,7 @@ body.dark-mode .switch-thumb {
 }
 
 /* ============================================
-   SECCIÓN DEUDAS (REDISEÑADA)
+   SECCIÓN DEUDAS
    ============================================ */
 .seccion.deudas {
   position: relative;
@@ -670,7 +769,7 @@ body.dark-mode .switch-thumb {
 }
 
 /* ============================================
-   SECCIÓN METAS DE AHORRO (REDISEÑADA)
+   SECCIÓN METAS
    ============================================ */
 .seccion.metas {
   position: relative;
@@ -829,7 +928,7 @@ body.dark-mode .switch-thumb {
 }
 
 /* ============================================
-   SUBSECCIONES (compatibilidad)
+   SUBSECCIONES
    ============================================ */
 .subseccion {
   display: flex;
@@ -873,7 +972,7 @@ body.dark-mode .switch-thumb {
 }
 
 /* ============================================
-   BOTÓN LÁPIZ (ir a registros.html)
+   BOTÓN LÁPIZ
    ============================================ */
 .btn-lapiz {
   position: fixed;
@@ -912,7 +1011,7 @@ body.dark-mode .switch-thumb {
 }
 
 /* ============================================
-   BOTÓN AGREGAR (imagen mas.png)
+   BOTÓN AGREGAR
    ============================================ */
 .btn-agregar-mas {
   position: fixed;
@@ -1538,7 +1637,7 @@ body.dark-mode .btn-cancelar {
   .fecha-contenedor {
     transform: scale(0.9);
     transform-origin: top right;
-    top: 40px;
+    top: 44px;
   }
 
   .btn-agregar-mas {
