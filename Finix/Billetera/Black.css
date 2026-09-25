@@ -1481,6 +1481,17 @@ body.dark-mode .nav-activo-texto {
 }
 
 /* ============================================
+   ICONOS DEL MENÚ INFERIOR EN BLANCO (MODO OSCURO)
+   ============================================ */
+body.dark-mode .bottom-nav img {
+  filter: brightness(0) invert(1);
+}
+
+body.dark-mode .bottom-nav .nav-activo-icono {
+  filter: brightness(0) invert(1);
+}
+
+/* ============================================
    SECCIÓN TOTAL — ESTILO NEÓN VERDE
    ============================================ */
 body.dark-mode .seccion.total {
