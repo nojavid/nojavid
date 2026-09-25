@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar - Finix</title>
+  <link rel="stylesheet" href="editar.css">
+</head>
+<body>
+
+  <!-- ============================================
+       HEADER
+       ============================================ -->
+  <header class="header">
+    <div class="header-inner">
+
+      <!-- Botón regresar -->
+      <a href="billetera.html" class="btn-regresar" id="btnRegresar" aria-label="Regresar">
+        <img src="../iconos/flecharegreso.png" alt="Regresar" class="icono-regresar" onerror="this.src='iconos/flecharegreso.png'">
+      </a>
+
+      <!-- Título -->
+      <h1 class="titulo-editar">Actualizar datos</h1>
+
+      <!-- Subtítulo / descripción -->
+      <p class="subtitulo-editar">Administra tus secciones de deudas y metas de ahorro</p>
+
+    </div>
+  </header>
+
+  <!-- ============================================
+       SECCIONES DINÁMICAS
+       ============================================ -->
+  <main class="contenedor-secciones" id="contenedorSecciones">
+    <!-- Se llena dinámicamente con JS -->
+  </main>
+
+  <!-- ============================================
+       NAVEGACIÓN INFERIOR
+       ============================================ -->
+  <div class="bottom-nav">
+    <a href="../finix.html" data-page="finix.html">
+      <img src="../iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'">
+    </a>
+
+    <a href="billetera.html" data-page="billetera.html" class="active" id="navBilletera">
+      <div class="nav-activo-rect">
+        <img src="../iconos/billetera1.4.png" alt="billetera" class="nav-activo-icono" onerror="this.src='iconos/billetera1.4.png'">
+        <span class="nav-activo-texto">Billetera</span>
+      </div>
+    </a>
+
+    <a href="../reportes.html" data-page="reportes.html">
+      <img src="../iconos/barra.png" alt="reportes" onerror="this.src='iconos/barra.png'">
+    </a>
+    <a href="../configuracion.html" data-page="configuracion.html">
+      <img src="../iconos/tuerca.png" alt="tuerca" onerror="this.src='iconos/tuerca.png'">
+    </a>
+  </div>
+
+  <script src="editar.js"></script>
+</body>
+</html>

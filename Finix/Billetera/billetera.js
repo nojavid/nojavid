@@ -1,7 +1,7 @@
 // ============================================
 // SELECTOR DE MESES
 // ============================================
-let mesSeleccionado = "todos";  // "todos" o "2026-04"
+let mesSeleccionado = "todos";
 
 const MESES_NOMBRES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
                        "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -16,7 +16,7 @@ function cargarNombre() {
 }
 
 // ============================================
-// MARCAR ÍCONO ACTIVO EN LA BARRA INFERIOR
+// MARCAR ÍCONO ACTIVO
 // ============================================
 function marcarActivo() {
   const paginaActual = window.location.pathname.split("/").pop() || "billetera.html";
@@ -32,7 +32,7 @@ function marcarActivo() {
 }
 
 // ============================================
-// SISTEMA DE REGISTROS (localStorage)
+// SISTEMA DE REGISTROS
 // ============================================
 const STORAGE_KEY = "finix_registros";
 
@@ -48,17 +48,11 @@ function guardarRegistros(registros) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
 }
 
-// ============================================
-// FORMATEAR MONTO
-// ============================================
 function formatearMonto(valor) {
   const numero = Number(valor) || 0;
   return "$" + numero.toLocaleString("es-CO");
 }
 
-// ============================================
-// CALCULAR PORCENTAJE
-// ============================================
 function calcularPorcentaje(registro) {
   if (registro.montoTotal && registro.montoPagado) {
     return Math.min(100, Math.round((registro.montoPagado / registro.montoTotal) * 100));
@@ -66,9 +60,6 @@ function calcularPorcentaje(registro) {
   return 0;
 }
 
-// ============================================
-// FORMATEAR FECHA (dd Mmm)
-// ============================================
 function formatearFecha(fechaISO) {
   if (!fechaISO) return "Sin fecha";
   const fecha = new Date(fechaISO + "T00:00:00");
@@ -77,9 +68,6 @@ function formatearFecha(fechaISO) {
   return `${dia} ${mes}`;
 }
 
-// ============================================
-// FILTRAR REGISTROS POR MES SELECCIONADO
-// ============================================
 function filtrarRegistrosPorMes(registros) {
   if (mesSeleccionado === "todos") return registros;
 
@@ -91,9 +79,6 @@ function filtrarRegistrosPorMes(registros) {
   });
 }
 
-// ============================================
-// OBTENER MESES CON DATOS
-// ============================================
 function obtenerMesesConDatos() {
   const registros = obtenerRegistros();
   const meses = new Set();
@@ -115,7 +100,7 @@ function formatearMesClave(clave) {
 }
 
 // ============================================
-// RENDERIZAR DROPDOWN DE MESES
+// DROPDOWN DE MESES
 // ============================================
 function renderizarDropdownMeses() {
   const dropdown = document.getElementById("mesesDropdown");
@@ -123,7 +108,6 @@ function renderizarDropdownMeses() {
 
   dropdown.innerHTML = "";
 
-  // Opción "Todos"
   const btnTodos = document.createElement("button");
   btnTodos.className = "mes-opcion" + (mesSeleccionado === "todos" ? " seleccionado" : "");
   btnTodos.textContent = "Todos los meses";
@@ -134,7 +118,6 @@ function renderizarDropdownMeses() {
   });
   dropdown.appendChild(btnTodos);
 
-  // Meses con datos
   const meses = obtenerMesesConDatos();
 
   if (meses.length === 0) {
@@ -158,9 +141,6 @@ function renderizarDropdownMeses() {
   });
 }
 
-// ============================================
-// SELECCIONAR MES
-// ============================================
 function seleccionarMes(clave) {
   mesSeleccionado = clave;
 
@@ -179,9 +159,6 @@ function seleccionarMes(clave) {
   actualizarTotales();
 }
 
-// ============================================
-// INICIALIZAR SELECTOR DE MESES
-// ============================================
 function inicializarSelectorMes() {
   const btnFecha = document.getElementById("btnFecha");
   const dropdown = document.getElementById("mesesDropdown");
@@ -219,7 +196,7 @@ function inicializarSelectorMes() {
 }
 
 // ============================================
-// RENDERIZAR LISTA DE DEUDAS
+// RENDERIZAR DEUDAS
 // ============================================
 function renderizarDeudas() {
   const lista = document.getElementById("deudasLista");
@@ -263,7 +240,7 @@ function renderizarDeudas() {
 }
 
 // ============================================
-// RENDERIZAR LISTA DE METAS
+// RENDERIZAR METAS
 // ============================================
 function renderizarMetas() {
   const lista = document.getElementById("metasLista");
@@ -307,7 +284,7 @@ function renderizarMetas() {
 }
 
 // ============================================
-// RENDERIZAR SECCIONES PERSONALIZADAS
+// SECCIONES PERSONALIZADAS
 // ============================================
 function renderizarSeccionesPersonalizadas() {
   const registros = obtenerRegistros();
@@ -503,7 +480,7 @@ function inicializarModal() {
 }
 
 // ============================================
-// SWITCH DE TEMA (CLARO / OSCURO) CON DRAG
+// SWITCH DE TEMA CON DRAG
 // ============================================
 function inicializarSwitchTema() {
   const track = document.getElementById("switchTrack");
@@ -624,11 +601,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const esBlack = window.location.pathname.includes("Black");
 
   if (temaGuardado === "oscuro" && !esBlack) {
-    window.location.href = "Black.html";
+    window.location.replace("Black.html");
     return;
   }
   if (temaGuardado === "claro" && esBlack) {
-    window.location.href = "billetera.html";
+    window.location.replace("billetera.html");
     return;
   }
 

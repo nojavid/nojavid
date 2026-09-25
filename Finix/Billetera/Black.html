@@ -8,12 +8,8 @@
 </head>
 <body class="dark-mode">
 
-  <!-- ============================================
-       HEADER
-       ============================================ -->
   <header class="header">
     <div class="header-inner">
-
       <h1 class="saludo">Hola, <span id="nombreUsuario">Name</span></h1>
       <h2 class="subtitulo">Billetera</h2>
 
@@ -27,7 +23,6 @@
         </div>
       </div>
 
-      <!-- Botón de fecha (selector de mes) -->
       <div class="fecha-contenedor" id="btnFecha">
         <img src="../iconos/calendario1.4.png" alt="calendario" class="icono-calendario">
         <p class="fecha">
@@ -35,39 +30,29 @@
         </p>
         <span class="flecha">^</span>
 
-        <!-- Dropdown de meses -->
         <div class="meses-dropdown" id="mesesDropdown">
         </div>
       </div>
-
     </div>
   </header>
 
-  <!-- SECCIÓN TOTAL -->
   <section class="seccion total">
     <img src="../iconos/ondas1.png" alt="" class="ondas-total">
-
     <div class="circulo-billetera">
       <img src="../iconos/billetera1.4.png" alt="billetera" class="icono-billetera-total">
     </div>
-
     <h2 class="titulo-balance">Balance total</h2>
     <p class="valor-balance" id="balanceTotal">$3.240.000</p>
-
     <div class="linea-vertical-total"></div>
-
     <img src="../iconos/flechaverde.png" alt="ahorro" class="flecha-total flecha-verde-total">
     <h3 class="titulo-ahorro-total">Ahorro</h3>
     <p class="valor-ahorro-total" id="totalAhorro">$0</p>
-
     <div class="linea-horizontal-total"></div>
-
     <img src="../iconos/flecharoga.png" alt="deudas" class="flecha-total flecha-roja-total">
     <h3 class="titulo-deudas-total">Deudas</h3>
     <p class="valor-deudas-total" id="totalDeudas">$0</p>
   </section>
 
-  <!-- SECCIÓN DEUDAS -->
   <section class="seccion deudas">
     <div class="total-deudas-box" id="totalDeudasBox">Total: $0</div>
     <div class="deudas-header">
@@ -80,7 +65,6 @@
     <div class="deudas-lista" id="deudasLista"></div>
   </section>
 
-  <!-- SECCIÓN METAS -->
   <section class="seccion metas">
     <div class="total-metas-box" id="totalMetasBox">Total: $0</div>
     <div class="metas-header">
@@ -93,27 +77,22 @@
     <div class="metas-lista" id="metasLista"></div>
   </section>
 
-  <!-- BOTÓN LÁPIZ -->
-  <a href="registros.html" class="btn-lapiz" id="btnLapiz" aria-label="Registros">
+  <a href="editar.html" class="btn-lapiz" id="btnLapiz" aria-label="Registros">
     <img src="../iconos/lapiz.png" alt="Registros" class="icono-lapiz">
   </a>
 
-  <!-- BOTÓN AGREGAR -->
   <button class="btn-agregar-mas" id="btnAgregar" aria-label="Agregar">
     <img src="../iconos/mas.png" alt="Agregar" class="icono-mas">
   </button>
 
-  <!-- MODAL NUEVO REGISTRO -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-registro" id="modalRegistro">
-
       <div class="modal-header">
         <h2 class="modal-titulo">Nuevo registro</h2>
         <button class="modal-cerrar" id="btnCerrarModal" aria-label="Cerrar">✕</button>
       </div>
 
       <form class="modal-form" id="formRegistro">
-
         <div class="form-grupo">
           <label class="form-label" for="selectSeccion">Sección</label>
           <select class="form-select" id="selectSeccion" required>
@@ -184,12 +163,10 @@
           <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
           <button type="submit" class="btn-guardar">Guardar</button>
         </div>
-
       </form>
     </div>
   </div>
 
-  <!-- NAVEGACIÓN INFERIOR -->
   <div class="bottom-nav">
     <a href="../finix.html" data-page="finix.html">
       <img src="../iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'">

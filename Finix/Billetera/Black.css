@@ -22,30 +22,6 @@ body {
 }
 
 /* ============================================
-   ONDAS DE FONDO (globales)
-   ============================================ */
-.ondas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* ============================================
    HEADER
    ============================================ */
 .header {
@@ -79,10 +55,7 @@ body {
   z-index: 11;
 }
 
-.saludo span {
-  color: #0B2E34;
-  font-weight: 800;
-}
+.saludo span { color: #0B2E34; font-weight: 800; }
 
 .subtitulo {
   position: absolute;
@@ -98,7 +71,7 @@ body {
 }
 
 /* ============================================
-   INTERRUPTOR MODO OSCURO / CLARO (SWITCH ANIMADO)
+   INTERRUPTOR
    ============================================ */
 .interruptor-tema {
   position: absolute;
@@ -143,18 +116,11 @@ body.dark-mode .switch-track {
   z-index: 1;
 }
 
-.switch-icon-sol {
-  left: 5px;
-}
-
-.switch-icon-luna {
-  right: 5px;
-}
+.switch-icon-sol { left: 5px; }
+.switch-icon-luna { right: 5px; }
 
 body:not(.dark-mode) .switch-icon-sol,
-body.dark-mode .switch-icon-luna {
-  opacity: 0.5;
-}
+body.dark-mode .switch-icon-luna { opacity: 0.5; }
 
 .switch-thumb {
   position: absolute;
@@ -172,13 +138,8 @@ body.dark-mode .switch-icon-luna {
   z-index: 2;
 }
 
-.switch-thumb:active {
-  cursor: grabbing;
-}
-
-body.dark-mode .switch-thumb {
-  left: 32px;
-}
+.switch-thumb:active { cursor: grabbing; }
+body.dark-mode .switch-thumb { left: 32px; }
 
 .switch-thumb img {
   width: 11px;
@@ -188,12 +149,10 @@ body.dark-mode .switch-thumb {
   filter: brightness(0) invert(1);
 }
 
-.switch-track.dragging .switch-thumb {
-  transition: none;
-}
+.switch-track.dragging .switch-thumb { transition: none; }
 
 /* ============================================
-   BOTÓN DE FECHA — SELECTOR DE MES
+   BOTÓN DE FECHA
    ============================================ */
 .fecha-contenedor {
   position: absolute;
@@ -213,13 +172,8 @@ body.dark-mode .switch-thumb {
   transition: background-color 0.2s ease;
 }
 
-.fecha-contenedor:hover {
-  background-color: #F5FAF7;
-}
-
-body.dark-mode .fecha-contenedor:hover {
-  background-color: #1A1D21;
-}
+.fecha-contenedor:hover { background-color: #F5FAF7; }
+body.dark-mode .fecha-contenedor:hover { background-color: #1A1D21; }
 
 .icono-calendario {
   width: 9px;
@@ -270,11 +224,8 @@ body.dark-mode .fecha-contenedor:hover {
   transition: transform 0.25s ease;
 }
 
-.fecha-contenedor.abierto .flecha {
-  transform: rotate(0deg);
-}
+.fecha-contenedor.abierto .flecha { transform: rotate(0deg); }
 
-/* Dropdown de meses */
 .meses-dropdown {
   position: absolute;
   top: calc(100% + 6px);
@@ -300,14 +251,8 @@ body.dark-mode .fecha-contenedor:hover {
 }
 
 @keyframes fadeInDropdown {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .mes-opcion {
@@ -327,24 +272,10 @@ body.dark-mode .fecha-contenedor:hover {
   box-sizing: border-box;
 }
 
-.mes-opcion:hover {
-  background-color: #E8F5EE;
-}
-
-.mes-opcion.seleccionado {
-  background-color: #185540;
-  color: #FFFFFF;
-}
-
-.mes-opcion.vacio {
-  color: #A0A8AD;
-  font-style: italic;
-  cursor: default;
-}
-
-.mes-opcion.vacio:hover {
-  background-color: transparent;
-}
+.mes-opcion:hover { background-color: #E8F5EE; }
+.mes-opcion.seleccionado { background-color: #185540; color: #FFFFFF; }
+.mes-opcion.vacio { color: #A0A8AD; font-style: italic; cursor: default; }
+.mes-opcion.vacio:hover { background-color: transparent; }
 
 body.dark-mode .meses-dropdown {
   background-color: #1A1D21;
@@ -352,26 +283,11 @@ body.dark-mode .meses-dropdown {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
 }
 
-body.dark-mode .mes-opcion {
-  color: #FFFFFF;
-}
-
-body.dark-mode .mes-opcion:hover {
-  background-color: #2A2E33;
-}
-
-body.dark-mode .mes-opcion.seleccionado {
-  background-color: #398869;
-  color: #FFFFFF;
-}
-
-body.dark-mode .mes-opcion.vacio {
-  color: #7A8F96;
-}
-
-body.dark-mode .mes-opcion.vacio:hover {
-  background-color: transparent;
-}
+body.dark-mode .mes-opcion { color: #FFFFFF; }
+body.dark-mode .mes-opcion:hover { background-color: #2A2E33; }
+body.dark-mode .mes-opcion.seleccionado { background-color: #398869; color: #FFFFFF; }
+body.dark-mode .mes-opcion.vacio { color: #7A8F96; }
+body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
 
 /* ============================================
    SECCIONES GENERALES
@@ -388,60 +304,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   border: 1px solid #F0F0F0;
 }
 
-.seccion-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.icono-circulo {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: #E8F5EE;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.icono-seccion {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-}
-
-.seccion-titulo {
-  color: #0B2E34;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: -0.2px;
-}
-
-.seccion-descripcion {
-  color: #69747A;
-  font-weight: 500;
-  font-size: 11px;
-  margin-bottom: 10px;
-  padding-left: 42px;
-}
-
-.seccion-subtitulo {
-  color: #0B2E34;
-  font-weight: 700;
-  font-size: 13px;
-  margin-bottom: 12px;
-  padding-left: 42px;
-}
-
-.seccion-subtitulo span {
-  color: #185540;
-  font-weight: 800;
-}
-
 /* ============================================
-   SECCIÓN TOTAL (Balance)
+   SECCIÓN TOTAL
    ============================================ */
 .seccion.total {
   position: relative;
@@ -484,11 +348,7 @@ body.dark-mode .mes-opcion.vacio:hover {
   z-index: 3;
 }
 
-.icono-billetera-total {
-  width: 55%;
-  height: 55%;
-  object-fit: contain;
-}
+.icono-billetera-total { width: 55%; height: 55%; object-fit: contain; }
 
 .titulo-balance {
   position: absolute;
@@ -536,17 +396,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   z-index: 3;
 }
 
-.flecha-verde-total {
-  left: 62.20%;
-  top: 14.46%;
-  transform: rotate(90deg);
-}
-
-.flecha-roja-total {
-  left: 62.20%;
-  top: 59.04%;
-  transform: rotate(-90deg);
-}
+.flecha-verde-total { left: 62.20%; top: 14.46%; transform: rotate(90deg); }
+.flecha-roja-total { left: 62.20%; top: 59.04%; transform: rotate(-90deg); }
 
 .titulo-ahorro-total {
   position: absolute;
@@ -611,7 +462,7 @@ body.dark-mode .mes-opcion.vacio:hover {
 }
 
 /* ============================================
-   SECCIÓN DEUDAS
+   DEUDAS / METAS (base clara)
    ============================================ */
 .seccion.deudas {
   position: relative;
@@ -645,12 +496,7 @@ body.dark-mode .mes-opcion.vacio:hover {
   z-index: 5;
 }
 
-.deudas-header {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 2px;
-}
+.deudas-header { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
 
 .deudas-circulo {
   width: 30px;
@@ -663,18 +509,9 @@ body.dark-mode .mes-opcion.vacio:hover {
   flex-shrink: 0;
 }
 
-.deudas-icono {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-}
+.deudas-icono { width: 18px; height: 18px; object-fit: contain; }
 
-.deudas-titulo {
-  font-size: 11px;
-  font-weight: 800;
-  color: #000000;
-  line-height: 1;
-}
+.deudas-titulo { font-size: 11px; font-weight: 800; color: #000000; line-height: 1; }
 
 .deudas-descripcion {
   font-size: 8px;
@@ -694,17 +531,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   gap: 10px;
 }
 
-.deuda-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.deuda-item-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+.deuda-item { display: flex; flex-direction: column; gap: 4px; }
+.deuda-item-header { display: flex; align-items: center; gap: 6px; }
 
 .deuda-item-circulo {
   width: 12px;
@@ -717,33 +545,11 @@ body.dark-mode .mes-opcion.vacio:hover {
   flex-shrink: 0;
 }
 
-.deuda-item-icono {
-  width: 7px;
-  height: 7px;
-  object-fit: contain;
-}
+.deuda-item-icono { width: 7px; height: 7px; object-fit: contain; }
+.deuda-item-nombre { font-size: 11px; font-weight: 800; color: #000000; line-height: 1; }
+.deuda-item-fecha { font-size: 8px; font-weight: 500; color: #000000; padding-left: 18px; line-height: 1; }
 
-.deuda-item-nombre {
-  font-size: 11px;
-  font-weight: 800;
-  color: #000000;
-  line-height: 1;
-}
-
-.deuda-item-fecha {
-  font-size: 8px;
-  font-weight: 500;
-  color: #000000;
-  padding-left: 18px;
-  line-height: 1;
-}
-
-.deuda-progreso-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-left: 18px;
-}
+.deuda-progreso-container { display: flex; align-items: center; gap: 8px; padding-left: 18px; }
 
 .deuda-progreso-barra {
   flex: 1;
@@ -769,9 +575,6 @@ body.dark-mode .mes-opcion.vacio:hover {
   text-align: right;
 }
 
-/* ============================================
-   SECCIÓN METAS
-   ============================================ */
 .seccion.metas {
   position: relative;
   max-width: 373px;
@@ -804,12 +607,7 @@ body.dark-mode .mes-opcion.vacio:hover {
   z-index: 5;
 }
 
-.metas-header {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 2px;
-}
+.metas-header { display: flex; align-items: center; gap: 5px; margin-bottom: 2px; }
 
 .metas-circulo {
   width: 30px;
@@ -822,18 +620,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   flex-shrink: 0;
 }
 
-.metas-icono {
-  width: 19px;
-  height: 19px;
-  object-fit: contain;
-}
-
-.metas-titulo {
-  font-size: 11px;
-  font-weight: 800;
-  color: #000000;
-  line-height: 1;
-}
+.metas-icono { width: 19px; height: 19px; object-fit: contain; }
+.metas-titulo { font-size: 11px; font-weight: 800; color: #000000; line-height: 1; }
 
 .metas-descripcion {
   font-size: 8px;
@@ -853,17 +641,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   gap: 10px;
 }
 
-.meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.meta-item-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+.meta-item { display: flex; flex-direction: column; gap: 4px; }
+.meta-item-header { display: flex; align-items: center; gap: 6px; }
 
 .meta-item-circulo {
   width: 12px;
@@ -876,33 +655,11 @@ body.dark-mode .mes-opcion.vacio:hover {
   flex-shrink: 0;
 }
 
-.meta-item-icono {
-  width: 7px;
-  height: 7px;
-  object-fit: contain;
-}
+.meta-item-icono { width: 7px; height: 7px; object-fit: contain; }
+.meta-item-nombre { font-size: 11px; font-weight: 800; color: #000000; line-height: 1; }
+.meta-item-fecha { font-size: 8px; font-weight: 500; color: #000000; padding-left: 18px; line-height: 1; }
 
-.meta-item-nombre {
-  font-size: 11px;
-  font-weight: 800;
-  color: #000000;
-  line-height: 1;
-}
-
-.meta-item-fecha {
-  font-size: 8px;
-  font-weight: 500;
-  color: #000000;
-  padding-left: 18px;
-  line-height: 1;
-}
-
-.meta-progreso-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-left: 18px;
-}
+.meta-progreso-container { display: flex; align-items: center; gap: 8px; padding-left: 18px; }
 
 .meta-progreso-barra {
   flex: 1;
@@ -929,51 +686,7 @@ body.dark-mode .mes-opcion.vacio:hover {
 }
 
 /* ============================================
-   SUBSECCIONES
-   ============================================ */
-.subseccion {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-top: 1px solid #F5F5F5;
-}
-
-.icono-sub {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.sub-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.sub-titulo {
-  color: #0B2E34;
-  font-weight: 700;
-  font-size: 12px;
-}
-
-.sub-texto {
-  color: #69747A;
-  font-weight: 500;
-  font-size: 10px;
-}
-
-.sub-valor {
-  color: #0B2E34;
-  font-weight: 800;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-
-/* ============================================
-   BOTÓN LÁPIZ
+   BOTONES FLOTANTES
    ============================================ */
 .btn-lapiz {
   position: fixed;
@@ -995,25 +708,10 @@ body.dark-mode .mes-opcion.vacio:hover {
   text-decoration: none;
 }
 
-.btn-lapiz:hover {
-  transform: scale(1.1);
-}
+.btn-lapiz:hover { transform: scale(1.1); }
+.btn-lapiz:active { transform: scale(0.92); }
+.icono-lapiz { width: 26px; height: 26px; object-fit: contain; display: block; pointer-events: none; }
 
-.btn-lapiz:active {
-  transform: scale(0.92);
-}
-
-.icono-lapiz {
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
-  display: block;
-  pointer-events: none;
-}
-
-/* ============================================
-   BOTÓN AGREGAR
-   ============================================ */
 .btn-agregar-mas {
   position: fixed;
   bottom: 86px;
@@ -1033,24 +731,12 @@ body.dark-mode .mes-opcion.vacio:hover {
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
 }
 
-.btn-agregar-mas:hover {
-  transform: scale(1.08);
-}
-
-.btn-agregar-mas:active {
-  transform: scale(0.94);
-}
-
-.icono-mas {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  display: block;
-  pointer-events: none;
-}
+.btn-agregar-mas:hover { transform: scale(1.08); }
+.btn-agregar-mas:active { transform: scale(0.94); }
+.icono-mas { width: 48px; height: 48px; object-fit: contain; display: block; pointer-events: none; }
 
 /* ============================================
-   MODAL NUEVO REGISTRO
+   MODAL
    ============================================ */
 .modal-overlay {
   position: fixed;
@@ -1069,10 +755,7 @@ body.dark-mode .mes-opcion.vacio:hover {
   transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 
-.modal-overlay.activo {
-  visibility: visible;
-  opacity: 1;
-}
+.modal-overlay.activo { visibility: visible; opacity: 1; }
 
 .modal-registro {
   position: relative;
@@ -1089,32 +772,12 @@ body.dark-mode .mes-opcion.vacio:hover {
   will-change: transform;
 }
 
-.modal-overlay.activo .modal-registro {
-  transform: translateY(0);
-}
+.modal-overlay.activo .modal-registro { transform: translateY(0); }
+.modal-overlay.cerrando .modal-registro { transform: translateY(100%); }
+.modal-overlay.cerrando { opacity: 0; visibility: hidden; }
 
-.modal-overlay.cerrando .modal-registro {
-  transform: translateY(100%);
-}
-
-.modal-overlay.cerrando {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.modal-titulo {
-  font-size: 18px;
-  font-weight: 800;
-  color: #0B2E34;
-  letter-spacing: -0.3px;
-}
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.modal-titulo { font-size: 18px; font-weight: 800; color: #0B2E34; letter-spacing: -0.3px; }
 
 .modal-cerrar {
   width: 30px;
@@ -1132,32 +795,14 @@ body.dark-mode .mes-opcion.vacio:hover {
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.modal-cerrar:hover {
-  background-color: #E0E0E0;
-  transform: scale(1.05);
-}
+.modal-cerrar:hover { background-color: #E0E0E0; transform: scale(1.05); }
 
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+.modal-form { display: flex; flex-direction: column; gap: 14px; }
+.form-grupo { display: flex; flex-direction: column; gap: 5px; }
 
-.form-grupo {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+.form-label { font-size: 11px; font-weight: 700; color: #0B2E34; letter-spacing: -0.1px; }
 
-.form-label {
-  font-size: 11px;
-  font-weight: 700;
-  color: #0B2E34;
-  letter-spacing: -0.1px;
-}
-
-.form-input,
-.form-select {
+.form-input, .form-select {
   width: 100%;
   height: 40px;
   padding: 0 12px;
@@ -1173,16 +818,12 @@ body.dark-mode .mes-opcion.vacio:hover {
   box-sizing: border-box;
 }
 
-.form-input:focus,
-.form-select:focus {
+.form-input:focus, .form-select:focus {
   border-color: #398869;
   box-shadow: 0 0 0 3px rgba(57, 136, 105, 0.15);
 }
 
-.form-input::placeholder {
-  color: #A0A8AD;
-  font-weight: 400;
-}
+.form-input::placeholder { color: #A0A8AD; font-weight: 400; }
 
 .form-select {
   appearance: none;
@@ -1205,15 +846,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   border: 1px dashed #C8D4D9;
 }
 
-.form-nueva-seccion.activo {
-  display: flex;
-}
-
-.form-color-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.form-nueva-seccion.activo { display: flex; }
+.form-color-wrapper { display: flex; align-items: center; gap: 10px; }
 
 .form-color {
   width: 42px;
@@ -1226,18 +860,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   box-sizing: border-box;
 }
 
-.form-color-texto {
-  font-size: 12px;
-  font-weight: 600;
-  color: #0B2E34;
-  letter-spacing: 0.5px;
-}
-
-.form-recordatorio {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+.form-color-texto { font-size: 12px; font-weight: 600; color: #0B2E34; letter-spacing: 0.5px; }
+.form-recordatorio { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .radio-opcion {
   display: flex;
@@ -1253,13 +877,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   justify-content: center;
 }
 
-.radio-opcion:hover {
-  border-color: #398869;
-}
-
-.radio-opcion input[type="radio"] {
-  display: none;
-}
+.radio-opcion:hover { border-color: #398869; }
+.radio-opcion input[type="radio"] { display: none; }
 
 .radio-custom {
   width: 14px;
@@ -1283,35 +902,15 @@ body.dark-mode .mes-opcion.vacio:hover {
   transition: transform 0.2s ease;
 }
 
-.radio-opcion input[type="radio"]:checked + .radio-custom {
-  border-color: #398869;
-}
+.radio-opcion input[type="radio"]:checked + .radio-custom { border-color: #398869; }
+.radio-opcion input[type="radio"]:checked + .radio-custom::after { transform: scale(1); }
+.radio-opcion input[type="radio"]:checked ~ .radio-texto { color: #185540; font-weight: 700; }
 
-.radio-opcion input[type="radio"]:checked + .radio-custom::after {
-  transform: scale(1);
-}
+.radio-texto { font-size: 11px; font-weight: 500; color: #69747A; white-space: nowrap; transition: color 0.2s ease; }
 
-.radio-opcion input[type="radio"]:checked ~ .radio-texto {
-  color: #185540;
-  font-weight: 700;
-}
+.form-botones { display: flex; gap: 10px; margin-top: 6px; }
 
-.radio-texto {
-  font-size: 11px;
-  font-weight: 500;
-  color: #69747A;
-  white-space: nowrap;
-  transition: color 0.2s ease;
-}
-
-.form-botones {
-  display: flex;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.btn-cancelar,
-.btn-guardar {
+.btn-cancelar, .btn-guardar {
   flex: 1;
   height: 44px;
   border-radius: 12px;
@@ -1323,14 +922,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-cancelar {
-  background-color: #F0F0F0;
-  color: #69747A;
-}
-
-.btn-cancelar:hover {
-  background-color: #E4E4E4;
-}
+.btn-cancelar { background-color: #F0F0F0; color: #69747A; }
+.btn-cancelar:hover { background-color: #E4E4E4; }
 
 .btn-guardar {
   background-color: #185540;
@@ -1338,15 +931,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   box-shadow: 0 4px 12px rgba(24, 85, 64, 0.3);
 }
 
-.btn-guardar:hover {
-  background-color: #1E6B50;
-  transform: translateY(-1px);
-}
-
-.btn-cancelar:active,
-.btn-guardar:active {
-  transform: scale(0.97);
-}
+.btn-guardar:hover { background-color: #1E6B50; transform: translateY(-1px); }
+.btn-cancelar:active, .btn-guardar:active { transform: scale(0.97); }
 
 /* ============================================
    NAVEGACIÓN INFERIOR
@@ -1377,18 +963,8 @@ body.dark-mode .mes-opcion.vacio:hover {
   text-decoration: none;
 }
 
-.bottom-nav a.active {
-  background-color: transparent;
-  width: auto;
-  height: auto;
-  border-radius: 0;
-}
-
-.bottom-nav img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-}
+.bottom-nav a.active { background-color: transparent; width: auto; height: auto; border-radius: 0; }
+.bottom-nav img { width: 22px; height: 22px; object-fit: contain; }
 
 .nav-activo-rect {
   display: flex;
@@ -1403,12 +979,7 @@ body.dark-mode .mes-opcion.vacio:hover {
   gap: 2px;
 }
 
-.nav-activo-icono {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
+.nav-activo-icono { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
 
 .nav-activo-texto {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -1422,9 +993,7 @@ body.dark-mode .mes-opcion.vacio:hover {
 /* ============================================
    MODO OSCURO
    ============================================ */
-body.dark-mode {
-  background-color: #121315;
-}
+body.dark-mode { background-color: #121315; }
 
 body.dark-mode .seccion {
   background-color: #1A1D21;
@@ -1432,68 +1001,32 @@ body.dark-mode .seccion {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
-body.dark-mode .seccion.total {
-  background-color: #185540;
-}
+body.dark-mode .seccion.total { background-color: #185540; }
 
 body.dark-mode .saludo,
 body.dark-mode .saludo span,
 body.dark-mode .seccion-titulo,
-body.dark-mode .seccion-valor,
 body.dark-mode .sub-titulo,
-body.dark-mode .sub-valor {
-  color: #FFFFFF;
-}
+body.dark-mode .sub-valor { color: #FFFFFF; }
 
 body.dark-mode .subtitulo,
 body.dark-mode .seccion-descripcion,
-body.dark-mode .titulo-ahorro,
-body.dark-mode .titulo-deudas,
-body.dark-mode .sub-texto {
-  color: #A8B8BE;
-}
+body.dark-mode .sub-texto { color: #A8B8BE; }
 
-body.dark-mode .fecha-contenedor {
-  background-color: #1A1D21;
-}
-
+body.dark-mode .fecha-contenedor { background-color: #1A1D21; }
 body.dark-mode .fecha,
 body.dark-mode .fecha #fechaActual,
-body.dark-mode .flecha {
-  color: #FFFFFF;
-}
+body.dark-mode .flecha { color: #FFFFFF; }
 
-body.dark-mode .bottom-nav {
-  background-color: #121315;
-  border-top-color: #185540;
-}
+body.dark-mode .bottom-nav { background-color: #121315; border-top-color: #185540; }
+body.dark-mode .bottom-nav a.active { background-color: transparent; }
+body.dark-mode .nav-activo-rect { background-color: #398869; }
+body.dark-mode .nav-activo-texto { color: #FFFFFF; }
 
-body.dark-mode .bottom-nav a.active {
-  background-color: transparent;
-}
+body.dark-mode .bottom-nav img { filter: brightness(0) invert(1); }
+body.dark-mode .bottom-nav .nav-activo-icono { filter: brightness(0) invert(1); }
 
-body.dark-mode .nav-activo-rect {
-  background-color: #398869;
-}
-
-body.dark-mode .nav-activo-texto {
-  color: #FFFFFF;
-}
-
-/* ============================================
-   ICONOS DEL MENÚ INFERIOR EN BLANCO (MODO OSCURO)
-   ============================================ */
-body.dark-mode .bottom-nav img {
-  filter: brightness(0) invert(1);
-}
-
-body.dark-mode .bottom-nav .nav-activo-icono {
-  filter: brightness(0) invert(1);
-}
-
-/* ============================================
-   SECCIÓN TOTAL — ESTILO NEÓN VERDE
-   ============================================ */
+/* ---- Sección TOTAL neón verde ---- */
 body.dark-mode .seccion.total {
   background-color: #080808;
   border: 1px solid rgba(102, 214, 166, 0.8);
@@ -1502,7 +1035,6 @@ body.dark-mode .seccion.total {
               inset 0 0 12px rgba(102, 214, 166, 0.05);
 }
 
-/* Capa oscura ENCIMA de las ondas */
 body.dark-mode .seccion.total::before {
   content: '';
   position: absolute;
@@ -1516,7 +1048,6 @@ body.dark-mode .seccion.total::before {
   border-radius: 18px;
 }
 
-/* Reforzar z-index del contenido para que quede encima de la capa oscura */
 body.dark-mode .seccion.total .circulo-billetera,
 body.dark-mode .seccion.total .titulo-balance,
 body.dark-mode .seccion.total .valor-balance,
@@ -1526,66 +1057,41 @@ body.dark-mode .seccion.total .titulo-ahorro-total,
 body.dark-mode .seccion.total .valor-ahorro-total,
 body.dark-mode .seccion.total .linea-horizontal-total,
 body.dark-mode .seccion.total .titulo-deudas-total,
-body.dark-mode .seccion.total .valor-deudas-total {
-  z-index: 4;
-}
+body.dark-mode .seccion.total .valor-deudas-total { z-index: 4; }
 
-/* Título balance con glow blanco */
 body.dark-mode .titulo-balance {
   color: #FFFFFF;
-  text-shadow: 0 0 6px rgba(255, 255, 255, 0.6),
-               0 0 12px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.6), 0 0 12px rgba(255, 255, 255, 0.3);
 }
 
-/* Valor del balance (número grande) en blanco brillante */
 body.dark-mode .valor-balance {
   color: #FFFFFF;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
-               0 0 16px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(255, 255, 255, 0.4);
 }
 
-/* Título "Ahorro" en verde neón */
-body.dark-mode .titulo-ahorro-total {
-  color: #66D6A6;
-  text-shadow: 0 0 6px rgba(102, 214, 166, 0.8);
-}
+body.dark-mode .titulo-ahorro-total { color: #66D6A6; text-shadow: 0 0 6px rgba(102, 214, 166, 0.8); }
 
-/* Valor del ahorro en verde neón brillante */
 body.dark-mode .valor-ahorro-total {
   color: #66D6A6;
-  text-shadow: 0 0 8px rgba(102, 214, 166, 0.9),
-               0 0 16px rgba(102, 214, 166, 0.5);
+  text-shadow: 0 0 8px rgba(102, 214, 166, 0.9), 0 0 16px rgba(102, 214, 166, 0.5);
 }
 
-/* Título "Deudas" en rojo neón */
-body.dark-mode .titulo-deudas-total {
-  color: #FF6B6B;
-  text-shadow: 0 0 6px rgba(255, 60, 60, 0.8);
-}
+body.dark-mode .titulo-deudas-total { color: #FF6B6B; text-shadow: 0 0 6px rgba(255, 60, 60, 0.8); }
 
-/* Valor de deudas en rojo neón brillante */
 body.dark-mode .valor-deudas-total {
   color: #FF6B6B;
-  text-shadow: 0 0 8px rgba(255, 60, 60, 0.9),
-               0 0 16px rgba(255, 60, 60, 0.5);
+  text-shadow: 0 0 8px rgba(255, 60, 60, 0.9), 0 0 16px rgba(255, 60, 60, 0.5);
 }
 
-/* Círculo de la billetera con glow verde */
 body.dark-mode .circulo-billetera {
   background-color: #66D6A6;
-  box-shadow: 0 0 8px rgba(102, 214, 166, 0.8),
-              0 0 16px rgba(102, 214, 166, 0.4);
+  box-shadow: 0 0 8px rgba(102, 214, 166, 0.8), 0 0 16px rgba(102, 214, 166, 0.4);
 }
 
-/* Líneas separadoras en verde neón */
 body.dark-mode .linea-vertical-total,
-body.dark-mode .linea-horizontal-total {
-  border-top-color: rgba(102, 214, 166, 0.6);
-}
+body.dark-mode .linea-horizontal-total { border-top-color: rgba(102, 214, 166, 0.6); }
 
-/* ============================================
-   SECCIÓN DEUDAS — NEÓN SUAVE ROJO
-   ============================================ */
+/* ---- Deudas neón rojo ---- */
 body.dark-mode .seccion.deudas {
   background-color: rgba(255, 60, 60, 0.08);
   border: 1px solid rgba(255, 60, 60, 0.8);
@@ -1594,49 +1100,28 @@ body.dark-mode .seccion.deudas {
               inset 0 0 12px rgba(255, 60, 60, 0.05);
 }
 
-body.dark-mode .deudas-lista {
-  background-color: #FFFFFF;
-  box-shadow: 0 0 8px rgba(255, 60, 60, 0.2);
-}
-
+body.dark-mode .deudas-lista { background-color: #FFFFFF; box-shadow: 0 0 8px rgba(255, 60, 60, 0.2); }
 body.dark-mode .deuda-item-nombre,
 body.dark-mode .deuda-item-fecha,
-body.dark-mode .deuda-progreso-texto {
-  color: #000000;
-}
-
-body.dark-mode .deuda-progreso-barra {
-  background-color: #D9D9D9;
-}
-
-body.dark-mode .deudas-titulo {
-  color: #FF6B6B;
-  text-shadow: 0 0 8px rgba(255, 60, 60, 0.6);
-}
-
-body.dark-mode .deudas-descripcion {
-  color: #FFB0B0;
-  text-shadow: 0 0 4px rgba(255, 60, 60, 0.3);
-}
+body.dark-mode .deuda-progreso-texto { color: #000000; }
+body.dark-mode .deuda-progreso-barra { background-color: #D9D9D9; }
+body.dark-mode .deudas-titulo { color: #FF6B6B; text-shadow: 0 0 8px rgba(255, 60, 60, 0.6); }
+body.dark-mode .deudas-descripcion { color: #FFB0B0; text-shadow: 0 0 4px rgba(255, 60, 60, 0.3); }
 
 body.dark-mode .deudas-circulo {
   background-color: #FF6B6B;
-  box-shadow: 0 0 8px rgba(255, 60, 60, 0.6),
-              0 0 16px rgba(255, 60, 60, 0.3);
+  box-shadow: 0 0 8px rgba(255, 60, 60, 0.6), 0 0 16px rgba(255, 60, 60, 0.3);
 }
 
 body.dark-mode .total-deudas-box {
   background-color: rgba(255, 60, 60, 0.25);
   color: #FF6B6B;
   border: 1px solid rgba(255, 60, 60, 0.6);
-  box-shadow: 0 0 8px rgba(255, 60, 60, 0.5),
-              0 0 16px rgba(255, 60, 60, 0.25);
+  box-shadow: 0 0 8px rgba(255, 60, 60, 0.5), 0 0 16px rgba(255, 60, 60, 0.25);
   text-shadow: 0 0 6px rgba(255, 60, 60, 0.8);
 }
 
-/* ============================================
-   SECCIÓN METAS — NEÓN SUAVE AZUL
-   ============================================ */
+/* ---- Metas neón azul ---- */
 body.dark-mode .seccion.metas {
   background-color: rgba(60, 150, 255, 0.08);
   border: 1px solid rgba(60, 150, 255, 0.8);
@@ -1645,65 +1130,32 @@ body.dark-mode .seccion.metas {
               inset 0 0 12px rgba(60, 150, 255, 0.05);
 }
 
-body.dark-mode .metas-lista {
-  background-color: #FFFFFF;
-  box-shadow: 0 0 8px rgba(60, 150, 255, 0.2);
-}
-
+body.dark-mode .metas-lista { background-color: #FFFFFF; box-shadow: 0 0 8px rgba(60, 150, 255, 0.2); }
 body.dark-mode .meta-item-nombre,
 body.dark-mode .meta-item-fecha,
-body.dark-mode .meta-progreso-texto {
-  color: #000000;
-}
-
-body.dark-mode .meta-progreso-barra {
-  background-color: #D9D9D9;
-}
-
-body.dark-mode .metas-titulo {
-  color: #6BB6FF;
-  text-shadow: 0 0 8px rgba(60, 150, 255, 0.6);
-}
-
-body.dark-mode .metas-descripcion {
-  color: #B0D8FF;
-  text-shadow: 0 0 4px rgba(60, 150, 255, 0.3);
-}
+body.dark-mode .meta-progreso-texto { color: #000000; }
+body.dark-mode .meta-progreso-barra { background-color: #D9D9D9; }
+body.dark-mode .metas-titulo { color: #6BB6FF; text-shadow: 0 0 8px rgba(60, 150, 255, 0.6); }
+body.dark-mode .metas-descripcion { color: #B0D8FF; text-shadow: 0 0 4px rgba(60, 150, 255, 0.3); }
 
 body.dark-mode .metas-circulo {
   background-color: #6BB6FF;
-  box-shadow: 0 0 8px rgba(60, 150, 255, 0.6),
-              0 0 16px rgba(60, 150, 255, 0.3);
+  box-shadow: 0 0 8px rgba(60, 150, 255, 0.6), 0 0 16px rgba(60, 150, 255, 0.3);
 }
 
 body.dark-mode .total-metas-box {
   background-color: rgba(60, 150, 255, 0.25);
   color: #6BB6FF;
   border: 1px solid rgba(60, 150, 255, 0.6);
-  box-shadow: 0 0 8px rgba(60, 150, 255, 0.5),
-              0 0 16px rgba(60, 150, 255, 0.25);
+  box-shadow: 0 0 8px rgba(60, 150, 255, 0.5), 0 0 16px rgba(60, 150, 255, 0.25);
   text-shadow: 0 0 6px rgba(60, 150, 255, 0.8);
 }
 
-/* ============================================
-   MODAL NUEVO REGISTRO — MODO OSCURO
-   ============================================ */
-body.dark-mode .modal-registro {
-  background-color: #1A1D21;
-}
-
-body.dark-mode .modal-titulo {
-  color: #FFFFFF;
-}
-
-body.dark-mode .modal-cerrar {
-  background-color: #2A2E33;
-  color: #FFFFFF;
-}
-
-body.dark-mode .form-label {
-  color: #FFFFFF;
-}
+/* ---- Modal oscuro ---- */
+body.dark-mode .modal-registro { background-color: #1A1D21; }
+body.dark-mode .modal-titulo { color: #FFFFFF; }
+body.dark-mode .modal-cerrar { background-color: #2A2E33; color: #FFFFFF; }
+body.dark-mode .form-label { color: #FFFFFF; }
 
 body.dark-mode .form-input,
 body.dark-mode .form-select {
@@ -1712,148 +1164,37 @@ body.dark-mode .form-select {
   color: #FFFFFF;
 }
 
-body.dark-mode .form-input::placeholder {
-  color: #7A8F96;
-}
-
-body.dark-mode .form-nueva-seccion {
-  background-color: #1A1D21;
-  border-color: #2A2E33;
-}
-
-body.dark-mode .form-color-texto {
-  color: #FFFFFF;
-}
-
-body.dark-mode .radio-opcion {
-  border-color: #2A2E33;
-  background-color: #121315;
-}
-
-body.dark-mode .radio-texto {
-  color: #A8B8BE;
-}
-
-body.dark-mode .radio-opcion input[type="radio"]:checked ~ .radio-texto {
-  color: #66D6A6;
-}
-
-body.dark-mode .btn-cancelar {
-  background-color: #2A2E33;
-  color: #A8B8BE;
-}
+body.dark-mode .form-input::placeholder { color: #7A8F96; }
+body.dark-mode .form-nueva-seccion { background-color: #1A1D21; border-color: #2A2E33; }
+body.dark-mode .form-color-texto { color: #FFFFFF; }
+body.dark-mode .radio-opcion { border-color: #2A2E33; background-color: #121315; }
+body.dark-mode .radio-texto { color: #A8B8BE; }
+body.dark-mode .radio-opcion input[type="radio"]:checked ~ .radio-texto { color: #66D6A6; }
+body.dark-mode .btn-cancelar { background-color: #2A2E33; color: #A8B8BE; }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 383px) {
-  .saludo {
-    left: 15px;
-  }
-
-  .subtitulo {
-    left: 15px;
-  }
-
-  .interruptor-tema {
-    left: auto;
-    right: 0;
-  }
-
-  .fecha-contenedor {
-    left: auto;
-    right: 0;
-  }
-
-  .seccion {
-    max-width: 100%;
-    margin-left: 15px;
-    margin-right: 15px;
-    width: calc(100% - 30px);
-  }
-
-  .seccion.total {
-    margin-left: 10px;
-    margin-right: 10px;
-    width: calc(100% - 20px);
-  }
-
-  .seccion.deudas,
-  .seccion.metas {
-    margin-left: 10px;
-    margin-right: 10px;
-    width: calc(100% - 20px);
-  }
-
-  .btn-agregar-mas {
-    right: 10px;
-    bottom: 84px;
-  }
-
-  .btn-lapiz {
-    top: auto;
-    left: auto;
-    right: 21px;
-    bottom: 138px;
-  }
+  .interruptor-tema { left: auto; right: 0; }
+  .fecha-contenedor { left: auto; right: 0; }
+  .seccion { max-width: 100%; margin-left: 15px; margin-right: 15px; width: calc(100% - 30px); }
+  .seccion.total { margin-left: 10px; margin-right: 10px; width: calc(100% - 20px); }
+  .seccion.deudas, .seccion.metas { margin-left: 10px; margin-right: 10px; width: calc(100% - 20px); }
+  .btn-agregar-mas { right: 10px; bottom: 84px; }
+  .btn-lapiz { top: auto; left: auto; right: 21px; bottom: 138px; }
 }
 
 @media (max-width: 360px) {
-  .saludo {
-    font-size: 20px;
-    height: 26px;
-    line-height: 26px;
-  }
-
-  .subtitulo {
-    font-size: 11px;
-    top: 44px;
-  }
-
-  .interruptor-tema {
-    transform: scale(0.9);
-    transform-origin: top right;
-  }
-
-  .fecha-contenedor {
-    transform: scale(0.9);
-    transform-origin: top right;
-    top: 44px;
-  }
-
-  .btn-agregar-mas {
-    width: 44px;
-    height: 44px;
-    right: 8px;
-    bottom: 82px;
-  }
-
-  .icono-mas {
-    width: 44px;
-    height: 44px;
-  }
-
-  .btn-lapiz {
-    width: 24px;
-    height: 24px;
-    right: 18px;
-    bottom: 132px;
-  }
-
-  .icono-lapiz {
-    width: 24px;
-    height: 24px;
-  }
-
-  .form-recordatorio {
-    gap: 6px;
-  }
-
-  .radio-opcion {
-    padding: 7px 8px;
-  }
-
-  .radio-texto {
-    font-size: 10px;
-  }
+  .saludo { font-size: 20px; height: 26px; line-height: 26px; }
+  .subtitulo { font-size: 11px; top: 44px; }
+  .interruptor-tema { transform: scale(0.9); transform-origin: top right; }
+  .fecha-contenedor { transform: scale(0.9); transform-origin: top right; top: 44px; }
+  .btn-agregar-mas { width: 44px; height: 44px; right: 8px; bottom: 82px; }
+  .icono-mas { width: 44px; height: 44px; }
+  .btn-lapiz { width: 24px; height: 24px; right: 18px; bottom: 132px; }
+  .icono-lapiz { width: 24px; height: 24px; }
+  .form-recordatorio { gap: 6px; }
+  .radio-opcion { padding: 7px 8px; }
+  .radio-texto { font-size: 10px; }
 }

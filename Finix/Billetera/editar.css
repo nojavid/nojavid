@@ -1,0 +1,424 @@
+/* ============================================
+   RESET Y BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  padding-bottom: 90px;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+  position: relative;
+  z-index: 50;
+  width: 100%;
+}
+
+.header-inner {
+  position: relative;
+  width: 100%;
+  max-width: 383px;
+  height: 80px;
+  margin: 0 auto;
+  padding: 0;
+  z-index: 50;
+}
+
+.btn-regresar {
+  position: absolute;
+  left: 20px;
+  top: 24px;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 12;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.btn-regresar:hover { transform: scale(1.15); }
+.btn-regresar:active { transform: scale(0.9); }
+
+.icono-regresar {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  display: block;
+}
+
+.titulo-editar {
+  position: absolute;
+  left: 49px;
+  top: 23px;
+  width: 123px;
+  height: 19px;
+  color: #000000;
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 19px;
+  white-space: nowrap;
+  letter-spacing: -0.2px;
+  z-index: 11;
+}
+
+.subtitulo-editar {
+  position: absolute;
+  left: 49px;
+  top: 46px;
+  width: 225px;
+  height: 26px;
+  color: #828486;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  z-index: 11;
+}
+
+/* ============================================
+   CONTENEDOR DE SECCIONES
+   ============================================ */
+.contenedor-secciones {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 383px;
+  margin: 0 auto;
+  padding: 12px 10px 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ============================================
+   SECCIONES EDITABLES
+   ============================================ */
+.seccion-editable.deudas {
+  position: relative;
+  padding: 11px 12px 12px 12px;
+  background-color: #FFEFEF;
+  border: 1px solid #FDBBBB;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.seccion-editable.deudas .seccion-circulo { background-color: #FFA1A1; }
+.seccion-editable.deudas .seccion-titulo,
+.seccion-editable.deudas .seccion-descripcion { color: #000000; }
+.seccion-editable.deudas .lista-items { background-color: #FFFFFF; }
+.seccion-editable.deudas .item-progreso-relleno { background-color: #D80202; }
+
+.seccion-editable.metas {
+  position: relative;
+  padding: 11px 12px 12px 12px;
+  background-color: #EEF5FF;
+  border: 1px solid #A2DDFA;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.seccion-editable.metas .seccion-circulo { background-color: #88BBF5; }
+.seccion-editable.metas .seccion-titulo,
+.seccion-editable.metas .seccion-descripcion { color: #000000; }
+.seccion-editable.metas .lista-items { background-color: #FFFFFF; }
+.seccion-editable.metas .item-progreso-relleno { background-color: #025FD8; }
+
+.seccion-editable.personalizada {
+  position: relative;
+  padding: 11px 12px 12px 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.seccion-editable.personalizada .seccion-titulo,
+.seccion-editable.personalizada .seccion-descripcion { color: #000000; }
+.seccion-editable.personalizada .lista-items { background-color: #FFFFFF; }
+
+/* ============================================
+   ESTRUCTURA INTERNA
+   ============================================ */
+.seccion-header-editable {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 2px;
+}
+
+.seccion-circulo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.seccion-icono { width: 18px; height: 18px; object-fit: contain; }
+
+.seccion-titulo { font-size: 11px; font-weight: 800; line-height: 1; }
+
+.seccion-descripcion {
+  font-size: 8px;
+  font-weight: 500;
+  padding-left: 35px;
+  margin-bottom: 8px;
+  line-height: 13px;
+}
+
+.lista-items {
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item-editable { display: flex; flex-direction: column; gap: 4px; }
+.item-header { display: flex; align-items: center; gap: 6px; }
+
+.item-circulo {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.item-icono { width: 7px; height: 7px; object-fit: contain; }
+.item-nombre { font-size: 11px; font-weight: 800; color: #000000; line-height: 1; }
+.item-fecha { font-size: 8px; font-weight: 500; color: #000000; padding-left: 18px; line-height: 1; }
+
+.item-progreso-container { display: flex; align-items: center; gap: 8px; padding-left: 18px; }
+
+.item-progreso-barra {
+  flex: 1;
+  height: 5px;
+  background-color: #D9D9D9;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.item-progreso-relleno {
+  height: 100%;
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.item-progreso-texto {
+  font-size: 8px;
+  font-weight: 500;
+  color: #000000;
+  min-width: 25px;
+  text-align: right;
+}
+
+/* ============================================
+   ESTADO VACÍO
+   ============================================ */
+.lista-vacia {
+  text-align: center;
+  padding: 10px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #828486;
+  font-style: italic;
+}
+
+/* ============================================
+   NAVEGACIÓN INFERIOR
+   ============================================ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #FFFFFF;
+  border-top: 1px solid #185540;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.bottom-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+
+.bottom-nav a.active { background-color: transparent; width: auto; height: auto; border-radius: 0; }
+.bottom-nav img { width: 22px; height: 22px; object-fit: contain; }
+
+.nav-activo-rect {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 79px;
+  height: 29px;
+  background-color: #398869;
+  border-radius: 10px;
+  padding-left: 5px;
+  box-sizing: border-box;
+  gap: 2px;
+}
+
+.nav-activo-icono { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
+
+.nav-activo-texto {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ============================================
+   MODO OSCURO
+   ============================================ */
+body.dark-mode { background-color: #121315; }
+body.dark-mode .titulo-editar { color: #FFFFFF; }
+body.dark-mode .subtitulo-editar { color: #A8B8BE; }
+body.dark-mode .contenedor-secciones { background-color: transparent; }
+
+/* ---- Ícono de regresar en blanco ---- */
+body.dark-mode .icono-regresar {
+  filter: brightness(0) invert(1);
+}
+
+/* ---- Sección DEUDAS en oscuro ---- */
+body.dark-mode .seccion-editable.deudas {
+  background-color: rgba(255, 60, 60, 0.08);
+  border: 1px solid rgba(255, 60, 60, 0.8);
+  box-shadow: 0 0 12px rgba(255, 60, 60, 0.35),
+              0 0 24px rgba(255, 60, 60, 0.15);
+}
+
+body.dark-mode .seccion-editable.deudas .seccion-titulo {
+  color: #FF6B6B;
+  text-shadow: 0 0 8px rgba(255, 60, 60, 0.6);
+}
+
+body.dark-mode .seccion-editable.deudas .seccion-descripcion {
+  color: #FFB0B0;
+  text-shadow: 0 0 4px rgba(255, 60, 60, 0.3);
+}
+
+body.dark-mode .seccion-editable.deudas .seccion-circulo {
+  background-color: #FF6B6B;
+  box-shadow: 0 0 8px rgba(255, 60, 60, 0.6),
+              0 0 16px rgba(255, 60, 60, 0.3);
+}
+
+/* ---- Sección METAS en oscuro ---- */
+body.dark-mode .seccion-editable.metas {
+  background-color: rgba(60, 150, 255, 0.08);
+  border: 1px solid rgba(60, 150, 255, 0.8);
+  box-shadow: 0 0 12px rgba(60, 150, 255, 0.35),
+              0 0 24px rgba(60, 150, 255, 0.15);
+}
+
+body.dark-mode .seccion-editable.metas .seccion-titulo {
+  color: #6BB6FF;
+  text-shadow: 0 0 8px rgba(60, 150, 255, 0.6);
+}
+
+body.dark-mode .seccion-editable.metas .seccion-descripcion {
+  color: #B0D8FF;
+  text-shadow: 0 0 4px rgba(60, 150, 255, 0.3);
+}
+
+body.dark-mode .seccion-editable.metas .seccion-circulo {
+  background-color: #6BB6FF;
+  box-shadow: 0 0 8px rgba(60, 150, 255, 0.6),
+              0 0 16px rgba(60, 150, 255, 0.3);
+}
+
+/* ---- Sección PERSONALIZADA en oscuro ---- */
+body.dark-mode .seccion-editable.personalizada {
+  background-color: #1A1D21;
+  border: 1px solid #2A2E33;
+}
+
+body.dark-mode .seccion-editable.personalizada .seccion-titulo {
+  color: #FFFFFF;
+}
+
+body.dark-mode .seccion-editable.personalizada .seccion-descripcion {
+  color: #A8B8BE;
+}
+
+/* ---- Lista de items en modo oscuro ---- */
+body.dark-mode .lista-items {
+  background-color: #FFFFFF;
+}
+
+body.dark-mode .item-nombre,
+body.dark-mode .item-fecha,
+body.dark-mode .item-progreso-texto {
+  color: #000000;
+}
+
+/* ---- Estado vacío ---- */
+body.dark-mode .lista-vacia {
+  color: #A8B8BE;
+}
+
+/* ---- Bottom nav ---- */
+body.dark-mode .bottom-nav {
+  background-color: #121315;
+  border-top-color: #185540;
+}
+
+body.dark-mode .nav-activo-rect {
+  background-color: #398869;
+}
+
+body.dark-mode .bottom-nav img {
+  filter: brightness(0) invert(1);
+}
+
+body.dark-mode .bottom-nav .nav-activo-icono {
+  filter: brightness(0) invert(1);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 383px) {
+  .titulo-editar { left: 49px; }
+  .subtitulo-editar { left: 49px; }
+  .contenedor-secciones { padding-left: 10px; padding-right: 10px; }
+}
+
+@media (max-width: 360px) {
+  .titulo-editar { font-size: 13px; }
+  .subtitulo-editar { font-size: 10px; top: 44px; }
+}
