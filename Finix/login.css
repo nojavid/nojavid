@@ -1,0 +1,364 @@
+/* =========================================================
+   LOGIN - Estilos completos
+   ========================================================= */
+
+/* ===== Reset básico ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
+  user-select: none;
+}
+
+/* ===== Contenedor principal ===== */
+.screen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #FFFFFF;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* ============================================================
+   PANTALLA 1: BIENVENIDA
+   ============================================================ */
+
+/* ===== 1. Ondas ARRIBA IZQUIERDA (volteadas horizontalmente) ===== */
+.ondas-top {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 89.6vw;
+  height: 26.5vh;
+  transform: scaleX(-1);
+  transform-origin: center center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===== 2. Logo CENTRAL ===== */
+.logo {
+  position: absolute;
+  left: 37.4vw;
+  top: 31.5vh;
+  width: 25.4vw;
+  height: 25.4vw;
+  object-fit: contain;
+  z-index: 2;
+}
+
+/* ===== 3. Título ===== */
+.titulo {
+  position: absolute;
+  left: 16.8vw;
+  top: 44.5vh;
+  width: 66.4vw;
+  font-size: 10.2vw;
+  font-weight: 600;
+  color: #1C2B2C;
+  text-align: center;
+  line-height: 1.1;
+  letter-spacing: 0.2px;
+  z-index: 2;
+}
+
+/* ===== 4. Subtítulo ===== */
+.subtitulo {
+  position: absolute;
+  left: 30.5vw;
+  top: 50vh;
+  width: 39.2vw;
+  font-size: 4.07vw;
+  font-weight: 300;
+  color: #787A78;
+  text-align: center;
+  line-height: 1.2;
+  z-index: 2;
+}
+
+/* ===== 5. Línea dorada ===== */
+.linea {
+  position: absolute;
+  left: 43.3vw;
+  top: 54.9vh;
+  width: 13.7vw;
+  height: 3px;
+  background: #BCAB7C;
+  border-radius: 2px;
+  z-index: 2;
+}
+
+/* ===== 6. Descripción ===== */
+.descripcion {
+  position: absolute;
+  left: 22.6vw;
+  top: 59.9vh;
+  width: 56vw;
+  font-size: 4.07vw;
+  font-weight: 300;
+  color: #787A78;
+  text-align: center;
+  line-height: 1.4;
+  z-index: 2;
+}
+
+/* ===== 7. Ondas ABAJO DERECHA (volteadas verticalmente) ===== */
+.ondas-bottom {
+  position: absolute;
+  left: 10.4vw;
+  top: 73.6vh;
+  width: 89.6vw;
+  height: 26.5vh;
+  transform: scaleY(-1);
+  transform-origin: center center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===== Pista "Toca o desliza" ===== */
+.hint {
+  position: absolute;
+  bottom: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #787A78;
+  font-size: 3.5vw;
+  font-weight: 300;
+  z-index: 3;
+  animation: hintPulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.hint-arrow {
+  font-size: 5vw;
+  line-height: 1;
+  color: #BCAB7C;
+  animation: arrowSlide 1.4s ease-in-out infinite;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 1; }
+}
+
+@keyframes arrowSlide {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(4px); }
+}
+
+/* ===== Estado fade-out de la bienvenida ===== */
+.screen.fade-out {
+  opacity: 0;
+  transform: scale(0.97);
+  pointer-events: none;
+}
+
+/* ============================================================
+   PANTALLA 2: LOGIN
+   ============================================================ */
+.login-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(30px);
+  transition: 
+    opacity 0.45s ease,
+    transform 0.45s ease,
+    visibility 0s linear 0.45s;
+  background: #FFFFFF;
+  z-index: 10;
+}
+
+.login-screen.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transition: 
+    opacity 0.45s ease,
+    transform 0.45s ease,
+    visibility 0s linear 0s;
+}
+
+/* ===== Logo del login ===== */
+.login-logo {
+  position: absolute;
+  top: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22vw;
+  height: 22vw;
+  object-fit: contain;
+  z-index: 2;
+}
+
+/* ===== Título del login ===== */
+.login-titulo {
+  position: absolute;
+  top: 34vh;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 7.5vw;
+  font-weight: 600;
+  color: #1C2B2C;
+  z-index: 2;
+}
+
+.login-subtitulo {
+  position: absolute;
+  top: 41vh;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 3.8vw;
+  font-weight: 300;
+  color: #787A78;
+  z-index: 2;
+}
+
+/* ===== Formulario ===== */
+.login-form {
+  position: absolute;
+  top: 47vh;
+  left: 8vw;
+  width: 84vw;
+  z-index: 3;
+}
+
+.input-group {
+  margin-bottom: 4.5vw;
+}
+
+.input-group label {
+  display: block;
+  font-size: 3.4vw;
+  font-weight: 600;
+  color: #1C2B2C;
+  margin-bottom: 1.8vw;
+  padding-left: 1vw;
+}
+
+.input-group input {
+  width: 100%;
+  height: 12vw;
+  padding: 0 4vw;
+  border: 1.5px solid #E5E5E5;
+  border-radius: 3.5vw;
+  background: #FAFAFA;
+  font-family: 'Poppins', sans-serif;
+  font-size: 3.8vw;
+  color: #1C2B2C;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+}
+
+.input-group input::placeholder {
+  color: #B0B0B0;
+  font-weight: 300;
+}
+
+.input-group input:focus {
+  border-color: #BCAB7C;
+  background: #FFFFFF;
+}
+
+/* ===== Botón de login ===== */
+.btn-login {
+  width: 100%;
+  height: 12.5vw;
+  margin-top: 2vw;
+  border: none;
+  border-radius: 3.5vw;
+  background: #1C2B2C;
+  color: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
+  font-size: 4.2vw;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: transform 0.15s, background 0.2s;
+  box-shadow: 0 6px 20px rgba(28, 43, 44, 0.25);
+}
+
+.btn-login:active {
+  transform: scale(0.97);
+  background: #162123;
+}
+
+/* ===== Footer del login ===== */
+.login-footer {
+  margin-top: 5vw;
+  text-align: center;
+  font-size: 3.4vw;
+  font-weight: 300;
+  color: #787A78;
+}
+
+.login-footer a {
+  color: #BCAB7C;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* ===== Botón atrás (solo flecha blanca, gruesa, sin fondo) ===== */
+.btn-back {
+  position: absolute;
+  top: 4vh;
+  left: 5vw;
+  width: 11vw;
+  height: 11vw;
+  border: none;
+  background: transparent;       /* ✅ sin fondo */
+  color: #FFFFFF;                /* ✅ flecha blanca */
+  font-size: 6.5vw;              /* más grande */
+  font-weight: 900;              /* ✅ más gruesa (black) */
+  cursor: pointer;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0 0 1vw 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);   /* sutil para que se vea sobre fondos claros */
+  transition: transform 0.15s;
+}
+
+.btn-back:active {
+  transform: scale(0.9);
+}
+
+/* ============================================================
+   AJUSTES PARA PANTALLAS GRANDES (tablet / desktop)
+   ============================================================ */
+@media (min-width: 600px) {
+  .screen {
+    max-width: 480px;
+    margin: 0 auto;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .login-screen {
+    left: 50%;
+    transform: translateX(calc(-50% + 30px));
+  }
+
+  .login-screen.active {
+    transform: translateX(-50%);
+  }
+}
