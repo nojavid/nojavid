@@ -80,7 +80,7 @@
   // ============================================================
   // 2. NAVEGACIÓN ENTRE PANTALLAS
   // ============================================================
-  let navegando = false;   // evita dobles disparos
+  let navegando = false;
 
   /**
    * Ir de la bienvenida → login
@@ -107,7 +107,6 @@
 
   /**
    * Volver del login → bienvenida
-   * Restaura la pantalla exactamente como estaba
    */
   function volverAlInicio() {
     if (navegando) return;
@@ -123,10 +122,10 @@
       screen.style.transform = "scale(1)";
       screen.style.pointerEvents = "auto";
 
-      // 3. Reajustamos el layout (por si rotó o cambió el tamaño)
+      // 3. Reajustamos el layout
       ajustarLayout();
 
-      // 4. Liberamos el flag después de la transición
+      // 4. Liberamos el flag
       setTimeout(() => {
         navegando = false;
       }, 300);
@@ -142,7 +141,7 @@
 
   // ---- CLIC / TAP ----
   screen.addEventListener("click", (e) => {
-    if (e.target.closest(".hint")) return;   // ignora clics en el hint
+    if (e.target.closest(".hint")) return;
     irAlLogin();
   });
 
@@ -154,7 +153,7 @@
     touchStartTime = Date.now();
   }, { passive: true });
 
-  // ---- TOUCH END (detectar swipe) ----
+  // ---- TOUCH END (swipe) ----
   screen.addEventListener("touchend", (e) => {
     const t = e.changedTouches[0];
     const dx = t.clientX - touchStartX;
@@ -162,14 +161,12 @@
     const dt = Date.now() - touchStartTime;
     const distancia = Math.sqrt(dx * dx + dy * dy);
 
-    // Swipe: al menos 40px de movimiento y menos de 600ms
     if (distancia > 40 && dt < 600) {
       irAlLogin();
     }
-    // Si fue un tap corto, el evento "click" lo maneja
   }, { passive: true });
 
-  // ---- MOUSE (para probar en desktop) ----
+  // ---- MOUSE (desktop) ----
   let mouseStartX = 0;
   let mouseStartY = 0;
   screen.addEventListener("mousedown", (e) => {
@@ -194,7 +191,6 @@
     volverAlInicio();
   });
 
-  // Soporte táctil explícito para móvil
   btnBack.addEventListener("touchend", (e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -202,21 +198,52 @@
   }, { passive: false });
 
   // ============================================================
-  // 5. FORMULARIO DE LOGIN (demo)
+  // 5. FORMULARIO DE LOGIN → REDIRIGE A finix.html
   // ============================================================
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const email = document.getElementById("email").value.trim();
+
+    const email    = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
+    // Validación: campos vacíos
     if (!email || !password) {
       alert("Por favor completa todos los campos");
       return;
     }
 
-    // Aquí conectarías tu backend real
-    console.log("Login:", { email, password });
-    alert("Bienvenido, " + email);
+    // Validación: formato de correo
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Por favor ingresa un correo válido");
+      return;
+    }
+
+    // Validación: longitud de contraseña
+    if (password.length < 6) {
+      alert("La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
+
+    // Guardar sesión (opcional)
+    try {
+      localStorage.setItem("finix_user", JSON.stringify({
+        email: email,
+        loginAt: new Date().toISOString()
+      }));
+    } catch (err) {
+      console.warn("No se pudo guardar la sesión:", err);
+    }
+
+    // Animación de salida
+    loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+    loginScreen.style.opacity = "0";
+    loginScreen.style.transform = "translateX(-30px)";
+
+    // Redirigir a finix.html después de la animación
+    setTimeout(() => {
+      window.location.href = "finix.html";
+    }, 400);
   });
 
   // ============================================================
