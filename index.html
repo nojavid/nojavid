@@ -90,7 +90,7 @@
                 </div>
             </a>
         </div>
-        <!-- Tarjeta del proyecto TANAJ -->
+        <!-- Tarjeta del proyecto FINIX -->
         <div class="proyecto-tarjeta">
             <a href="Finix/Login.html" class="proyecto-enlace">
                 <div class="proyecto-contenido">
@@ -102,7 +102,41 @@
         </div>
     </section>
 
+    <!-- ============================================ -->
+    <!-- BANNER DE PERMISO DE NOTIFICACIONES -->
+    <!-- ============================================ -->
+    <div id="banner-permiso" class="banner-permiso" role="dialog" aria-labelledby="banner-titulo">
+        <div class="banner-contenido">
+            <div class="banner-icono">🔔</div>
+            <div class="banner-texto">
+                <h3 id="banner-titulo" class="banner-titulo">¿Activar notificaciones?</h3>
+                <p class="banner-descripcion">
+                    Recibe avisos cuando haya cambios importantes en la página: nuevos proyectos, actualizaciones y más.
+                </p>
+            </div>
+            <div class="banner-botones">
+                <button id="btn-permitir" class="banner-btn banner-btn-permitir">
+                    ✅ Permitir
+                </button>
+                <button id="btn-rechazar" class="banner-btn banner-btn-rechazar">
+                    Ahora no
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÓN FLOTANTE DE PRUEBA DE NOTIFICACIONES -->
+    <button id="btn-test-notif" 
+            onclick="detectarCambio('Cambio manual detectado', 'cambio')" 
+            title="Probar notificación"
+            aria-label="Probar notificación">
+        🔔
+    </button>
+
     <!-- SCRIPT PRINCIPAL -->
     <script src="index-script.js"></script>
+
+    <!-- SCRIPT DE NOTIFICACIONES -->
+    <script src="notificaciones.js"></script>
 </body>
 </html>
