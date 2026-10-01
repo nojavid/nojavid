@@ -2,6 +2,7 @@
    Login - Ajuste responsive + Navegación + Video + Advertencia
    Validación inteligente con resaltado de campos
    + SCROLL AUTOMÁTICO AL TOP cuando aparece el aviso
+   + COMUNICACIÓN con index.html (eventos)
    ========================================================= */
 
 (function () {
@@ -38,6 +39,22 @@
   // ---------- Medidas base ----------
   const BASE_W = 393;
   const BASE_H = 852;
+
+  // ============================================================
+  // FUNCIÓN AUXILIAR: Emitir evento de forma segura
+  // ============================================================
+  function emitir(tipo, datos) {
+    if (typeof eventos !== 'undefined' && typeof eventos[tipo] === 'function') {
+      try {
+        eventos[tipo](datos);
+        console.log(`📤 Evento "${tipo}" emitido:`, datos);
+      } catch (e) {
+        console.warn(`⚠️ Error al emitir evento "${tipo}":`, e);
+      }
+    } else {
+      console.warn(`⚠️ Evento "${tipo}" no disponible (comunicacion.js no cargado)`);
+    }
+  }
 
   // ============================================================
   // 1. AJUSTE RESPONSIVE (pantalla 1)
@@ -236,8 +253,6 @@
     }
 
     // ===== SCROLL AUTOMÁTICO AL TOP DEL LOGIN =====
-    // Subimos el scroll del login-screen hasta arriba del todo
-    // para que el aviso (fixed) se vea en un contexto limpio.
     requestAnimationFrame(() => {
       loginScreen.scrollTo({
         top: 0,
@@ -263,6 +278,7 @@
 
   // ============================================================
   // 6. FORMULARIO → VALIDACIÓN INTELIGENTE + REDIRIGE A finix.html
+  //    + EMITE EVENTOS A index.html
   // ============================================================
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -276,18 +292,21 @@
     // ---------- Caso 1: ambos vacíos ----------
     if (emailVacio && passwordVacio) {
       mostrarAdvertencia("Por favor completa todos los campos", null);
+      emitir('loginFallido', 'campos-vacios');
       return;
     }
 
     // ---------- Caso 2: solo correo vacío ----------
     if (emailVacio && !passwordVacio) {
       mostrarAdvertencia("El campo de correo electrónico está vacío", "email");
+      emitir('loginFallido', 'email-vacio');
       return;
     }
 
     // ---------- Caso 3: solo contraseña vacía ----------
     if (!emailVacio && passwordVacio) {
       mostrarAdvertencia("El campo de contraseña está vacío", "password");
+      emitir('loginFallido', 'password-vacio');
       return;
     }
 
@@ -295,12 +314,14 @@
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       mostrarAdvertencia("Por favor ingresa un correo válido", "email");
+      emitir('loginFallido', 'email-invalido');
       return;
     }
 
     // ---------- Caso 5: contraseña muy corta ----------
     if (password.length < 6) {
       mostrarAdvertencia("La contraseña debe tener al menos 6 caracteres", "password");
+      emitir('loginFallido', 'password-corta');
       return;
     }
 
@@ -314,6 +335,9 @@
     } catch (err) {
       console.warn("No se pudo guardar la sesión:", err);
     }
+
+    // 🔔 Notificar login exitoso a index.html
+    emitir('loginExitoso', email);
 
     loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
     loginScreen.style.opacity = "0";

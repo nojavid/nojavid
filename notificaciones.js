@@ -342,8 +342,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ============================================
     // 12. MONITOR DE CAMBIOS EN LOCALSTORAGE
+    // (ignora el canal de comunicación y claves internas)
     // ============================================
     window.addEventListener('storage', function(e) {
+        // Ignorar el canal de comunicación (lo maneja comunicacion.js)
+        if (e.key === 'nojavid_canal_eventos') return;
+
+        // Ignorar claves internas de notificaciones
+        if (e.key === 'nojavid_decision_notificaciones' ||
+            e.key === 'nojavid_fecha_rechazo') return;
+
         mostrarNotificacion(
             `💾 Cambio detectado en "${e.key}"`,
             'cambio'
@@ -365,6 +373,52 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         mostrarNotificacion('🔔 Sistema de notificaciones activo', 'success', 3500);
     }, 1500);
+
+    // ============================================
+    // 15. ESCUCHAR EVENTOS DE OTRAS PÁGINAS (Finix, Tanaj, etc.)
+    // ============================================
+    if (typeof escucharEventos === 'function') {
+        escucharEventos(function(evento) {
+            let mensaje = '';
+            let tipo = 'info';
+
+            switch (evento.tipo) {
+                case 'usuario-entro':
+                    mensaje = `👤 Alguien entró a ${evento.datos.pagina}`;
+                    tipo = 'info';
+                    break;
+                case 'usuario-salio':
+                    mensaje = `👋 Alguien salió de ${evento.datos.pagina}`;
+                    tipo = 'info';
+                    break;
+                case 'login-exitoso':
+                    mensaje = `✅ Login exitoso: ${evento.datos.usuario}`;
+                    tipo = 'success';
+                    break;
+                case 'login-fallido':
+                    mensaje = `❌ Login fallido (intento ${evento.datos.intentos})`;
+                    tipo = 'error';
+                    break;
+                case 'registro-nuevo':
+                    mensaje = `🎉 Nuevo registro: ${evento.datos.usuario}`;
+                    tipo = 'success';
+                    break;
+                case 'proyecto-visitado':
+                    mensaje = `📂 Proyecto visitado: ${evento.datos.proyecto}`;
+                    tipo = 'cambio';
+                    break;
+                case 'finix-actualizado':
+                    mensaje = `🔄 Finix actualizado: ${evento.datos.detalle}`;
+                    tipo = 'cambio';
+                    break;
+                default:
+                    mensaje = `📢 Evento: ${evento.tipo}`;
+            }
+
+            mostrarNotificacion(mensaje, tipo, 5000);
+            notificarNavegador('NOJAVID', mensaje);
+        });
+    }
 
     console.log('✅ Todos los observadores activos');
 });

@@ -180,6 +180,34 @@
 
   </div>
 
+  <!-- ============================================
+       SCRIPT DE COMUNICACIÓN CON OTRAS PÁGINAS
+       ============================================ -->
+  <script src="../comunicacion.js"></script>
+
+  <!-- AVISAR A LA PÁGINA PRINCIPAL AL ENTRAR/SALIR -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Esperar un poco para asegurar que comunicacion.js esté listo
+      setTimeout(function() {
+        if (typeof eventos !== 'undefined') {
+          // Avisar que alguien entró a la página de Login
+          eventos.usuarioEntro('Finix - Login');
+          console.log('📤 Evento "usuario-entro" enviado a index.html');
+
+          // Avisar cuando salga de la página
+          window.addEventListener('beforeunload', function() {
+            if (typeof eventos !== 'undefined') {
+              eventos.usuarioSalio('Finix - Login');
+            }
+          });
+        } else {
+          console.warn('⚠️ comunicacion.js no está cargado');
+        }
+      }, 100);
+    });
+  </script>
+
   <script src="login.js"></script>
 </body>
 </html>
