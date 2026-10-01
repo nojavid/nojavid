@@ -1,11 +1,12 @@
 /* =========================================================
-   Login - Ajuste responsive + Navegación
+   Login - Ajuste responsive + Navegación + Video + Advertencia
+   Validación inteligente con resaltado de campos
    ========================================================= */
 
 (function () {
   "use strict";
 
-  // ---------- Elementos pantalla 1 (bienvenida) ----------
+  // ---------- Elementos pantalla 1 ----------
   const ondasTop    = document.getElementById("ondasTop");
   const logo        = document.getElementById("logo");
   const titulo      = document.getElementById("titulo");
@@ -20,12 +21,25 @@
   const btnBack     = document.getElementById("btnBack");
   const loginForm   = document.getElementById("loginForm");
 
-  // ---------- Medidas base del diseño original ----------
+  // ---------- Nuevos elementos ----------
+  const brandVideo  = document.getElementById("brandVideo");
+  const checkBox    = document.getElementById("checkBox");
+  const rememberChk = document.getElementById("remember");
+
+  // ---------- Advertencia ----------
+  const warningOverlay = document.getElementById("warningOverlay");
+  const warningText    = document.getElementById("warningText");
+
+  // ---------- Inputs ----------
+  const emailInput = document.getElementById("email");
+  const passInput  = document.getElementById("password");
+
+  // ---------- Medidas base ----------
   const BASE_W = 393;
   const BASE_H = 852;
 
   // ============================================================
-  // 1. AJUSTE RESPONSIVE
+  // 1. AJUSTE RESPONSIVE (pantalla 1)
   // ============================================================
   function ajustarLayout() {
     const screenW = window.innerWidth;
@@ -35,42 +49,35 @@
     const sy = (v) => (v / BASE_H) * screenH;
     const sFont = Math.min(screenW / BASE_W, screenH / BASE_H);
 
-    // ---- 1. Ondas superiores ----
     ondasTop.style.left   = sx(0)   + "px";
     ondasTop.style.top    = sy(0)   + "px";
     ondasTop.style.width  = sx(352) + "px";
     ondasTop.style.height = sy(226) + "px";
 
-    // ---- 2. Logo central ----
     logo.style.left   = sx(147) + "px";
     logo.style.top    = sy(268) + "px";
     logo.style.width  = sx(100) + "px";
     logo.style.height = sx(100) + "px";
 
-    // ---- 3. Título ----
     titulo.style.left     = sx(66) + "px";
     titulo.style.top      = sy(379) + "px";
     titulo.style.width    = sx(261) + "px";
     titulo.style.fontSize = (40 * sFont) + "px";
 
-    // ---- 4. Subtítulo ----
     subtitulo.style.left     = sx(120) + "px";
     subtitulo.style.top      = sy(426) + "px";
     subtitulo.style.width    = sx(154) + "px";
     subtitulo.style.fontSize = (16 * sFont) + "px";
 
-    // ---- 5. Línea ----
     linea.style.left  = sx(170) + "px";
     linea.style.top   = sy(468) + "px";
     linea.style.width = sx(54)  + "px";
 
-    // ---- 6. Descripción ----
     descripcion.style.left     = sx(89) + "px";
     descripcion.style.top      = sy(510) + "px";
     descripcion.style.width    = sx(220) + "px";
     descripcion.style.fontSize = (16 * sFont) + "px";
 
-    // ---- 7. Ondas inferiores ----
     ondasBottom.style.left   = sx(41) + "px";
     ondasBottom.style.top    = sy(627) + "px";
     ondasBottom.style.width  = sx(352) + "px";
@@ -81,51 +88,66 @@
   // 2. NAVEGACIÓN ENTRE PANTALLAS
   // ============================================================
   let navegando = false;
+  let videoTimers = [];
 
-  /**
-   * Ir de la bienvenida → login
-   */
+  function limpiarTimersVideo() {
+    videoTimers.forEach((id) => clearTimeout(id));
+    videoTimers = [];
+  }
+
   function irAlLogin() {
     if (navegando) return;
     navegando = true;
 
-    // Fade-out de la bienvenida
     screen.classList.add("fade-out");
 
-    // Fade-in del login después de un pequeño delay
     setTimeout(() => {
       loginScreen.classList.add("active");
 
-      // Enfocar el primer input después de la transición
+      // Sincronización del video
       setTimeout(() => {
-        const emailInput = document.getElementById("email");
+        if (brandVideo) {
+          brandVideo.classList.add("play-in");
+          brandVideo.play().catch(() => {});
+
+          const t1 = setTimeout(() => {
+            brandVideo.classList.add("greet");
+          }, 5000);
+
+          const t2 = setTimeout(() => {
+            brandVideo.classList.remove("greet");
+            brandVideo.classList.add("rest");
+          }, 6200);
+
+          videoTimers.push(t1, t2);
+        }
+
         if (emailInput) emailInput.focus();
         navegando = false;
       }, 500);
     }, 250);
   }
 
-  /**
-   * Volver del login → bienvenida
-   */
   function volverAlInicio() {
     if (navegando) return;
     navegando = true;
 
-    // 1. Ocultamos el login
     loginScreen.classList.remove("active");
 
-    // 2. Restauramos la bienvenida
+    if (brandVideo) {
+      limpiarTimersVideo();
+      brandVideo.pause();
+      brandVideo.currentTime = 0;
+      brandVideo.classList.remove("play-in", "greet", "rest");
+    }
+
     setTimeout(() => {
       screen.classList.remove("fade-out");
       screen.style.opacity = "1";
       screen.style.transform = "scale(1)";
       screen.style.pointerEvents = "auto";
-
-      // 3. Reajustamos el layout
       ajustarLayout();
 
-      // 4. Liberamos el flag
       setTimeout(() => {
         navegando = false;
       }, 300);
@@ -135,17 +157,13 @@
   // ============================================================
   // 3. DETECTAR CLIC Y SWIPE EN LA BIENVENIDA
   // ============================================================
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let touchStartTime = 0;
+  let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
 
-  // ---- CLIC / TAP ----
   screen.addEventListener("click", (e) => {
     if (e.target.closest(".hint")) return;
     irAlLogin();
   });
 
-  // ---- TOUCH START ----
   screen.addEventListener("touchstart", (e) => {
     const t = e.touches[0];
     touchStartX = t.clientX;
@@ -153,22 +171,16 @@
     touchStartTime = Date.now();
   }, { passive: true });
 
-  // ---- TOUCH END (swipe) ----
   screen.addEventListener("touchend", (e) => {
     const t = e.changedTouches[0];
     const dx = t.clientX - touchStartX;
     const dy = t.clientY - touchStartY;
     const dt = Date.now() - touchStartTime;
     const distancia = Math.sqrt(dx * dx + dy * dy);
-
-    if (distancia > 40 && dt < 600) {
-      irAlLogin();
-    }
+    if (distancia > 40 && dt < 600) irAlLogin();
   }, { passive: true });
 
-  // ---- MOUSE (desktop) ----
-  let mouseStartX = 0;
-  let mouseStartY = 0;
+  let mouseStartX = 0, mouseStartY = 0;
   screen.addEventListener("mousedown", (e) => {
     mouseStartX = e.clientX;
     mouseStartY = e.clientY;
@@ -176,10 +188,7 @@
   screen.addEventListener("mouseup", (e) => {
     const dx = e.clientX - mouseStartX;
     const dy = e.clientY - mouseStartY;
-    const distancia = Math.sqrt(dx * dx + dy * dy);
-    if (distancia > 40) {
-      irAlLogin();
-    }
+    if (Math.sqrt(dx * dx + dy * dy) > 40) irAlLogin();
   });
 
   // ============================================================
@@ -191,63 +200,112 @@
     volverAlInicio();
   });
 
-  btnBack.addEventListener("touchend", (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    volverAlInicio();
-  }, { passive: false });
+  // ============================================================
+  // 5. CHECK "RECORDAR CUENTA"
+  // ============================================================
+  rememberChk.addEventListener("change", () => {
+    checkBox.classList.toggle("checked", rememberChk.checked);
+  });
 
   // ============================================================
-  // 5. FORMULARIO DE LOGIN → REDIRIGE A finix.html
+  // 5.5. MOSTRAR ADVERTENCIA (toast animado) + resaltar campo
+  // ============================================================
+  function mostrarAdvertencia(mensaje, campo) {
+    warningText.textContent = mensaje;
+    warningOverlay.classList.add("show");
+
+    // Quitar resaltados previos
+    document.querySelectorAll(".field.error").forEach((f) => {
+      f.classList.remove("error");
+    });
+
+    // Resaltar el campo que dio error (si se especifica)
+    if (campo) {
+      const input = document.getElementById(campo);
+      if (input) input.closest(".field").classList.add("error");
+    }
+  }
+
+  // Cerrar la advertencia al hacer clic fuera de la caja
+  warningOverlay.addEventListener("click", (e) => {
+    if (e.target === warningOverlay) {
+      warningOverlay.classList.remove("show");
+    }
+  });
+
+  // Quitar el resaltado cuando el usuario empiece a escribir
+  emailInput.addEventListener("input", () => {
+    emailInput.closest(".field").classList.remove("error");
+  });
+  passInput.addEventListener("input", () => {
+    passInput.closest(".field").classList.remove("error");
+  });
+
+  // ============================================================
+  // 6. FORMULARIO → VALIDACIÓN INTELIGENTE + REDIRIGE A finix.html
   // ============================================================
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const email    = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const email    = emailInput.value.trim();
+    const password = passInput.value.trim();
 
-    // Validación: campos vacíos
-    if (!email || !password) {
-      alert("Por favor completa todos los campos");
+    const emailVacio    = email === "";
+    const passwordVacio = password === "";
+
+    // ---------- Caso 1: ambos vacíos ----------
+    if (emailVacio && passwordVacio) {
+      mostrarAdvertencia("Por favor completa todos los campos", null);
       return;
     }
 
-    // Validación: formato de correo
+    // ---------- Caso 2: solo correo vacío ----------
+    if (emailVacio && !passwordVacio) {
+      mostrarAdvertencia("El campo de correo electrónico está vacío", "email");
+      return;
+    }
+
+    // ---------- Caso 3: solo contraseña vacía ----------
+    if (!emailVacio && passwordVacio) {
+      mostrarAdvertencia("El campo de contraseña está vacío", "password");
+      return;
+    }
+
+    // ---------- Caso 4: correo con formato inválido ----------
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Por favor ingresa un correo válido");
+      mostrarAdvertencia("Por favor ingresa un correo válido", "email");
       return;
     }
 
-    // Validación: longitud de contraseña
+    // ---------- Caso 5: contraseña muy corta ----------
     if (password.length < 6) {
-      alert("La contraseña debe tener al menos 6 caracteres");
+      mostrarAdvertencia("La contraseña debe tener al menos 6 caracteres", "password");
       return;
     }
 
-    // Guardar sesión (opcional)
+    // ---------- Todo correcto: guardar y redirigir ----------
     try {
       localStorage.setItem("finix_user", JSON.stringify({
         email: email,
+        remember: rememberChk.checked,
         loginAt: new Date().toISOString()
       }));
     } catch (err) {
       console.warn("No se pudo guardar la sesión:", err);
     }
 
-    // Animación de salida
     loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
     loginScreen.style.opacity = "0";
     loginScreen.style.transform = "translateX(-30px)";
 
-    // Redirigir a finix.html después de la animación
     setTimeout(() => {
       window.location.href = "finix.html";
     }, 400);
   });
 
   // ============================================================
-  // 6. EVENTOS DE RESIZE
+  // 7. EVENTOS DE RESIZE
   // ============================================================
   window.addEventListener("load", ajustarLayout);
   window.addEventListener("resize", ajustarLayout);
@@ -256,7 +314,7 @@
   });
 
   // ============================================================
-  // 7. EVITAR ZOOM CON DOBLE TAP
+  // 8. EVITAR ZOOM CON DOBLE TAP
   // ============================================================
   let lastTouch = 0;
   document.addEventListener("touchend", (e) => {
