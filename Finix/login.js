@@ -1,6 +1,7 @@
 /* =========================================================
    Login - Ajuste responsive + Navegación + Video + Advertencia
    Validación inteligente con resaltado de campos
+   + SCROLL AUTOMÁTICO AL TOP cuando aparece el aviso
    ========================================================= */
 
 (function () {
@@ -134,6 +135,9 @@
 
     loginScreen.classList.remove("active");
 
+    // Resetear scroll del login al inicio para la próxima vez
+    loginScreen.scrollTop = 0;
+
     if (brandVideo) {
       limpiarTimersVideo();
       brandVideo.pause();
@@ -208,7 +212,8 @@
   });
 
   // ============================================================
-  // 5.5. MOSTRAR ADVERTENCIA (toast animado) + resaltar campo
+  // 5.5. MOSTRAR ADVERTENCIA (toast animado)
+  //      + resaltar campo + SCROLL AUTOMÁTICO AL TOP
   // ============================================================
   function mostrarAdvertencia(mensaje, campo) {
     warningText.textContent = mensaje;
@@ -222,8 +227,23 @@
     // Resaltar el campo que dio error (si se especifica)
     if (campo) {
       const input = document.getElementById(campo);
-      if (input) input.closest(".field").classList.add("error");
+      if (input) {
+        const field = input.closest(".field");
+        // Forzar reflow para reiniciar la animación de shake
+        void field.offsetWidth;
+        field.classList.add("error");
+      }
     }
+
+    // ===== SCROLL AUTOMÁTICO AL TOP DEL LOGIN =====
+    // Subimos el scroll del login-screen hasta arriba del todo
+    // para que el aviso (fixed) se vea en un contexto limpio.
+    requestAnimationFrame(() => {
+      loginScreen.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
   }
 
   // Cerrar la advertencia al hacer clic fuera de la caja

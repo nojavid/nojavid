@@ -147,6 +147,7 @@ html, body {
   background: #FFFFFF;
   overflow-y: auto;
   overflow-x: hidden;
+  scroll-behavior: smooth;
   z-index: 10;
 }
 
@@ -339,6 +340,7 @@ html, body {
   width: 100%;
   height: 8vh;
   min-height: 56px;
+  transition: transform 0.25s ease;
 }
 
 .field input {
@@ -353,7 +355,7 @@ html, body {
   font-size: 4.3vw;
   color: #1A232A;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
 }
 .field input::placeholder {
   color: #8D8D8B;
@@ -371,6 +373,28 @@ html, body {
   width: 4.8vw;
   height: 4.8vw;
   pointer-events: none;
+}
+
+/* ===== ESTADO DE ERROR (campo resaltado) ===== */
+.field.error {
+  animation: shakeError 0.45s ease;
+}
+.field.error input {
+  border-color: #E4572E;
+  background: #FFF4F0;
+  box-shadow: 0 0 0 3px rgba(228, 87, 46, 0.15);
+}
+.field.error .field-icon path,
+.field.error .field-icon rect {
+  stroke: #E4572E;
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-5px); }
+  40%      { transform: translateX(5px); }
+  60%      { transform: translateX(-3px); }
+  80%      { transform: translateX(3px); }
 }
 
 /* ===== 11 y 12. Recordar cuenta ===== */
@@ -541,7 +565,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 9999;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0s linear 0.3s;
