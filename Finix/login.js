@@ -14,7 +14,7 @@
   // ============================================================
   const SUPABASE_URL = 'https://dfhmekwkhsxvjuojuruv.supabase.co';
   // ⚠️ IMPORTANTE: Reemplaza esto con tu llave "anon public" REAL
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmaG1la3draHN4dmp1b2p1cnV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwMDAwMDAsImV4cCI6MjEwMDAwMDAwMH0.REEMPLAZA_ESTO_CON_TU_LLAVE_REAL';
+  const SUPABASE_ANON_KEY = 'sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8';
 
   let supabaseClient = null;
   if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
