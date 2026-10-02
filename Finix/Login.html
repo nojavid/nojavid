@@ -159,7 +159,7 @@
 
       <div class="register-row">
         <span class="register-text">¿No tines cuenta?</span>
-        <a href="registrar.html" class="register-link">Registrate</a>
+        <a href="Registro.html" class="register-link" id="btnGoRegister">Registrate</a>
       </div>
 
     </div>
@@ -206,6 +206,31 @@
         }
       }, 100);
     });
+  </script>
+
+  <!-- ============================================
+       TRANSICIÓN SUAVE: LOGIN -> REGISTRO
+       ============================================ -->
+  <script>
+    (function () {
+      const btnGoRegister = document.getElementById("btnGoRegister");
+      const loginScreen   = document.getElementById("loginScreen");
+      if (!btnGoRegister || !loginScreen) return;
+
+      btnGoRegister.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Animación de salida hacia la izquierda
+        loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+        loginScreen.style.opacity    = "0";
+        loginScreen.style.transform  = "translateX(-40px)";
+
+        // Redirigir después de la animación
+        setTimeout(function () {
+          window.location.href = "Registro.html";
+        }, 400);
+      });
+    })();
   </script>
 
   <script src="login.js"></script>

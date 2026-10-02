@@ -1,0 +1,382 @@
+/* =========================================================
+   REGISTRO - Estilos
+   ========================================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
+  user-select: none;
+  overflow-x: hidden;
+}
+
+.register-screen {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 40px 32px 40px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  -webkit-overflow-scrolling: touch;
+}
+
+.register-screen.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Logo */
+.reg-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+.reg-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+/* Títulos */
+.reg-titles {
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.reg-title {
+  font-size: 30px;
+  font-weight: 600;
+  color: #083224;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.reg-sub {
+  font-size: 15px;
+  font-weight: 500;
+  color: #899095;
+  line-height: 1.35;
+}
+
+/* Formulario */
+.reg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.reg-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reg-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #637177;
+  padding-left: 2px;
+}
+
+/* Campo */
+.reg-field {
+  position: relative;
+  width: 100%;
+  height: 48px;
+  background: #FFFFFF;
+  border: 1.5px solid #E5E4E2;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.reg-field.focused {
+  border-color: #275248;
+  box-shadow: 0 0 0 3px rgba(39, 82, 72, 0.08);
+}
+
+.reg-field.valid {
+  border-color: #39FF14;
+  box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.12);
+}
+
+.reg-field.error {
+  border-color: #E4572E;
+  background: #FFF4F0;
+  animation: shakeError 0.45s ease;
+}
+
+@keyframes shakeError {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-5px); }
+  40%     { transform: translateX(5px); }
+  60%     { transform: translateX(-3px); }
+  80%     { transform: translateX(3px); }
+}
+
+/* Iconos dentro del campo */
+.reg-icon {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reg-icon svg {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.reg-icon .icon-valid {
+  opacity: 0;
+  transform: scale(0.5) rotate(-20deg);
+}
+
+.reg-field.valid .reg-icon .icon-default {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.reg-field.valid .reg-icon .icon-valid {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+  filter: drop-shadow(0 0 4px rgba(57,255,20,0.6));
+}
+
+/* Input */
+.reg-field input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #1A232A;
+  margin-left: 12px;
+  padding-right: 6px;
+  min-width: 0;
+}
+
+.reg-field input::placeholder {
+  color: #B8B8B8;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+/* =========================================================
+   Toggle de contraseña con animación estilo itshover
+   ========================================================= */
+.reg-toggle {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #899095;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+.reg-toggle:hover { color: #275248; }
+
+.toggle-svg {
+  width: 22px;
+  height: 22px;
+  overflow: visible;
+  transition: transform 0.15s ease;
+}
+
+/* Estado por defecto = "eye-off" (contraseña oculta): la línea diagonal visible */
+.toggle-svg .eye-strike {
+  stroke-dasharray: 26;
+  stroke-dashoffset: 0;
+  opacity: 1;
+  transition: stroke-dashoffset 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Estado "eye" (contraseña visible): la línea diagonal se desdibuja */
+.reg-toggle.is-visible .eye-strike {
+  stroke-dashoffset: 26;
+  opacity: 0.5;
+}
+
+/* Las partes del ojo hacen un pequeño fade + scale al alternar */
+.toggle-svg .eye-parts {
+  transform-origin: 50% 50%;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.reg-toggle.is-visible .eye-parts {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.reg-toggle:not(.is-visible) .eye-parts {
+  opacity: 0.75;
+  transform: scale(0.98);
+}
+
+/* Feedback al hacer click */
+.reg-toggle:active .toggle-svg {
+  transform: scale(0.92);
+}
+
+/* Botón Crear cuenta - dentro del form, justo debajo de repetir contraseña */
+.reg-submit {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  background: #275248;
+  color: #FFFFFF;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 8px;
+  flex-shrink: 0;
+  position: relative;
+  transition: transform 0.15s, background 0.2s;
+}
+
+.reg-submit:active {
+  transform: scale(0.98);
+  background: #1e4239;
+}
+
+.reg-arrow {
+  position: absolute;
+  right: 16px;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.reg-submit:hover .reg-arrow { transform: translateX(4px); }
+
+/* Separador O */
+.reg-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 22px 0 18px 0;
+  flex-shrink: 0;
+}
+
+.reg-separator .sep-line {
+  flex: 1;
+  height: 2px;
+  background: #E3E3E3;
+  border-radius: 2px;
+}
+
+.reg-separator .sep-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #E3E3E3;
+  line-height: 1;
+}
+
+/* Accesos rápidos */
+.quick-access {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.qa-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1.5px solid #E3E3E3;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.qa-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+.reg-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.reg-have-account {
+  font-size: 16px;
+  font-weight: 400;
+  color: #7C7C7C;
+  text-align: center;
+}
+
+.reg-login-link {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0D554F;
+  text-decoration: none;
+  text-align: center;
+}
+
+.reg-login-link:active { opacity: 0.7; }
+
+/* Pantallas pequeñas */
+@media (max-height: 700px) {
+  .register-screen { padding: 20px 32px 20px 32px; }
+  .reg-logo { width: 70px; height: 70px; }
+  .reg-header { margin-bottom: 14px; }
+  .reg-titles { margin-bottom: 18px; }
+  .reg-title { font-size: 26px; }
+  .reg-form { gap: 11px; }
+  .reg-field { height: 44px; }
+  .reg-submit { height: 46px; margin-top: 6px; }
+  .reg-separator { margin: 16px 0 12px 0; }
+  .quick-access { margin-bottom: 16px; }
+  .qa-btn { width: 46px; height: 46px; }
+}
