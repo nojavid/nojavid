@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="login.css">
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -135,7 +137,8 @@
       </div>
 
       <div class="quick-access">
-        <button class="qa-btn" type="button" aria-label="Google">
+        <!-- Botón Google: ahora maneja el login real -->
+        <button class="qa-btn" type="button" id="googleLoginBtn" aria-label="Google">
           <svg viewBox="0 0 48 48" width="26" height="26">
             <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/>
             <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
@@ -188,14 +191,11 @@
   <!-- AVISAR A LA PÁGINA PRINCIPAL AL ENTRAR/SALIR -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Esperar un poco para asegurar que comunicacion.js esté listo
       setTimeout(function() {
         if (typeof eventos !== 'undefined') {
-          // Avisar que alguien entró a la página de Login
           eventos.usuarioEntro('Finix - Login');
           console.log('📤 Evento "usuario-entro" enviado a index.html');
 
-          // Avisar cuando salga de la página
           window.addEventListener('beforeunload', function() {
             if (typeof eventos !== 'undefined') {
               eventos.usuarioSalio('Finix - Login');
@@ -220,15 +220,81 @@
       btnGoRegister.addEventListener("click", function (e) {
         e.preventDefault();
 
-        // Animación de salida hacia la izquierda
         loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
         loginScreen.style.opacity    = "0";
         loginScreen.style.transform  = "translateX(-40px)";
 
-        // Redirigir después de la animación
         setTimeout(function () {
           window.location.href = "Registro.html";
         }, 400);
+      });
+    })();
+  </script>
+
+  <!-- ============================================
+       GOOGLE SIGN-IN (Login)
+       ============================================ -->
+  <script>
+    (function () {
+      const CLIENT_ID = "368673555834-1rmhim6cr22quun34e3gfq52a1ofiroq.apps.googleusercontent.com";
+
+      // Google llama a esta función cuando el usuario se autentica
+      window.handleGoogleResponse = function (response) {
+        try {
+          const payload = JSON.parse(atob(response.credential.split('.')[1]));
+          console.log("✅ Google user:", payload);
+
+          // Guardar sesión con el mismo formato que tu login normal
+          localStorage.setItem("finix_user", JSON.stringify({
+            email: payload.email,
+            name: payload.name,
+            picture: payload.picture,
+            provider: "google",
+            remember: true,
+            loginAt: new Date().toISOString()
+          }));
+
+          // Emitir evento si comunicacion.js está cargado
+          if (typeof eventos !== 'undefined' && typeof eventos.loginExitoso === 'function') {
+            try { eventos.loginExitoso(payload.email); } catch (e) {}
+          }
+
+          // Animación de salida y redirección
+          const loginScreen = document.getElementById("loginScreen");
+          loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+          loginScreen.style.opacity = "0";
+          loginScreen.style.transform = "translateX(-30px)";
+
+          setTimeout(function () {
+            window.location.href = "finix.html";
+          }, 400);
+
+        } catch (err) {
+          console.error("❌ Error procesando respuesta de Google:", err);
+          alert("Hubo un error al iniciar sesión con Google.");
+        }
+      };
+
+      // Inicializar Google Identity Services
+      window.addEventListener("load", function () {
+        if (typeof google === "undefined" || !google.accounts) {
+          console.warn("⚠️ Google Identity Services no cargó");
+          return;
+        }
+
+        google.accounts.id.initialize({
+          client_id: CLIENT_ID,
+          callback: window.handleGoogleResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true
+        });
+
+        const googleBtn = document.getElementById("googleLoginBtn");
+        if (googleBtn) {
+          googleBtn.addEventListener("click", function () {
+            google.accounts.id.prompt();
+          });
+        }
       });
     })();
   </script>
