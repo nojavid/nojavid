@@ -1,46 +1,32 @@
 /* =========================================================
-   Registro - Validación en vivo + Supabase
+   Registro - Validación en vivo + Supabase (Email + Google)
    ========================================================= */
 (function () {
   "use strict";
 
-  // ============================================================
-  // CONFIGURACIÓN DE SUPABASE (NUEVO PROYECTO)
-  // ============================================================
   const SUPABASE_URL = 'https://dfhmekwkhsxvjuojuruv.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8'; // ← ⚠️ REEMPLAZA ESTO CON TU LLAVE ANON PUBLIC REAL
+  const SUPABASE_ANON_KEY = 'sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8';
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // ============================================================
-  // ELEMENTOS DEL DOM
-  // ============================================================
   const registerScreen = document.getElementById("registerScreen");
   const form           = document.getElementById("registerForm");
 
-  // Inputs
   const fullname  = document.getElementById("fullname");
   const email     = document.getElementById("email");
   const password  = document.getElementById("password");
   const password2 = document.getElementById("password2");
 
-  // Fields (contenedores)
   const fieldFullname  = document.getElementById("fieldFullname");
   const fieldEmail     = document.getElementById("fieldEmail");
   const fieldPassword  = document.getElementById("fieldPassword");
   const fieldPassword2 = document.getElementById("fieldPassword2");
 
-  // ============================================================
-  // Animación de entrada
-  // ============================================================
   window.addEventListener("load", () => {
     requestAnimationFrame(() => registerScreen.classList.add("active"));
     fullname.focus();
   });
 
-  // ============================================================
-  // Helpers de validación
-  // ============================================================
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   function marcar(campo, valido) {
@@ -48,11 +34,6 @@
     campo.classList.remove("error");
   }
 
-  // ============================================================
-  // Validación en vivo
-  // ============================================================
-
-  // --- Nombre completo ---
   fullname.addEventListener("focus", () => fieldFullname.classList.add("focused"));
   fullname.addEventListener("blur",  () => {
     fieldFullname.classList.remove("focused");
@@ -70,7 +51,6 @@
     else marcar(fieldFullname, false);
   });
 
-  // --- Correo ---
   email.addEventListener("focus", () => fieldEmail.classList.add("focused"));
   email.addEventListener("blur",  () => {
     fieldEmail.classList.remove("focused");
@@ -88,7 +68,6 @@
     else marcar(fieldEmail, false);
   });
 
-  // --- Contraseña ---
   password.addEventListener("focus", () => fieldPassword.classList.add("focused"));
   password.addEventListener("blur",  () => {
     fieldPassword.classList.remove("focused");
@@ -106,7 +85,6 @@
     validarCoincidencia();
   });
 
-  // --- Repetir contraseña ---
   password2.addEventListener("focus", () => fieldPassword2.classList.add("focused"));
   password2.addEventListener("blur",  () => {
     fieldPassword2.classList.remove("focused");
@@ -128,9 +106,6 @@
     }
   }
 
-  // ============================================================
-  // Toggle mostrar / ocultar contraseña
-  // ============================================================
   document.querySelectorAll(".reg-toggle").forEach((btn) => {
     btn.addEventListener("click", () => {
       const target = document.getElementById(btn.dataset.target);
@@ -140,7 +115,6 @@
       target.type = esPassword ? "text" : "password";
 
       btn.classList.toggle("is-visible", esPassword);
-
       btn.setAttribute(
         "aria-label",
         esPassword ? "Ocultar contraseña" : "Mostrar contraseña"
@@ -148,9 +122,6 @@
     });
   });
 
-  // ============================================================
-  // Submit con Supabase
-  // ============================================================
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -161,7 +132,6 @@
 
     const errores = [];
 
-    // --- Validaciones locales ---
     if (nombre.length < 3) {
       fieldFullname.classList.add("error");
       errores.push("nombre");
@@ -197,7 +167,6 @@
       return;
     }
 
-    // --- Deshabilitar botón mientras se procesa ---
     const btnSubmit = document.getElementById("btnSubmit");
     const spanBtn = btnSubmit.querySelector("span");
     const textoOriginal = spanBtn.textContent;
@@ -205,16 +174,11 @@
     spanBtn.textContent = "Creando cuenta...";
 
     try {
-      // ============================================================
-      // 1. Crear usuario en Supabase Auth
-      // ============================================================
       const { data, error } = await supabase.auth.signUp({
         email: correo,
         password: pass,
         options: {
-          data: {
-            fullname: nombre  // Se guarda en user_metadata → el trigger crea el perfil
-          }
+          data: { fullname: nombre }
         }
       });
 
@@ -245,9 +209,6 @@
         return;
       }
 
-      // ============================================================
-      // 2. Registro exitoso
-      // ============================================================
       console.log("✅ Usuario creado:", data.user);
 
       try {
@@ -259,9 +220,6 @@
         }));
       } catch (err) { /* ignore */ }
 
-      // ============================================================
-      // 3. Animación y redirigir a Login
-      // ============================================================
       registerScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
       registerScreen.style.opacity = "0";
       registerScreen.style.transform = "translateX(40px)";
@@ -278,9 +236,54 @@
     }
   });
 
-  // ============================================================
-  // Botón "Iniciar Sesión" -> transición suave a Login
-  // ============================================================
+  const googleRegistroBtn = document.getElementById("googleRegistroBtn");
+  if (googleRegistroBtn) {
+    googleRegistroBtn.addEventListener("click", async () => {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: 'https://nojavid.github.io/nojavid/Finix/Login.html'
+        }
+      });
+
+      if (error) {
+        console.error("Error al registrarse con Google:", error);
+        alert("Hubo un error al conectar con Google. Intenta de nuevo.");
+      }
+    });
+  }
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      console.log("✅ Sesión de Google detectada:", session.user);
+
+      try {
+        localStorage.setItem("finix_user", JSON.stringify({
+          email: session.user.email,
+          name: session.user.user_metadata?.full_name ||
+                session.user.user_metadata?.name ||
+                session.user.user_metadata?.fullname ||
+                "",
+          picture: session.user.user_metadata?.avatar_url ||
+                   session.user.user_metadata?.picture ||
+                   "",
+          provider: "google",
+          supabaseId: session.user.id,
+          remember: true,
+          loginAt: new Date().toISOString()
+        }));
+      } catch (err) { /* ignore */ }
+
+      registerScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+      registerScreen.style.opacity = "0";
+      registerScreen.style.transform = "translateX(40px)";
+
+      setTimeout(() => {
+        window.location.href = "finix.html";
+      }, 420);
+    }
+  });
+
   const btnGoLogin = document.getElementById("btnGoLogin");
   if (btnGoLogin) {
     btnGoLogin.addEventListener("click", (e) => {
@@ -294,9 +297,6 @@
     });
   }
 
-  // ============================================================
-  // Evitar zoom con doble tap
-  // ============================================================
   let lastTouch = 0;
   document.addEventListener("touchend", (e) => {
     const now = Date.now();

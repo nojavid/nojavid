@@ -3,17 +3,13 @@
    Validación inteligente con resaltado de campos
    + SCROLL AUTOMÁTICO AL TOP cuando aparece el aviso
    + COMUNICACIÓN con index.html (eventos)
-   + AUTENTICACIÓN REAL CON SUPABASE
+   + AUTENTICACIÓN REAL CON SUPABASE (Email + Google OAuth)
    ========================================================= */
 
 (function () {
   "use strict";
 
-  // ============================================================
-  // CONFIGURACIÓN DE SUPABASE (NUEVO PROYECTO)
-  // ============================================================
   const SUPABASE_URL = 'https://dfhmekwkhsxvjuojuruv.supabase.co';
-  // ⚠️ IMPORTANTE: Reemplaza esto con tu llave "anon public" REAL
   const SUPABASE_ANON_KEY = 'sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8';
 
   let supabaseClient = null;
@@ -138,7 +134,6 @@
     setTimeout(() => {
       loginScreen.classList.add("active");
 
-      // Sincronización del video
       setTimeout(() => {
         if (brandVideo) {
           brandVideo.classList.add("play-in");
@@ -295,7 +290,6 @@
     const emailVacio    = email === "";
     const passwordVacio = password === "";
 
-    // ---------- Validaciones locales ----------
     if (emailVacio && passwordVacio) {
       mostrarAdvertencia("Por favor completa todos los campos", null);
       emitir('loginFallido', 'campos-vacios');
@@ -327,7 +321,6 @@
       return;
     }
 
-    // ---------- Autenticación con Supabase ----------
     const btnSubmit = loginForm.querySelector(".btn-submit");
     const spanBtn = btnSubmit.querySelector("span");
     const textoOriginal = spanBtn.textContent;
@@ -336,10 +329,9 @@
 
     try {
       if (!supabaseClient) {
-        throw new Error("Supabase no está inicializado. Revisa el script en el HTML.");
+        throw new Error("Supabase no está inicializado.");
       }
 
-      // 🔐 Login real con Supabase
       const { data, error } = await supabaseClient.auth.signInWithPassword({
         email: email,
         password: password
@@ -366,14 +358,12 @@
         return;
       }
 
-      // ✅ Login exitoso
       console.log("✅ Login exitoso:", data.user);
 
-      // Guardar sesión local CON EL NOMBRE
       try {
         localStorage.setItem("finix_user", JSON.stringify({
           email: data.user.email,
-          name: data.user.user_metadata?.fullname || "",
+          name: data.user.user_metadata?.fullname || data.user.user_metadata?.full_name || "",
           supabaseId: data.user.id,
           remember: rememberChk.checked,
           loginAt: new Date().toISOString()
@@ -403,7 +393,73 @@
   });
 
   // ============================================================
-  // 7. EVENTOS DE RESIZE
+  // 7. LOGIN CON GOOGLE (OAuth con Supabase)
+  // ============================================================
+  const googleBtn = document.getElementById("googleLoginBtn");
+  if (googleBtn) {
+    googleBtn.addEventListener("click", async () => {
+      if (!supabaseClient) {
+        alert("Supabase no está inicializado.");
+        return;
+      }
+
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: 'https://nojavid.github.io/nojavid/Finix/Login.html'
+        }
+      });
+
+      if (error) {
+        console.error("Error al iniciar con Google:", error);
+        alert("Hubo un error al conectar con Google. Intenta de nuevo.");
+      }
+    });
+  }
+
+  // ============================================================
+  // 8. DETECTAR SESIÓN DE GOOGLE AL VOLVER A LA PÁGINA
+  // ============================================================
+  if (supabaseClient) {
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      console.log("🔔 Evento Supabase Auth:", event, session);
+
+      if (event === 'SIGNED_IN' && session) {
+        try {
+          localStorage.setItem("finix_user", JSON.stringify({
+            email: session.user.email,
+            name: session.user.user_metadata?.full_name ||
+                  session.user.user_metadata?.name ||
+                  session.user.user_metadata?.fullname ||
+                  "",
+            picture: session.user.user_metadata?.avatar_url ||
+                     session.user.user_metadata?.picture ||
+                     "",
+            provider: "google",
+            supabaseId: session.user.id,
+            remember: true,
+            loginAt: new Date().toISOString()
+          }));
+          console.log("💾 Sesión de Google guardada en localStorage");
+        } catch (err) {
+          console.warn("Error guardando sesión en localStorage:", err);
+        }
+
+        emitir('loginExitoso', session.user.email);
+
+        loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+        loginScreen.style.opacity = "0";
+        loginScreen.style.transform = "translateX(-30px)";
+
+        setTimeout(() => {
+          window.location.href = "finix.html";
+        }, 400);
+      }
+    });
+  }
+
+  // ============================================================
+  // 9. EVENTOS DE RESIZE
   // ============================================================
   window.addEventListener("load", ajustarLayout);
   window.addEventListener("resize", ajustarLayout);
@@ -412,7 +468,7 @@
   });
 
   // ============================================================
-  // 8. EVITAR ZOOM CON DOBLE TAP
+  // 10. EVITAR ZOOM CON DOBLE TAP
   // ============================================================
   let lastTouch = 0;
   document.addEventListener("touchend", (e) => {
