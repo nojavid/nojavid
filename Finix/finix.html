@@ -13,7 +13,6 @@
         <div class="header-finix">
             <div class="interruptor-tema" id="interruptorTema">
                 <div class="switch-track" id="switchTrack">
-                    <!-- Sol (izquierda) -->
                     <svg class="switch-icon switch-icon-sol" viewBox="0 0 24 24" fill="none" stroke="#185540" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="4"/>
                         <line x1="12" y1="2" x2="12" y2="4"/>
@@ -26,7 +25,6 @@
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
                     </svg>
 
-                    <!-- Luna (derecha) -->
                     <svg class="switch-icon switch-icon-luna" viewBox="0 0 24 24" fill="none" stroke="#185540" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                     </svg>
@@ -48,13 +46,8 @@
             </div>
         </div>
 
-        <!-- ========== TEXTO 1: Hola, ========== -->
         <p class="txt-hola">Hola,</p>
-
-        <!-- ========== TEXTO 2: Nombre ========== -->
         <h1 class="txt-nombre" id="nombreUsuario">Name</h1>
-
-        <!-- ========== TEXTO 3: Subtítulo ========== -->
         <p class="txt-subtitulo">Tu bienestar financiero, en tus manos</p>
 
         <!-- ========== RECTÁNGULO PRINCIPAL (Saldo total) ========== -->
@@ -206,6 +199,29 @@
 
     </div>
 
+    <!-- ========== MODAL CONFIRMAR ELIMINAR ========== -->
+    <div class="modal-eliminar-overlay" id="modalEliminar">
+        <div class="modal-eliminar-card">
+            <div class="modal-eliminar-icono">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#B33A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/>
+                    <path d="M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+            </div>
+            <h3 class="modal-eliminar-titulo">Eliminar movimiento</h3>
+            <p class="modal-eliminar-texto" id="modalEliminarTexto">
+                ¿Seguro que quieres eliminar este movimiento?
+            </p>
+            <div class="modal-eliminar-botones">
+                <button class="modal-btn-cancelar" id="btnCancelarEliminar">Cancelar</button>
+                <button class="modal-btn-eliminar" id="btnConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ========== NAVEGACIÓN INFERIOR ========== -->
     <div class="bottom-nav">
         <a href="finix.html" data-page="finix.html" class="active">
@@ -218,7 +234,6 @@
             </div>
         </a>
 
-        <!-- Billetera -->
         <a href="Billetera/billetera.html" data-page="billetera.html">
             <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
@@ -227,7 +242,6 @@
             </svg>
         </a>
 
-        <!-- Reportes -->
         <a href="reportes.html" data-page="reportes.html">
             <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="20" x2="12" y2="10"/>
@@ -236,7 +250,6 @@
             </svg>
         </a>
 
-        <!-- Configuración -->
         <a href="configuracion.html" data-page="configuracion.html">
             <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3"/>

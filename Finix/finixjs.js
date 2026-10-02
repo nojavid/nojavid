@@ -242,6 +242,8 @@ function renderizarMovimientos() {
 
         const card = document.createElement('div');
         card.className = 'mov-card';
+        card.dataset.id = mov.id || '';
+        card.dataset.nombre = mov.nombre || 'Movimiento';
         card.innerHTML = `
             <div class="mov-icono ${esIngreso ? 'ingreso' : 'gasto'}">
                 ${mov.icono || (esIngreso ? '💰' : '💸')}
@@ -256,6 +258,8 @@ function renderizarMovimientos() {
         `;
         contenedor.appendChild(card);
     });
+
+    inicializarLongPress();
 }
 
 function formatearFecha(fecha) {
@@ -273,6 +277,133 @@ function formatearFecha(fecha) {
     const dia = String(fecha.getDate()).padStart(2, '0');
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
     return `${dia}/${mes}/${fecha.getFullYear()}`;
+}
+
+// ============================================================
+// 9.1 LONG PRESS PARA ELIMINAR MOVIMIENTO
+// ============================================================
+let longPressTimer = null;
+let movimientoAEliminarId = null;
+
+function inicializarLongPress() {
+    const tarjetas = document.querySelectorAll('.mov-card');
+
+    tarjetas.forEach(card => {
+        if (card.dataset.longPressActivo === 'true') return;
+        card.dataset.longPressActivo = 'true';
+
+        let startX = 0, startY = 0;
+        let movido = false;
+
+        const iniciar = (e) => {
+            movido = false;
+            const punto = e.touches ? e.touches[0] : e;
+            startX = punto.clientX;
+            startY = punto.clientY;
+
+            card.classList.add('presionado');
+
+            longPressTimer = setTimeout(() => {
+                if (movido) return;
+                card.classList.remove('presionado');
+                abrirModalEliminar(card.dataset.id, card.dataset.nombre);
+            }, 600);
+        };
+
+        const cancelar = () => {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+            card.classList.remove('presionado');
+        };
+
+        const mover = (e) => {
+            const punto = e.touches ? e.touches[0] : e;
+            const dx = Math.abs(punto.clientX - startX);
+            const dy = Math.abs(punto.clientY - startY);
+            if (dx > 8 || dy > 8) {
+                movido = true;
+                cancelar();
+            }
+        };
+
+        card.addEventListener('mousedown', iniciar);
+        card.addEventListener('mouseup', cancelar);
+        card.addEventListener('mouseleave', cancelar);
+        card.addEventListener('mousemove', mover);
+
+        card.addEventListener('touchstart', iniciar, { passive: true });
+        card.addEventListener('touchend', cancelar);
+        card.addEventListener('touchcancel', cancelar);
+        card.addEventListener('touchmove', mover, { passive: true });
+
+        card.addEventListener('contextmenu', (e) => e.preventDefault());
+    });
+}
+
+// ============================================================
+// 9.2 MODAL ELIMINAR
+// ============================================================
+function abrirModalEliminar(id, nombre) {
+    const modal = document.getElementById('modalEliminar');
+    const texto = document.getElementById('modalEliminarTexto');
+    if (!modal) return;
+
+    movimientoAEliminarId = id;
+
+    if (texto) {
+        texto.textContent = `¿Seguro que quieres eliminar "${nombre}"? Esta acción no se puede deshacer.`;
+    }
+
+    modal.classList.add('activo');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalEliminar() {
+    const modal = document.getElementById('modalEliminar');
+    if (!modal) return;
+    modal.classList.remove('activo');
+    document.body.style.overflow = '';
+    movimientoAEliminarId = null;
+}
+
+function confirmarEliminar() {
+    if (!movimientoAEliminarId) return;
+
+    let movs = leerMovimientos();
+    movs = movs.filter(m => String(m.id) !== String(movimientoAEliminarId));
+
+    localStorage.setItem('finix_movimientos', JSON.stringify(movs));
+
+    // Refrescar TODO al instante
+    actualizarSaldo();
+    actualizarResumen();
+    actualizarGrafica();
+    renderizarMovimientos();
+
+    cerrarModalEliminar();
+
+    console.log('🗑️ Movimiento eliminado:', movimientoAEliminarId);
+}
+
+function inicializarModalEliminar() {
+    const modal = document.getElementById('modalEliminar');
+    const btnCancelar = document.getElementById('btnCancelarEliminar');
+    const btnConfirmar = document.getElementById('btnConfirmarEliminar');
+
+    if (btnCancelar) btnCancelar.addEventListener('click', cerrarModalEliminar);
+    if (btnConfirmar) btnConfirmar.addEventListener('click', confirmarEliminar);
+
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) cerrarModalEliminar();
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') cerrarModalEliminar();
+    });
 }
 
 // ============================================================
@@ -439,7 +570,6 @@ function marcarActivo() {
 // 13. INICIALIZACIÓN
 // ============================================================
 function init() {
-    // Aplicar tema guardado antes de pintar
     const temaGuardado = localStorage.getItem('finix_tema');
     if (temaGuardado === 'oscuro') {
         document.body.classList.add('dark-mode');
@@ -455,6 +585,7 @@ function init() {
     renderizarMovimientos();
     configurarBotonTexto();
     inicializarSwitchTema();
+    inicializarModalEliminar();
     marcarActivo();
 }
 

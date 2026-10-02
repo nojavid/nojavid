@@ -603,6 +603,10 @@ body.dark-mode .switch-thumb { left: 32px; }
     border: 1px solid #E2E2E2;
     border-radius: 10px;
     transition: all 0.2s ease;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .mov-card:hover { background-color: #F0F5F2; }
@@ -656,6 +660,19 @@ body.dark-mode .switch-thumb { left: 32px; }
     font-weight: 500;
 }
 
+/* Feedback visual mientras se mantiene presionada la tarjeta */
+.mov-card.presionado {
+    background-color: #FCEAEA !important;
+    border-color: #B33A3A !important;
+    transform: scale(0.98);
+    transition: all 0.15s ease;
+}
+
+body.dark-mode .mov-card.presionado {
+    background-color: rgba(179, 58, 58, 0.15) !important;
+    border-color: #B33A3A !important;
+}
+
 /* ============================================================
    NAVEGACIÓN INFERIOR
    ============================================================ */
@@ -693,7 +710,6 @@ body.dark-mode .switch-thumb { left: 32px; }
     overflow: visible;
 }
 
-/* Icono SVG inactivo: NEGRO en modo claro */
 .nav-icono {
     width: 22px;
     height: 22px;
@@ -707,7 +723,6 @@ body.dark-mode .switch-thumb { left: 32px; }
     stroke: #185540;
 }
 
-/* Píldora activa — contenido centrado */
 .nav-activo-rect {
     display: flex;
     align-items: center;
@@ -722,7 +737,6 @@ body.dark-mode .switch-thumb { left: 32px; }
     transform: translateX(-12px);
 }
 
-/* Casa (SVG) en BLANCO dentro de la píldora verde */
 .nav-activo-icono {
     width: 15px;
     height: 15px;
@@ -741,6 +755,139 @@ body.dark-mode .switch-thumb { left: 32px; }
 }
 
 /* ============================================================
+   MODAL ELIMINAR MOVIMIENTO
+   ============================================================ */
+.modal-eliminar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-eliminar-overlay.activo {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal-eliminar-card {
+    background-color: #FFFFFF;
+    border-radius: 18px;
+    padding: 24px 20px 20px 20px;
+    width: 300px;
+    max-width: calc(100% - 40px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.modal-eliminar-overlay.activo .modal-eliminar-card {
+    transform: scale(1);
+}
+
+.modal-eliminar-icono {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #FDEAEA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.modal-eliminar-icono svg {
+    width: 26px;
+    height: 26px;
+}
+
+.modal-eliminar-titulo {
+    font-size: 16px;
+    font-weight: 800;
+    color: #13302E;
+    margin-bottom: 6px;
+}
+
+.modal-eliminar-texto {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6B7A7A;
+    line-height: 1.4;
+    margin-bottom: 18px;
+    word-break: break-word;
+}
+
+.modal-eliminar-botones {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.modal-btn-cancelar,
+.modal-btn-eliminar {
+    flex: 1;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-btn-cancelar {
+    background-color: #F0F0F0;
+    color: #3F5050;
+}
+
+.modal-btn-cancelar:hover { background-color: #E4E4E4; }
+
+.modal-btn-eliminar {
+    background-color: #B33A3A;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(179, 58, 58, 0.35);
+}
+
+.modal-btn-eliminar:hover {
+    background-color: #C94444;
+    transform: translateY(-1px);
+}
+
+.modal-btn-cancelar:active,
+.modal-btn-eliminar:active {
+    transform: scale(0.97);
+}
+
+body.dark-mode .modal-eliminar-card {
+    background-color: #1A1D21;
+    border: 1px solid #2A2E33;
+}
+
+body.dark-mode .modal-eliminar-titulo { color: #FFFFFF; }
+body.dark-mode .modal-eliminar-texto { color: #A8B8BE; }
+body.dark-mode .modal-eliminar-icono { background-color: rgba(179, 58, 58, 0.18); }
+
+body.dark-mode .modal-btn-cancelar {
+    background-color: #2A2E33;
+    color: #A8B8BE;
+}
+
+body.dark-mode .modal-btn-cancelar:hover { background-color: #33383E; }
+
+/* ============================================================
    MODO OSCURO
    ============================================================ */
 body.dark-mode { background-color: #121315; }
@@ -755,7 +902,6 @@ body.dark-mode .titulo-resumen,
 body.dark-mode .titulo-metas,
 body.dark-mode .titulo-movimientos { color: #FFFFFF; }
 
-/* Card agregar */
 body.dark-mode .card-agregar {
     background-color: #1A1D21;
     border-color: #2A2E33;
@@ -764,12 +910,8 @@ body.dark-mode .card-agregar {
 body.dark-mode .agregar-titulo,
 body.dark-mode .agregar-sub { color: #8FA8A5; }
 
-/* Etiquetas de las opciones (En texto / En Foto / En Audio) en modo oscuro */
-body.dark-mode .opcion-label {
-    color: #FFFFFF;
-}
+body.dark-mode .opcion-label { color: #FFFFFF; }
 
-/* Resumen */
 body.dark-mode .card-ingreso {
     background-color: rgba(102, 214, 166, 0.12);
     border: 1px solid rgba(102, 214, 166, 0.4);
@@ -787,7 +929,6 @@ body.dark-mode .resumen-porcentaje { color: #FFFFFF; }
 
 body.dark-mode .resumen-barra { background-color: #2A2E33; }
 
-/* Card saldo neón */
 body.dark-mode .card-saldo {
     background-color: #080808;
     border: 1px solid rgba(102, 214, 166, 0.8);
@@ -817,7 +958,6 @@ body.dark-mode .btn-detalle {
     box-shadow: 0 0 8px rgba(102, 214, 166, 0.4);
 }
 
-/* Metas */
 body.dark-mode .meta-card {
     background-color: #1A1D21;
     border-color: #2A2E33;
@@ -839,7 +979,6 @@ body.dark-mode .metas-vacio-sub { color: #A8B8BE; }
 body.dark-mode .btn-ver-todo span,
 body.dark-mode .btn-ver-todo svg { color: #66D6A6; }
 
-/* Movimientos */
 body.dark-mode .mov-card {
     background-color: #1A1D21;
     border-color: #2A2E33;
@@ -850,13 +989,11 @@ body.dark-mode .mov-nombre { color: #FFFFFF; }
 body.dark-mode .mov-fecha { color: #8A9A9A; }
 body.dark-mode .movimientos-vacio { color: #8FA8A5; }
 
-/* ---- NAV en modo oscuro ---- */
 body.dark-mode .bottom-nav {
     background-color: #121315;
     border-top-color: #185540;
 }
 
-/* Iconos inactivos: BLANCOS en oscuro */
 body.dark-mode .nav-icono {
     color: #FFFFFF;
     stroke: #FFFFFF;
@@ -867,7 +1004,6 @@ body.dark-mode .bottom-nav a:not(.active):hover .nav-icono {
     stroke: #66D6A6;
 }
 
-/* La casa del activo sigue blanca en ambos temas */
 body.dark-mode .nav-activo-icono {
     color: #FFFFFF;
     stroke: #FFFFFF;
