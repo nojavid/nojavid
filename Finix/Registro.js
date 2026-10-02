@@ -1,10 +1,20 @@
 /* =========================================================
-   Registro - Validación en vivo + Animación de iconos
-   + Transición suave hacia Login.html
+   Registro - Validación en vivo + Supabase
    ========================================================= */
 (function () {
   "use strict";
 
+  // ============================================================
+  // CONFIGURACIÓN DE SUPABASE
+  // ============================================================
+  const SUPABASE_URL = 'https://oxgvialqqmpzfwfinrba.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94Z3ZpYWxxcW1wemZ3ZmxucmJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NTA4NTksImV4cCI6MjEwNjUyNjg1OX0.gNYJqzTRi6leLtIVPm5qipKpBFQjim5HDC0eG5_y3G0'; // ← Reemplaza esto con tu key real
+
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ============================================================
+  // ELEMENTOS DEL DOM
+  // ============================================================
   const registerScreen = document.getElementById("registerScreen");
   const form           = document.getElementById("registerForm");
 
@@ -88,7 +98,6 @@
       fieldPassword.classList.add("error");
       setTimeout(() => fieldPassword.classList.remove("error"), 500);
     }
-    // Reevaluar la confirmación
     validarCoincidencia();
   });
   password.addEventListener("input", () => {
@@ -120,7 +129,7 @@
   }
 
   // ============================================================
-  // Toggle mostrar / ocultar contraseña (estilo itshover)
+  // Toggle mostrar / ocultar contraseña
   // ============================================================
   document.querySelectorAll(".reg-toggle").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -130,10 +139,8 @@
       const esPassword = target.type === "password";
       target.type = esPassword ? "text" : "password";
 
-      // Cambia la clase que controla la animación
       btn.classList.toggle("is-visible", esPassword);
 
-      // Accesibilidad
       btn.setAttribute(
         "aria-label",
         esPassword ? "Ocultar contraseña" : "Mostrar contraseña"
@@ -142,18 +149,19 @@
   });
 
   // ============================================================
-  // Submit
+  // Submit con Supabase
   // ============================================================
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const nombre   = fullname.value.trim();
-    const correo   = email.value.trim();
-    const pass     = password.value;
-    const pass2    = password2.value;
+    const nombre = fullname.value.trim();
+    const correo = email.value.trim();
+    const pass   = password.value;
+    const pass2  = password2.value;
 
     const errores = [];
 
+    // --- Validaciones locales ---
     if (nombre.length < 3) {
       fieldFullname.classList.add("error");
       errores.push("nombre");
@@ -175,7 +183,6 @@
     } else marcar(fieldPassword2, true);
 
     if (errores.length > 0) {
-      // Sacudir los que tengan error
       setTimeout(() => {
         errores.forEach((id) => {
           const map = {
@@ -190,23 +197,85 @@
       return;
     }
 
-    // Guardar datos
+    // --- Deshabilitar botón mientras se procesa ---
+    const btnSubmit = document.getElementById("btnSubmit");
+    const spanBtn = btnSubmit.querySelector("span");
+    const textoOriginal = spanBtn.textContent;
+    btnSubmit.disabled = true;
+    spanBtn.textContent = "Creando cuenta...";
+
     try {
-      localStorage.setItem("finix_new_user", JSON.stringify({
-        nombre,
+      // ============================================================
+      // 1. Crear usuario en Supabase Auth
+      // ============================================================
+      const { data, error } = await supabase.auth.signUp({
         email: correo,
-        createdAt: new Date().toISOString()
-      }));
-    } catch (err) { /* ignore */ }
+        password: pass,
+        options: {
+          data: {
+            fullname: nombre  // Se guarda en user_metadata → el trigger crea el perfil
+          }
+        }
+      });
 
-    // Animación de salida y redirección a login
-    registerScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-    registerScreen.style.opacity = "0";
-    registerScreen.style.transform = "translateX(40px)";
+      if (error) {
+        console.error("Error Supabase:", error);
 
-    setTimeout(() => {
-      window.location.href = "Login.html";
-    }, 420);
+        let mensaje = error.message;
+
+        if (error.message.toLowerCase().includes("already registered") ||
+            error.message.toLowerCase().includes("already been registered") ||
+            error.message.toLowerCase().includes("user already exists")) {
+          mensaje = "Este correo ya está registrado. Intenta iniciar sesión.";
+          fieldEmail.classList.add("error");
+          setTimeout(() => fieldEmail.classList.remove("error"), 2000);
+        } else if (error.message.toLowerCase().includes("password")) {
+          mensaje = "La contraseña no cumple con los requisitos mínimos.";
+          fieldPassword.classList.add("error");
+          setTimeout(() => fieldPassword.classList.remove("error"), 2000);
+        } else if (error.message.toLowerCase().includes("email")) {
+          mensaje = "El correo electrónico no es válido.";
+          fieldEmail.classList.add("error");
+          setTimeout(() => fieldEmail.classList.remove("error"), 2000);
+        }
+
+        alert("❌ " + mensaje);
+        btnSubmit.disabled = false;
+        spanBtn.textContent = textoOriginal;
+        return;
+      }
+
+      // ============================================================
+      // 2. Registro exitoso
+      // ============================================================
+      console.log("✅ Usuario creado:", data.user);
+
+      try {
+        localStorage.setItem("finix_new_user", JSON.stringify({
+          nombre,
+          email: correo,
+          supabaseId: data.user?.id,
+          createdAt: new Date().toISOString()
+        }));
+      } catch (err) { /* ignore */ }
+
+      // ============================================================
+      // 3. Animación y redirigir a Login
+      // ============================================================
+      registerScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+      registerScreen.style.opacity = "0";
+      registerScreen.style.transform = "translateX(40px)";
+
+      setTimeout(() => {
+        window.location.href = "Login.html";
+      }, 420);
+
+    } catch (err) {
+      console.error("Error inesperado:", err);
+      alert("❌ Hubo un error inesperado. Intenta de nuevo.");
+      btnSubmit.disabled = false;
+      spanBtn.textContent = textoOriginal;
+    }
   });
 
   // ============================================================
