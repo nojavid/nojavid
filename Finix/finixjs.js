@@ -1,13 +1,74 @@
 // ============================================================
-// 1. NOMBRE DEL USUARIO
+// CONFIGURACIÓN DE SUPABASE
 // ============================================================
-function cargarNombreUsuario() {
+const SUPABASE_URL = 'https://dfhmekwkhsxvjuojuruv.supabase.co';
+// ⚠️ IMPORTANTE: Reemplaza esto con tu llave "anon public" REAL
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmaG1la3draHN4dmp1b2p1cnV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwMDAwMDAsImV4cCI6MjEwMDAwMDAwMH0.REEMPLAZA_ESTO_CON_TU_LLAVE_REAL';
+
+let supabaseClient = null;
+if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('✅ Supabase inicializado en finix.js');
+} else {
+    console.warn('⚠️ Librería de Supabase no detectada. Verifica el script en finix.html');
+}
+
+// ============================================================
+// 1. CARGAR NOMBRE DEL USUARIO (desde Supabase o localStorage)
+// ============================================================
+async function cargarNombreUsuario() {
     const el = document.getElementById('nombreUsuario');
     if (!el) return;
-    const nombre = localStorage.getItem('finix_usuario')
-        || localStorage.getItem('nombreUsuario')
-        || 'Name';
-    el.textContent = nombre;
+
+    let nombreCompleto = '';
+
+    // 1️⃣ Intentar obtener el usuario desde Supabase (sesión activa)
+    if (supabaseClient) {
+        try {
+            const { data: { user }, error } = await supabaseClient.auth.getUser();
+
+            if (error) {
+                console.warn('⚠️ Error al obtener usuario:', error.message);
+            }
+
+            if (user) {
+                // El nombre está en user_metadata (así lo guardamos al registrar)
+                nombreCompleto = user.user_metadata?.fullname
+                              || user.user_metadata?.name
+                              || user.user_metadata?.full_name
+                              || '';
+                console.log('👤 Usuario desde Supabase:', user.email, '| Nombre completo:', nombreCompleto);
+            }
+        } catch (e) {
+            console.warn('⚠️ No se pudo obtener usuario desde Supabase:', e);
+        }
+    }
+
+    // 2️⃣ Si no hay usuario en Supabase, intentar con localStorage
+    if (!nombreCompleto) {
+        try {
+            const userLS = JSON.parse(localStorage.getItem('finix_user') || '{}');
+            nombreCompleto = userLS.name || userLS.nombre || '';
+            if (nombreCompleto) {
+                console.log('👤 Usuario desde localStorage:', nombreCompleto);
+            }
+        } catch (e) {
+            nombreCompleto = '';
+        }
+    }
+
+    // 3️⃣ Fallback a claves antiguas
+    if (!nombreCompleto) {
+        nombreCompleto = localStorage.getItem('finix_usuario')
+                      || localStorage.getItem('nombreUsuario')
+                      || '';
+    }
+
+    // 4️⃣ Extraer SOLO el primer nombre
+    const primerNombre = nombreCompleto.trim().split(/\s+/)[0] || 'Usuario';
+
+    el.textContent = primerNombre;
+    console.log('✅ Nombre mostrado:', primerNombre);
 }
 
 // ============================================================
@@ -376,7 +437,6 @@ function confirmarEliminar() {
 
     localStorage.setItem('finix_movimientos', JSON.stringify(movs));
 
-    // Refrescar TODO al instante
     actualizarSaldo();
     actualizarResumen();
     actualizarGrafica();
@@ -420,7 +480,7 @@ function configurarBotonTexto() {
 }
 
 // ============================================================
-// 11. SWITCH DE TEMA CON DRAG (SVG sol/luna inline)
+// 11. SWITCH DE TEMA CON DRAG
 // ============================================================
 function inicializarSwitchTema() {
     const track = document.getElementById('switchTrack');
@@ -569,7 +629,8 @@ function marcarActivo() {
 // ============================================================
 // 13. INICIALIZACIÓN
 // ============================================================
-function init() {
+async function init() {
+    // Tema guardado
     const temaGuardado = localStorage.getItem('finix_tema');
     if (temaGuardado === 'oscuro') {
         document.body.classList.add('dark-mode');
@@ -577,7 +638,10 @@ function init() {
         document.body.classList.remove('dark-mode');
     }
 
-    cargarNombreUsuario();
+    // Cargar nombre primero (async)
+    await cargarNombreUsuario();
+
+    // Luego el resto
     actualizarSaldo();
     actualizarResumen();
     actualizarGrafica();
@@ -599,6 +663,7 @@ if (document.readyState === 'loading') {
 // 14. ACTUALIZAR AL VOLVER A LA PESTAÑA
 // ============================================================
 window.addEventListener('focus', () => {
+    cargarNombreUsuario();
     actualizarSaldo();
     actualizarResumen();
     actualizarGrafica();

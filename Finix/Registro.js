@@ -5,10 +5,10 @@
   "use strict";
 
   // ============================================================
-  // CONFIGURACIÓN DE SUPABASE
+  // CONFIGURACIÓN DE SUPABASE (NUEVO PROYECTO)
   // ============================================================
-  const SUPABASE_URL = 'https://oxgvialqqmpzfwfinrba.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im94Z3ZpYWxxcW1wemZ3ZmxucmJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NTA4NTksImV4cCI6MjEwNjUyNjg1OX0.gNYJqzTRi6leLtIVPm5qipKpBFQjim5HDC0eG5_y3G0'; // ← Reemplaza esto con tu key real
+  const SUPABASE_URL = 'https://dfhmekwkhsxvjuojuruv.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8'; // ← ⚠️ REEMPLAZA ESTO CON TU LLAVE ANON PUBLIC REAL
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -279,7 +279,7 @@
   });
 
   // ============================================================
-  // Botón "Iniciar Sección" -> transición suave a Login
+  // Botón "Iniciar Sesión" -> transición suave a Login
   // ============================================================
   const btnGoLogin = document.getElementById("btnGoLogin");
   if (btnGoLogin) {

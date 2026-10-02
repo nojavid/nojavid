@@ -3,10 +3,26 @@
    Validación inteligente con resaltado de campos
    + SCROLL AUTOMÁTICO AL TOP cuando aparece el aviso
    + COMUNICACIÓN con index.html (eventos)
+   + AUTENTICACIÓN REAL CON SUPABASE
    ========================================================= */
 
 (function () {
   "use strict";
+
+  // ============================================================
+  // CONFIGURACIÓN DE SUPABASE (NUEVO PROYECTO)
+  // ============================================================
+  const SUPABASE_URL = 'https://dfhmekwkhsxvjuojuruv.supabase.co';
+  // ⚠️ IMPORTANTE: Reemplaza esto con tu llave "anon public" REAL
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmaG1la3draHN4dmp1b2p1cnV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwMDAwMDAsImV4cCI6MjEwMDAwMDAwMH0.REEMPLAZA_ESTO_CON_TU_LLAVE_REAL';
+
+  let supabaseClient = null;
+  if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('✅ Supabase inicializado en login.js');
+  } else {
+    console.warn("⚠️ Librería de Supabase no detectada en Login.html");
+  }
 
   // ---------- Elementos pantalla 1 ----------
   const ondasTop    = document.getElementById("ondasTop");
@@ -151,8 +167,6 @@
     navegando = true;
 
     loginScreen.classList.remove("active");
-
-    // Resetear scroll del login al inicio para la próxima vez
     loginScreen.scrollTop = 0;
 
     if (brandVideo) {
@@ -230,29 +244,24 @@
 
   // ============================================================
   // 5.5. MOSTRAR ADVERTENCIA (toast animado)
-  //      + resaltar campo + SCROLL AUTOMÁTICO AL TOP
   // ============================================================
   function mostrarAdvertencia(mensaje, campo) {
     warningText.textContent = mensaje;
     warningOverlay.classList.add("show");
 
-    // Quitar resaltados previos
     document.querySelectorAll(".field.error").forEach((f) => {
       f.classList.remove("error");
     });
 
-    // Resaltar el campo que dio error (si se especifica)
     if (campo) {
       const input = document.getElementById(campo);
       if (input) {
         const field = input.closest(".field");
-        // Forzar reflow para reiniciar la animación de shake
         void field.offsetWidth;
         field.classList.add("error");
       }
     }
 
-    // ===== SCROLL AUTOMÁTICO AL TOP DEL LOGIN =====
     requestAnimationFrame(() => {
       loginScreen.scrollTo({
         top: 0,
@@ -261,14 +270,12 @@
     });
   }
 
-  // Cerrar la advertencia al hacer clic fuera de la caja
   warningOverlay.addEventListener("click", (e) => {
     if (e.target === warningOverlay) {
       warningOverlay.classList.remove("show");
     }
   });
 
-  // Quitar el resaltado cuando el usuario empiece a escribir
   emailInput.addEventListener("input", () => {
     emailInput.closest(".field").classList.remove("error");
   });
@@ -277,10 +284,9 @@
   });
 
   // ============================================================
-  // 6. FORMULARIO → VALIDACIÓN INTELIGENTE + REDIRIGE A finix.html
-  //    + EMITE EVENTOS A index.html
+  // 6. FORMULARIO → VALIDACIÓN + AUTENTICACIÓN CON SUPABASE
   // ============================================================
-  loginForm.addEventListener("submit", (e) => {
+  loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const email    = emailInput.value.trim();
@@ -289,28 +295,25 @@
     const emailVacio    = email === "";
     const passwordVacio = password === "";
 
-    // ---------- Caso 1: ambos vacíos ----------
+    // ---------- Validaciones locales ----------
     if (emailVacio && passwordVacio) {
       mostrarAdvertencia("Por favor completa todos los campos", null);
       emitir('loginFallido', 'campos-vacios');
       return;
     }
 
-    // ---------- Caso 2: solo correo vacío ----------
     if (emailVacio && !passwordVacio) {
       mostrarAdvertencia("El campo de correo electrónico está vacío", "email");
       emitir('loginFallido', 'email-vacio');
       return;
     }
 
-    // ---------- Caso 3: solo contraseña vacía ----------
     if (!emailVacio && passwordVacio) {
       mostrarAdvertencia("El campo de contraseña está vacío", "password");
       emitir('loginFallido', 'password-vacio');
       return;
     }
 
-    // ---------- Caso 4: correo con formato inválido ----------
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       mostrarAdvertencia("Por favor ingresa un correo válido", "email");
@@ -318,34 +321,85 @@
       return;
     }
 
-    // ---------- Caso 5: contraseña muy corta ----------
     if (password.length < 6) {
       mostrarAdvertencia("La contraseña debe tener al menos 6 caracteres", "password");
       emitir('loginFallido', 'password-corta');
       return;
     }
 
-    // ---------- Todo correcto: guardar y redirigir ----------
+    // ---------- Autenticación con Supabase ----------
+    const btnSubmit = loginForm.querySelector(".btn-submit");
+    const spanBtn = btnSubmit.querySelector("span");
+    const textoOriginal = spanBtn.textContent;
+    btnSubmit.disabled = true;
+    spanBtn.textContent = "Iniciando sesión...";
+
     try {
-      localStorage.setItem("finix_user", JSON.stringify({
+      if (!supabaseClient) {
+        throw new Error("Supabase no está inicializado. Revisa el script en el HTML.");
+      }
+
+      // 🔐 Login real con Supabase
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
         email: email,
-        remember: rememberChk.checked,
-        loginAt: new Date().toISOString()
-      }));
+        password: password
+      });
+
+      if (error) {
+        console.error("Error Supabase Auth:", error);
+
+        let mensaje = "Correo o contraseña incorrectos.";
+
+        if (error.message.toLowerCase().includes("invalid login")) {
+          mensaje = "Correo o contraseña incorrectos.";
+        } else if (error.message.toLowerCase().includes("email not confirmed")) {
+          mensaje = "Debes confirmar tu correo electrónico antes de iniciar sesión.";
+        } else if (error.message.toLowerCase().includes("too many requests")) {
+          mensaje = "Demasiados intentos. Espera un momento e intenta de nuevo.";
+        }
+
+        mostrarAdvertencia(mensaje, null);
+        emitir('loginFallido', 'credenciales-invalidas');
+
+        btnSubmit.disabled = false;
+        spanBtn.textContent = textoOriginal;
+        return;
+      }
+
+      // ✅ Login exitoso
+      console.log("✅ Login exitoso:", data.user);
+
+      // Guardar sesión local CON EL NOMBRE
+      try {
+        localStorage.setItem("finix_user", JSON.stringify({
+          email: data.user.email,
+          name: data.user.user_metadata?.fullname || "",
+          supabaseId: data.user.id,
+          remember: rememberChk.checked,
+          loginAt: new Date().toISOString()
+        }));
+      } catch (err) {
+        console.warn("No se pudo guardar la sesión en localStorage:", err);
+      }
+
+      emitir('loginExitoso', data.user.email);
+
+      loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+      loginScreen.style.opacity = "0";
+      loginScreen.style.transform = "translateX(-30px)";
+
+      setTimeout(() => {
+        window.location.href = "finix.html";
+      }, 400);
+
     } catch (err) {
-      console.warn("No se pudo guardar la sesión:", err);
+      console.error("Error inesperado en login:", err);
+      mostrarAdvertencia("Hubo un error inesperado. Intenta de nuevo.", null);
+      emitir('loginFallido', 'error-inesperado');
+
+      btnSubmit.disabled = false;
+      spanBtn.textContent = textoOriginal;
     }
-
-    // 🔔 Notificar login exitoso a index.html
-    emitir('loginExitoso', email);
-
-    loginScreen.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-    loginScreen.style.opacity = "0";
-    loginScreen.style.transform = "translateX(-30px)";
-
-    setTimeout(() => {
-      window.location.href = "finix.html";
-    }, 400);
   });
 
   // ============================================================
