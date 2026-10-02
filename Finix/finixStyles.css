@@ -1,989 +1,891 @@
-/* Reset y estilos base */
+/* ============================================================
+   RESET Y BASE
+   ============================================================ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
-    background-color: #000004;
+    background-color: #FFFFFF;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
-    padding: 0 0 20px 0;
+    padding: 0 0 90px 0;
+    overflow-x: hidden;
 }
 
 .mobile-container {
     max-width: 375px;
     width: 100%;
-    background-color: #000004;
+    background-color: #FFFFFF;
     position: relative;
-    padding: 0 0 100px 0;
+    padding: 20px 0 40px 0;
     margin: 0 auto;
 }
 
-/* ========== ENCABEZADO ========== */
-.header {
+/* ============================================================
+   HEADER CON SWITCH DE TEMA
+   ============================================================ */
+.header-finix {
     position: relative;
     width: 100%;
-    height: 100px;
-    margin-top: 8px;
+    height: 30px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
-.logo {
-    position: absolute;
-    left: 25px;
-    top: 59px;
-    width: 32px;
+/* ============================================================
+   INTERRUPTOR MODO OSCURO / CLARO
+   ============================================================ */
+.interruptor-tema {
+    position: relative;
+    width: 70px;
     height: 26px;
-    object-fit: contain;
-}
-
-.titulo-nojavid {
-    position: absolute;
-    left: 65px;
-    top: 59px;
-    font-size: 12px;
-    font-weight: 800;
-    color: white;
-    letter-spacing: 0.3px;
-}
-
-.fecha-container {
-    position: absolute;
-    left: 65px;
-    top: 73px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.flecha {
-    color: #424242;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.fecha {
-    color: white;
-    font-size: 10px;
-    font-weight: 800;
-}
-
-.menu-hamburguesa {
-    position: absolute;
-    right: 20px;
-    top: 55px;
-    color: white;
-    font-size: 36px;
-    font-weight: 300;
-    cursor: pointer;
-    line-height: 0.9;
-}
-
-/* ========== TÍTULO HELLO! ========== */
-.titulo-hello {
-    font-size: 20px;
-    font-weight: 800;
-    color: white;
-    text-align: center;
-    margin: 10px 0 0 0;
-    padding: 0;
-}
-
-/* ========== TEXTO DESCRIPTIVO ========== */
-.texto-descripcion {
-    font-size: 13px;
-    font-weight: 500;
-    color: white;
-    line-height: 1.5;
-    text-align: left;
-    padding: 0 20px;
-    margin: 10px 0 20px 0;
-}
-
-/* ========== SECCIÓN ESCRITURA ========== */
-.seccion-escritura {
-    width: 100%;
-    padding: 0 20px;
-    margin: 10px 0 20px 0;
-}
-
-.fondo-escritura {
-    width: 100%;
-    max-width: 319px;
-    margin: 0 auto;
-    background-color: #1C2830;
-    border-radius: 20px;
-    padding: 15px 16px;
-}
-
-.subtitulo-empieza {
-    color: #00FFD4;
-    font-size: 10px;
-    font-weight: 800;
-    margin: 0 0 3px 0;
-}
-
-.texto-empieza {
-    color: white;
-    font-weight: 600;
-    font-size: 12px;
-    margin: 0 0 8px 0;
-}
-
-.recuadro-escritura {
-    background-color: #000210;
-    width: 100%;
-    height: 117px;
-    border-radius: 14px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow-y: auto;
-    overflow-x: hidden;
-    cursor: text;
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.recuadro-escritura:hover {
-    background-color: #0a1a2a;
-}
-
-.texto-animado {
-    color: #c0d0e0;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.6;
-    word-break: break-word;
-    white-space: pre-wrap;
-    min-height: 20px;
-    max-height: 100%;
-    overflow-y: auto;
-    transition: all 0.3s ease;
-    cursor: text;
-    position: relative;
-    z-index: 1;
+    z-index: 12;
     user-select: none;
-    font-family: 'Courier New', monospace;
-    width: 100%;
+    -webkit-user-select: none;
 }
 
-/* Efecto de cursor parpadeante durante la animación */
-.texto-animado.animando::after {
-    content: '|';
-    color: #00FFD4;
-    animation: parpadear 0.7s infinite;
-    margin-left: 2px;
-}
-
-@keyframes parpadear {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-
-/* "Procesando..." en color verde neon */
-.texto-animado.procesando {
-    color: #00FFD4 !important;
-    font-weight: 600;
-}
-
-/* Estilo para cuando el texto está en modo edición */
-.texto-animado[contenteditable="true"] {
-    color: white !important;
-    background-color: rgba(0, 210, 255, 0.05);
-    border: 1px solid #00FFD4;
-    border-radius: 4px;
-    padding: 8px !important;
-    outline: none;
-    min-height: 40px;
-    cursor: text;
-    user-select: text !important;
-    caret-color: #00FFD4;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.texto-animado[contenteditable="true"]:focus {
-    border-color: #00FFD4;
-    box-shadow: 0 0 20px rgba(0, 255, 212, 0.15);
-}
-
-/* Placeholder cuando está vacío en modo edición */
-.texto-animado[contenteditable="true"]:empty:before {
-    content: "Escribe aquí...";
-    color: #666;
-    font-style: italic;
-    opacity: 0.7;
-}
-
-/* Eliminar cualquier selección cuando no está en modo edición */
-.texto-animado:not([contenteditable="true"])::selection {
-    background: transparent;
-    color: #c0d0e0;
-}
-
-/* Estilos para los items del resultado */
-.texto-animado .item-resultado {
+.switch-track {
+    position: relative;
+    width: 70px;
+    height: 26px;
+    border-radius: 13px;
+    background: #FFFFFF;
+    border: 1.5px solid #185540;
+    box-sizing: border-box;
+    cursor: pointer;
+    overflow: hidden;
     display: flex;
     align-items: center;
-    gap: 10px;
-    border-radius: 8px;
-    padding: 6px 12px;
-    margin: 3px 0;
-    animation: aparecerItem 0.5s ease-out;
-    transition: all 0.3s ease;
 }
 
-.texto-animado .item-resultado .icono {
-    font-size: 18px;
-    margin-right: 4px;
+body.dark-mode .switch-track {
+    background: #FFFFFF;
+    border-color: #185540;
 }
 
-.texto-animado .item-resultado .texto {
-    color: white;
-    font-size: 13px;
+.switch-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 13px;
+    height: 13px;
+    opacity: 0.35;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.switch-icon-sol { left: 5px; }
+.switch-icon-luna { right: 5px; }
+
+body:not(.dark-mode) .switch-icon-sol,
+body.dark-mode .switch-icon-luna {
+    opacity: 0.55;
+}
+
+.switch-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 34px;
+    height: 19px;
+    border-radius: 10px;
+    background: #185540;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: grab;
+    z-index: 2;
+}
+
+.switch-thumb:active { cursor: grabbing; }
+body.dark-mode .switch-thumb { left: 32px; }
+
+.switch-thumb svg {
+    width: 11px;
+    height: 11px;
+    pointer-events: none;
+    stroke: #FFFFFF;
+}
+
+.switch-track.dragging .switch-thumb { transition: none; }
+
+/* ============================================================
+   TEXTOS DE CABECERA
+   ============================================================ */
+.txt-hola {
+    font-size: 24px;
     font-weight: 500;
-    letter-spacing: 0.3px;
+    color: #13302E;
+    margin: 6px 0 0 22px;
+    line-height: 1;
 }
 
-.texto-animado .item-resultado .precio {
-    color: #00FFD4;
+.txt-nombre {
+    font-size: 48px;
     font-weight: 700;
-    font-size: 13px;
+    color: #13302E;
+    margin: 0 0 0 19px;
+    line-height: 1;
+    letter-spacing: -0.5px;
 }
 
-/* Animación de aparición */
-@keyframes aparecerItem {
-    0% {
-        opacity: 0;
-        transform: translateX(-10px) scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
+.txt-subtitulo {
+    font-size: 16px;
+    font-weight: 500;
+    color: #13302E;
+    margin: 6px 0 0 19px;
+    opacity: 0.85;
 }
 
-/* ========== BOTÓN ENVIAR ========== */
-.btn-enviar {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: linear-gradient(135deg, #00FFD4, #00c9a7);
-    color: #000210;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 18px;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    cursor: pointer;
+/* ============================================================
+   CARD SALDO PRINCIPAL
+   ============================================================ */
+.card-saldo {
+    position: relative;
+    width: 358px;
+    height: 117px;
+    background-color: #244240;
+    border-radius: 10px;
+    margin: 22px auto 0;
+    padding: 11px 16px;
+    overflow: hidden;
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(0, 255, 212, 0.3);
-    z-index: 10;
-    animation: aparecerBoton 0.3s ease-out;
 }
 
-.btn-enviar:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(0, 255, 212, 0.6);
+.saldo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
 }
 
-.btn-enviar:active {
-    transform: scale(0.95);
-}
-
-@keyframes aparecerBoton {
-    0% {
-        opacity: 0;
-        transform: translateY(10px) scale(0.9);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* ========== BOTÓN CONFIRMAR (después de procesar con IA) ========== */
-.btn-confirmar {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: linear-gradient(135deg, #00FF88, #00cc66);
-    color: #000210;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 18px;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
-    z-index: 10;
-    animation: aparecerBoton 0.3s ease-out;
-}
-
-.btn-confirmar:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.7);
-}
-
-.btn-confirmar:active {
-    transform: scale(0.95);
-}
-
-/* Indicador de "IA analizando" con spinner */
-.texto-animado.ia-analizando {
-    color: #00FFD4;
+.saldo-label {
+    font-size: 16px;
     font-weight: 600;
-    display: flex !important;
-    align-items: center;
-    gap: 10px;
+    color: #FFFFFF;
+    margin-top: 2px;
 }
 
-.texto-animado.ia-analizando::before {
-    content: '';
-    width: 14px;
-    height: 14px;
-    border: 2px solid #00FFD4;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: girar 0.8s linear infinite;
-    flex-shrink: 0;
-}
-
-@keyframes girar {
-    to { transform: rotate(360deg); }
-}
-
-/* ========== SECCIÓN AUDIO - COLOR VERDE NEÓN FOSFORESCENTE ========== */
-.seccion-audio {
-    width: 100%;
-    padding: 0 20px;
-    margin: 10px 0 10px 0;
-    cursor: pointer;
-}
-
-.fondo-audio {
-    width: 100%;
-    max-width: 319px;
-    margin: 0 auto;
-    height: 48px;
-    background-color: #1C2830;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Efecto glow del fondo para el audio */
-.fondo-audio::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: 32px;
-    background: radial-gradient(circle at 30% 50%, rgba(0, 255, 30, 0.15), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
-.fondo-audio:hover::before {
-    opacity: 1;
-}
-
-.fondo-audio:hover {
-    box-shadow: 0 0 30px rgba(0, 255, 30, 0.2), inset 0 0 30px rgba(0, 255, 30, 0.05);
-    transform: scale(1.02);
-}
-
-.circulo-audio {
-    position: relative;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: radial-gradient(circle at center, rgba(0, 255, 30, 0.3), rgba(0, 255, 30, 0.1));
-    border: 2px solid #00FF1E;
+.btn-detalle {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    animation: neonPulseVerde 2s ease-in-out infinite;
-    box-shadow: 0 0 20px rgba(0, 255, 30, 0.3), inset 0 0 20px rgba(0, 255, 30, 0.1);
-}
-
-/* Animación de pulso neón verde */
-@keyframes neonPulseVerde {
-    0%, 100% {
-        box-shadow: 0 0 20px rgba(0, 255, 30, 0.3), inset 0 0 20px rgba(0, 255, 30, 0.1);
-        border-color: #00FF1E;
-    }
-    50% {
-        box-shadow: 0 0 40px rgba(0, 255, 30, 0.6), inset 0 0 40px rgba(0, 255, 30, 0.2);
-        border-color: #7FFF7F;
-    }
-}
-
-.circulo-audio .icono-audio {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 8px rgba(0, 255, 30, 0.6));
-    transition: all 0.3s ease;
-}
-
-.fondo-audio:hover .circulo-audio {
-    animation: neonPulseVerde 0.8s ease-in-out infinite;
-    transform: scale(1.1);
-}
-
-.fondo-audio:hover .icono-audio {
-    filter: drop-shadow(0 0 15px rgba(0, 255, 30, 0.9)) brightness(1.3);
-}
-
-.texto-audio {
-    color: white;
-    font-weight: 700;
-    font-size: 12px;
-    margin-left: 15px;
-    text-shadow: 0 0 10px rgba(0, 255, 30, 0.1);
-    transition: all 0.3s ease;
-}
-
-.fondo-audio:hover .texto-audio {
-    text-shadow: 0 0 20px rgba(0, 255, 30, 0.3);
-}
-
-/* ========== SECCIÓN CÁMARA - COLOR MORADO NEÓN FOSFORESCENTE ========== */
-.seccion-camara {
-    width: 100%;
-    padding: 0 20px;
-    margin: 10px 0 20px 0;
-    cursor: pointer;
-}
-
-.fondo-camara {
-    width: 100%;
-    max-width: 319px;
-    margin: 0 auto;
-    height: 48px;
-    background-color: #1C2830;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Efecto glow del fondo para la cámara */
-.fondo-camara::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    border-radius: 32px;
-    background: radial-gradient(circle at 30% 50%, rgba(136, 0, 255, 0.15), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
-.fondo-camara:hover::before {
-    opacity: 1;
-}
-
-.fondo-camara:hover {
-    box-shadow: 0 0 30px rgba(136, 0, 255, 0.2), inset 0 0 30px rgba(136, 0, 255, 0.05);
-    transform: scale(1.02);
-}
-
-.circulo-camara {
-    position: relative;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: radial-gradient(circle at center, rgba(136, 0, 255, 0.3), rgba(136, 0, 255, 0.1));
-    border: 2px solid #8800FF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    animation: neonPulseMorado 2s ease-in-out infinite;
-    box-shadow: 0 0 20px rgba(136, 0, 255, 0.3), inset 0 0 20px rgba(136, 0, 255, 0.1);
-}
-
-/* Animación de pulso neón morado */
-@keyframes neonPulseMorado {
-    0%, 100% {
-        box-shadow: 0 0 20px rgba(136, 0, 255, 0.3), inset 0 0 20px rgba(136, 0, 255, 0.1);
-        border-color: #8800FF;
-    }
-    50% {
-        box-shadow: 0 0 40px rgba(136, 0, 255, 0.6), inset 0 0 40px rgba(136, 0, 255, 0.2);
-        border-color: #BB66FF;
-    }
-}
-
-.circulo-camara .icono-camara {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 8px rgba(136, 0, 255, 0.6));
-    transition: all 0.3s ease;
-}
-
-.fondo-camara:hover .circulo-camara {
-    animation: neonPulseMorado 0.8s ease-in-out infinite;
-    transform: scale(1.1);
-}
-
-.fondo-camara:hover .icono-camara {
-    filter: drop-shadow(0 0 15px rgba(136, 0, 255, 0.9)) brightness(1.3);
-}
-
-.texto-camara {
-    color: white;
-    font-weight: 700;
-    font-size: 12px;
-    margin-left: 15px;
-    text-shadow: 0 0 10px rgba(136, 0, 255, 0.1);
-    transition: all 0.3s ease;
-}
-
-.fondo-camara:hover .texto-camara {
-    text-shadow: 0 0 20px rgba(136, 0, 255, 0.3);
-}
-
-/* ========== MENU OVERLAY (PANEL LATERAL DERECHO) ========== */
-.menu-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);   /* 80% oscuro detrás del menú */
-    z-index: 999;
-    justify-content: flex-end;   /* el panel queda pegado a la derecha */
-    align-items: stretch;         /* ocupa todo el alto */
-    overflow: hidden;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.menu-overlay.active {
-    display: flex;
-    opacity: 1;
-}
-
-/* Panel del menú: 70% de ancho, 100% de alto, entra desde la derecha */
-.menu-card {
-    background-color: #021516;
-    width: 70%;
-    max-width: 320px;
-    height: 100%;
-    padding: 40px 22px 20px 22px;
-    box-shadow: -10px 0 40px rgba(0,0,0,0.9);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-
-    /* Estado inicial: fuera de pantalla por la derecha */
-    transform: translateX(100%);
-    /* Animación lenta y suave: 0.65s */
-    transition: transform 0.65s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-/* Cuando el overlay está activo, el panel se desliza hacia su posición (0) */
-.menu-overlay.active .menu-card {
-    transform: translateX(0);
-}
-
-/* Título MENU centrado */
-.menu-title {
-    color: white;
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-align: center;
-    margin: 0 0 30px 0;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #1C2830;
-}
-
-/* Opciones del menú */
-.menu-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 6px;
-    border-bottom: 1px solid #1C2830;
+    gap: 5px;
+    width: 101px;
+    height: 30px;
+    background-color: #415E60;
+    border-radius: 15px;
     text-decoration: none;
+    padding: 0 8px;
     transition: all 0.25s ease;
 }
 
-.menu-item:last-of-type {
-    border-bottom: none;
+.btn-detalle:hover {
+    background-color: #4d6d70;
+    transform: scale(1.03);
 }
 
-.menu-item:hover {
-    background-color: rgba(0, 212, 255, 0.08);
-    border-radius: 8px;
-    padding-left: 12px;
-}
-
-.menu-item img {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-}
-
-.menu-item span {
-    color: white;
-    font-weight: 600;
-    font-size: 16px;
-}
-
-/* Botón de cerrar */
-.menu-close {
-    position: absolute;
-    top: 14px;
-    right: 18px;
-    color: #aaa;
-    font-size: 26px;
+.btn-detalle span {
+    font-size: 11px;
     font-weight: 300;
-    cursor: pointer;
-    transition: color 0.2s ease;
+    color: #FFFFFF;
+    white-space: nowrap;
 }
 
-.menu-close:hover {
-    color: #00D4FF;
+.icon-eye, .icon-chevron {
+    width: 12px;
+    height: 12px;
+    color: #FFFFFF;
+    flex-shrink: 0;
 }
 
-/* ========== ÍCONO DE USUARIO (AL FINAL DEL MENÚ, CENTRADO) ========== */
-.menu-user {
-    margin-top: auto;              /* empuja el ícono hasta abajo del panel */
-    padding-top: 24px;
-    padding-bottom: 20px;
-    display: flex;
-    justify-content: center;       /* centrado horizontal */
-    align-items: center;
-    text-decoration: none;         /* quita subrayado del enlace */
-    cursor: pointer;
+.saldo-valor {
+    font-size: 36px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-top: 8px;
+    line-height: 1;
+    letter-spacing: -1px;
+    position: relative;
+    z-index: 2;
 }
 
-.menu-user img {
-    width: 28px;                   /* mismo tamaño que los íconos del menú */
-    height: 28px;
-    object-fit: contain;
-    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+.saldo-moneda {
+    font-size: 16px;
+    font-weight: 300;
+    color: #FFFFFF;
+    margin-top: 4px;
+    opacity: 0.9;
+    position: relative;
+    z-index: 2;
+}
+
+/* ============================================================
+   GRÁFICA DE ONDAS
+   ============================================================ */
+.grafica-ondas {
+    position: absolute;
+    left: 185px;
+    bottom: 6px;
+    width: 167px;
+    height: 67px;
+    z-index: 1;
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+/* ============================================================
+   CARD AGREGAR
+   ============================================================ */
+.card-agregar {
+    width: 358px;
+    height: 102px;
+    background-color: #F9F9F7;
+    border: 1px solid #E2E2E2;
+    border-radius: 10px;
+    margin: 10px auto 0;
+    padding: 4px 0 0 0;
+    position: relative;
     transition: all 0.3s ease;
 }
 
-.menu-user:hover img {
-    transform: scale(1.15);
-    filter: drop-shadow(0 0 14px rgba(0, 212, 255, 0.9)) brightness(1.15);
+.agregar-header {
+    text-align: center;
+    margin-top: 2px;
 }
 
-/* ========== AUDIO POPUP (SIN ✕, SOLO CLIC AFUERA) ========== */
-.audio-popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.75);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.agregar-titulo {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #A0B8B6;
+    line-height: 1.2;
 }
 
-.audio-popup.active {
+.agregar-sub {
+    display: block;
+    font-size: 9px;
+    font-weight: 600;
+    color: #A0B8B6;
+    line-height: 1.2;
+    margin-top: 1px;
+}
+
+.agregar-opciones {
     display: flex;
-    opacity: 1;
+    justify-content: center;
+    gap: 51px;
+    margin-top: 6px;
 }
 
-.audio-popup-card {
-    background-color: #021516;
-    width: 240px;
-    border-radius: 28px;
-    padding: 24px 16px;
-    box-shadow: 0 20px 30px rgba(0,0,0,0.8);
+.opcion-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.opcion-cuadro {
+    width: 48px;
+    height: 43px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+
+.opcion-cuadro svg { width: 22px; height: 22px; }
+
+.cuadro-texto { background-color: #D0E1D9; }
+.cuadro-foto { background-color: #E1D0D0; }
+.cuadro-audio { background-color: #B6ACC1; }
+
+.opcion-card:hover .opcion-cuadro {
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.opcion-label {
+    font-size: 9px;
+    font-weight: 400;
+    color: #000000;
+    margin-top: 4px;
+    line-height: 1;
+}
+
+/* ============================================================
+   RESUMEN RÁPIDO
+   ============================================================ */
+.titulo-resumen {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1E3E39;
+    margin: 20px 0 0 18px;
+}
+
+.resumen-grid {
+    display: flex;
+    gap: 20px;
+    padding: 0 20px;
+    margin-top: 12px;
+}
+
+.resumen-card {
+    flex: 1;
+    height: 77px;
+    border-radius: 10px;
+    padding: 6px 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.card-ingreso { background-color: #E0F2E4; }
+.card-gasto { background-color: #F7F2EC; }
+
+.resumen-top { display: flex; align-items: center; gap: 6px; }
+
+.resumen-circulo {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.circulo-verde { background-color: #B0DAC3; }
+.circulo-naranja { background-color: #E6D9C6; }
+
+.resumen-circulo svg { width: 14px; height: 14px; }
+
+.resumen-titulo {
+    font-size: 9px;
+    font-weight: 700;
+    color: #3F5050;
+    line-height: 1.1;
+}
+
+.resumen-valor {
+    font-size: 16px;
+    font-weight: 700;
+    color: #3F5050;
+    margin-top: 4px;
+    line-height: 1;
+    letter-spacing: -0.3px;
+}
+
+.resumen-moneda {
+    font-size: 8px;
+    font-weight: 600;
+    color: #3F5050;
+    line-height: 1;
+    margin-top: 1px;
+}
+
+.resumen-barra-wrap {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.resumen-barra {
+    flex: 1;
+    height: 3px;
+    background-color: #D9D9D9;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.resumen-progreso {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.6s ease;
+}
+
+.progreso-verde { background-color: #3B8469; }
+.progreso-naranja { background-color: #AC7C1C; }
+
+.resumen-porcentaje {
+    font-size: 8px;
+    font-weight: 600;
+    color: #3F5050;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   METAS DE AHORRO
+   ============================================================ */
+.metas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 18px 0 18px;
+    margin-top: 20px;
+}
+
+.titulo-metas {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1E3E39;
+}
+
+.btn-ver-todo {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    text-decoration: none;
+    color: #244240;
+    transition: all 0.2s ease;
+}
+
+.btn-ver-todo:hover { opacity: 0.7; }
+
+.btn-ver-todo span {
+    font-size: 9px;
+    font-weight: 700;
+    color: #244240;
+}
+
+.btn-ver-todo svg {
+    width: 12px;
+    height: 12px;
+    color: #244240;
+}
+
+.metas-lista {
+    padding: 0 20px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-/* Opción (Ingreso / Gasto) */
-.audio-option {
+.meta-card {
+    background-color: #F9F9F7;
+    border: 1px solid #E2E2E2;
+    border-radius: 10px;
+    padding: 12px 14px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 14px 8px;
-    text-decoration: none;
-    cursor: pointer;
-    border-radius: 16px;
-    transition: background 0.25s ease;
+    gap: 12px;
+    transition: all 0.25s ease;
 }
 
-.audio-option:hover {
-    background-color: rgba(255, 255, 255, 0.04);
+.meta-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
 }
 
-.audio-option span {
-    color: white;
-    font-weight: 700;
-    font-size: 18px;
-    transition: text-shadow 0.3s ease;
-}
-
-/* Círculo que envuelve el micrófono */
-.circulo-option {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
+.meta-icono {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background-color: #D0E1D9;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 18px;
     flex-shrink: 0;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.06), transparent 70%);
-    transition: all 0.35s ease;
 }
 
-.circulo-option img {
-    width: 26px;
-    height: 26px;
-    object-fit: contain;
-    transition: all 0.35s ease;
+.meta-info { flex: 1; min-width: 0; }
+
+.meta-nombre {
+    font-size: 12px;
+    font-weight: 700;
+    color: #13302E;
+    margin-bottom: 2px;
 }
 
-/* ============================================================
-   INGRESO → círculo VERDE NEÓN BRILLANTE
-   ============================================================ */
-.audio-ingreso .circulo-option {
-    border: 2px solid #00FF88;
-    background: radial-gradient(circle at center, rgba(0, 255, 136, 0.25), rgba(0, 255, 136, 0.05) 70%);
-    box-shadow:
-        0 0 6px #00FF88,
-        0 0 14px #00FF88,
-        0 0 28px rgba(0, 255, 136, 0.8),
-        0 0 45px rgba(0, 255, 136, 0.5),
-        inset 0 0 14px rgba(0, 255, 136, 0.6),
-        inset 0 0 28px rgba(0, 255, 136, 0.3);
-    animation: neonVerdePulse 2s ease-in-out infinite;
+.meta-progreso-texto {
+    font-size: 10px;
+    font-weight: 500;
+    color: #6B7A7A;
 }
 
-.audio-ingreso .circulo-option img {
-    filter:
-        drop-shadow(0 0 4px #00FF88)
-        drop-shadow(0 0 8px #00FF88)
-        drop-shadow(0 0 14px rgba(0, 255, 136, 0.9))
-        brightness(1.4);
+.meta-barra {
+    width: 100%;
+    height: 4px;
+    background-color: #D9D9D9;
+    border-radius: 5px;
+    margin-top: 5px;
+    overflow: hidden;
 }
 
-.audio-ingreso:hover .circulo-option {
-    transform: scale(1.1);
-    box-shadow:
-        0 0 10px #00FF88,
-        0 0 22px #00FF88,
-        0 0 40px rgba(0, 255, 136, 1),
-        0 0 70px rgba(0, 255, 136, 0.7),
-        inset 0 0 20px rgba(0, 255, 136, 0.8),
-        inset 0 0 36px rgba(0, 255, 136, 0.5);
+.meta-barra-fill {
+    height: 100%;
+    background-color: #3B8469;
+    border-radius: 5px;
+    transition: width 0.6s ease;
 }
 
-.audio-ingreso:hover span {
-    text-shadow: 0 0 12px rgba(0, 255, 136, 0.9);
-}
-
-@keyframes neonVerdePulse {
-    0%, 100% {
-        box-shadow:
-            0 0 6px #00FF88,
-            0 0 14px #00FF88,
-            0 0 28px rgba(0, 255, 136, 0.8),
-            0 0 45px rgba(0, 255, 136, 0.5),
-            inset 0 0 14px rgba(0, 255, 136, 0.6),
-            inset 0 0 28px rgba(0, 255, 136, 0.3);
-    }
-    50% {
-        box-shadow:
-            0 0 8px #00FF88,
-            0 0 20px #00FF88,
-            0 0 40px rgba(0, 255, 136, 1),
-            0 0 65px rgba(0, 255, 136, 0.7),
-            inset 0 0 20px rgba(0, 255, 136, 0.8),
-            inset 0 0 36px rgba(0, 255, 136, 0.5);
-    }
+.meta-porcentaje {
+    font-size: 12px;
+    font-weight: 700;
+    color: #244240;
+    flex-shrink: 0;
 }
 
 /* ============================================================
-   GASTO → círculo ROJO NEÓN BRILLANTE
+   ESTADO VACÍO DE METAS
    ============================================================ */
-.audio-gasto .circulo-option {
-    border: 2px solid #FF3355;
-    background: radial-gradient(circle at center, rgba(255, 51, 85, 0.25), rgba(255, 51, 85, 0.05) 70%);
-    box-shadow:
-        0 0 6px #FF3355,
-        0 0 14px #FF3355,
-        0 0 28px rgba(255, 51, 85, 0.8),
-        0 0 45px rgba(255, 51, 85, 0.5),
-        inset 0 0 14px rgba(255, 51, 85, 0.6),
-        inset 0 0 28px rgba(255, 51, 85, 0.3);
-    animation: neonRojoPulse 2s ease-in-out infinite;
+.metas-vacio {
+    background-color: #F9F9F7;
+    border: 1px dashed #D0D8D5;
+    border-radius: 10px;
+    padding: 22px 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
 }
 
-.audio-gasto .circulo-option img {
-    filter:
-        drop-shadow(0 0 4px #FF3355)
-        drop-shadow(0 0 8px #FF3355)
-        drop-shadow(0 0 14px rgba(255, 51, 85, 0.9))
-        brightness(1.4);
+.metas-vacio-icono {
+    font-size: 26px;
+    opacity: 0.55;
+    margin-bottom: 2px;
 }
 
-.audio-gasto:hover .circulo-option {
-    transform: scale(1.1);
-    box-shadow:
-        0 0 10px #FF3355,
-        0 0 22px #FF3355,
-        0 0 40px rgba(255, 51, 85, 1),
-        0 0 70px rgba(255, 51, 85, 0.7),
-        inset 0 0 20px rgba(255, 51, 85, 0.8),
-        inset 0 0 36px rgba(255, 51, 85, 0.5);
+.metas-vacio-titulo {
+    font-size: 12px;
+    font-weight: 700;
+    color: #3F5050;
+    line-height: 1.3;
 }
 
-.audio-gasto:hover span {
-    text-shadow: 0 0 12px rgba(255, 51, 85, 0.9);
+.metas-vacio-sub {
+    font-size: 10px;
+    font-weight: 500;
+    color: #8A9A9A;
+    line-height: 1.3;
 }
 
-@keyframes neonRojoPulse {
-    0%, 100% {
-        box-shadow:
-            0 0 6px #FF3355,
-            0 0 14px #FF3355,
-            0 0 28px rgba(255, 51, 85, 0.8),
-            0 0 45px rgba(255, 51, 85, 0.5),
-            inset 0 0 14px rgba(255, 51, 85, 0.6),
-            inset 0 0 28px rgba(255, 51, 85, 0.3);
-    }
-    50% {
-        box-shadow:
-            0 0 8px #FF3355,
-            0 0 20px #FF3355,
-            0 0 40px rgba(255, 51, 85, 1),
-            0 0 65px rgba(255, 51, 85, 0.7),
-            inset 0 0 20px rgba(255, 51, 85, 0.8),
-            inset 0 0 36px rgba(255, 51, 85, 0.5);
-    }
+/* ============================================================
+   MOVIMIENTOS
+   ============================================================ */
+.titulo-movimientos {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1E3E39;
+    margin: 20px 0 0 18px;
 }
 
-/* ========== NAVEGACIÓN INFERIOR ========== */
+.movimientos-lista {
+    padding: 0 20px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mov-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background-color: #F9F9F7;
+    border: 1px solid #E2E2E2;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.mov-card:hover { background-color: #F0F5F2; }
+
+.mov-icono {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.mov-icono.ingreso { background-color: #D0E1D9; }
+.mov-icono.gasto { background-color: #E1D0D0; }
+
+.mov-info { flex: 1; min-width: 0; }
+
+.mov-nombre {
+    font-size: 12px;
+    font-weight: 600;
+    color: #13302E;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mov-fecha {
+    font-size: 9px;
+    font-weight: 400;
+    color: #8A9A9A;
+    margin-top: 2px;
+}
+
+.mov-precio {
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.mov-precio.ingreso { color: #2E7D5B; }
+.mov-precio.gasto { color: #B33A3A; }
+
+.movimientos-vacio {
+    text-align: center;
+    padding: 30px 20px;
+    color: #A0B8B6;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* ============================================================
+   NAVEGACIÓN INFERIOR
+   ============================================================ */
 .bottom-nav {
     position: fixed;
-    bottom: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 319px;
-    height: 48px;
-    background-color: #1C2830;
-    border-radius: 40px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background-color: #FFFFFF;
+    border-top: 1px solid #185540;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding: 0 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     z-index: 100;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
 }
 
 .bottom-nav a {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
     text-decoration: none;
-    position: relative;
-    padding: 6px 14px;
-    border-radius: 10px;
-    transition: all 0.25s ease;
 }
 
-.bottom-nav img {
-    width: 19px;
-    height: 19px;
-    object-fit: contain;
-    transition: all 0.25s ease;
-    filter: brightness(0.55) grayscale(0.5);
-}
-
-/* Íconos inactivos: hover ligero */
-.bottom-nav a:not(.active):hover img {
-    filter: brightness(1.05) grayscale(0);
-    transform: scale(1.1);
-}
-
-/* ========== ÍCONO ACTIVO (PÁGINA ACTUAL) ========== */
 .bottom-nav a.active {
-    background-color: #00D4FF;
+    background-color: transparent;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    overflow: visible;
+}
+
+/* Icono SVG inactivo: NEGRO en modo claro */
+.nav-icono {
+    width: 22px;
+    height: 22px;
+    color: #000000;
+    stroke: #000000;
+    transition: color 0.2s ease, stroke 0.2s ease;
+}
+
+.bottom-nav a:not(.active):hover .nav-icono {
+    color: #185540;
+    stroke: #185540;
+}
+
+/* Píldora activa — contenido centrado */
+.nav-activo-rect {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 79px;
+    height: 29px;
+    background-color: #398869;
     border-radius: 10px;
-    box-shadow: 0 0 14px rgba(0, 212, 255, 0.7);
+    padding: 0 8px;
+    box-sizing: border-box;
+    gap: 4px;
+    transform: translateX(-12px);
 }
 
-.bottom-nav a.active img {
-    filter: brightness(0) invert(1);
-    transform: scale(1.05);
+/* Casa (SVG) en BLANCO dentro de la píldora verde */
+.nav-activo-icono {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    color: #FFFFFF;
+    stroke: #FFFFFF;
 }
 
-/* ========== RESPONSIVE ========== */
+.nav-activo-texto {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* ============================================================
+   MODO OSCURO
+   ============================================================ */
+body.dark-mode { background-color: #121315; }
+
+body.dark-mode .mobile-container { background-color: #121315; }
+
+body.dark-mode .txt-hola,
+body.dark-mode .txt-nombre,
+body.dark-mode .txt-subtitulo { color: #FFFFFF; }
+
+body.dark-mode .titulo-resumen,
+body.dark-mode .titulo-metas,
+body.dark-mode .titulo-movimientos { color: #FFFFFF; }
+
+/* Card agregar */
+body.dark-mode .card-agregar {
+    background-color: #1A1D21;
+    border-color: #2A2E33;
+}
+
+body.dark-mode .agregar-titulo,
+body.dark-mode .agregar-sub { color: #8FA8A5; }
+
+/* Etiquetas de las opciones (En texto / En Foto / En Audio) en modo oscuro */
+body.dark-mode .opcion-label {
+    color: #FFFFFF;
+}
+
+/* Resumen */
+body.dark-mode .card-ingreso {
+    background-color: rgba(102, 214, 166, 0.12);
+    border: 1px solid rgba(102, 214, 166, 0.4);
+}
+
+body.dark-mode .card-gasto {
+    background-color: rgba(255, 107, 107, 0.12);
+    border: 1px solid rgba(255, 107, 107, 0.4);
+}
+
+body.dark-mode .resumen-titulo,
+body.dark-mode .resumen-valor,
+body.dark-mode .resumen-moneda,
+body.dark-mode .resumen-porcentaje { color: #FFFFFF; }
+
+body.dark-mode .resumen-barra { background-color: #2A2E33; }
+
+/* Card saldo neón */
+body.dark-mode .card-saldo {
+    background-color: #080808;
+    border: 1px solid rgba(102, 214, 166, 0.8);
+    box-shadow: 0 0 12px rgba(102, 214, 166, 0.35),
+                0 0 24px rgba(102, 214, 166, 0.15),
+                inset 0 0 12px rgba(102, 214, 166, 0.05);
+}
+
+body.dark-mode .saldo-label {
+    color: #FFFFFF;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .saldo-valor {
+    color: #FFFFFF;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8),
+                 0 0 16px rgba(255, 255, 255, 0.4);
+}
+
+body.dark-mode .saldo-moneda {
+    color: #66D6A6;
+    text-shadow: 0 0 6px rgba(102, 214, 166, 0.8);
+}
+
+body.dark-mode .btn-detalle {
+    background-color: rgba(102, 214, 166, 0.2);
+    box-shadow: 0 0 8px rgba(102, 214, 166, 0.4);
+}
+
+/* Metas */
+body.dark-mode .meta-card {
+    background-color: #1A1D21;
+    border-color: #2A2E33;
+}
+
+body.dark-mode .meta-nombre { color: #FFFFFF; }
+body.dark-mode .meta-progreso-texto { color: #A8B8BE; }
+body.dark-mode .meta-barra { background-color: #2A2E33; }
+body.dark-mode .meta-porcentaje { color: #66D6A6; }
+
+body.dark-mode .metas-vacio {
+    background-color: #1A1D21;
+    border-color: #2A2E33;
+}
+
+body.dark-mode .metas-vacio-titulo { color: #FFFFFF; }
+body.dark-mode .metas-vacio-sub { color: #A8B8BE; }
+
+body.dark-mode .btn-ver-todo span,
+body.dark-mode .btn-ver-todo svg { color: #66D6A6; }
+
+/* Movimientos */
+body.dark-mode .mov-card {
+    background-color: #1A1D21;
+    border-color: #2A2E33;
+}
+
+body.dark-mode .mov-card:hover { background-color: #22262B; }
+body.dark-mode .mov-nombre { color: #FFFFFF; }
+body.dark-mode .mov-fecha { color: #8A9A9A; }
+body.dark-mode .movimientos-vacio { color: #8FA8A5; }
+
+/* ---- NAV en modo oscuro ---- */
+body.dark-mode .bottom-nav {
+    background-color: #121315;
+    border-top-color: #185540;
+}
+
+/* Iconos inactivos: BLANCOS en oscuro */
+body.dark-mode .nav-icono {
+    color: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+body.dark-mode .bottom-nav a:not(.active):hover .nav-icono {
+    color: #66D6A6;
+    stroke: #66D6A6;
+}
+
+/* La casa del activo sigue blanca en ambos temas */
+body.dark-mode .nav-activo-icono {
+    color: #FFFFFF;
+    stroke: #FFFFFF;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
 @media (max-width: 375px) {
-    .texto-descripcion {
+    .card-saldo,
+    .card-agregar {
+        width: calc(100% - 34px);
+    }
+
+    .resumen-grid {
         padding: 0 15px;
-        font-size: 12px;
+        gap: 12px;
     }
-    
-    .fondo-escritura,
-    .fondo-audio,
-    .fondo-camara {
-        max-width: 100%;
-    }
-    
-    .bottom-nav {
-        width: 90%;
-        max-width: 319px;
-    }
-}
 
-/* ========== SCROLLBAR PERSONALIZADA ========== */
-.texto-animado::-webkit-scrollbar {
-    width: 4px;
-}
-
-.texto-animado::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.texto-animado::-webkit-scrollbar-thumb {
-    background: #1C2830;
-    border-radius: 2px;
-}
-
-.texto-animado::-webkit-scrollbar-thumb:hover {
-    background: #2a3a4a;
+    .agregar-opciones { gap: 40px; }
 }

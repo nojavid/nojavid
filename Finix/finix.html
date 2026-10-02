@@ -3,100 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nojavid · Finix</title>
+    <title>Finix · Inicio</title>
     <link rel="stylesheet" href="finixStyles.css">
 </head>
 <body>
     <div class="mobile-container">
-        <!-- ========== ENCABEZADO ========== -->
-        <div class="header">
-            <img src="./Finix/iconos/logo.png" alt="logo" class="logo" onerror="this.src='iconos/logo.png'">
-            <span class="titulo-nojavid">Nojavid</span>
-            <div class="fecha-container">
-                <span class="flecha">&lt;</span>
-                <span class="fecha" id="fechaActual">Sep de 2026</span>
-                <span class="flecha">&gt;</span>
-            </div>
-            <div class="menu-hamburguesa" id="menuHamburguesa">☰</div>
-        </div>
 
-        <!-- ========== TÍTULO HELLO! ========== -->
-        <h1 class="titulo-hello">Hello!</h1>
+        <!-- ========== HEADER con switch de tema ========== -->
+        <div class="header-finix">
+            <div class="interruptor-tema" id="interruptorTema">
+                <div class="switch-track" id="switchTrack">
+                    <!-- Sol (izquierda) -->
+                    <svg class="switch-icon switch-icon-sol" viewBox="0 0 24 24" fill="none" stroke="#185540" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4"/>
+                        <line x1="12" y1="2" x2="12" y2="4"/>
+                        <line x1="12" y1="20" x2="12" y2="22"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="2" y1="12" x2="4" y2="12"/>
+                        <line x1="20" y1="12" x2="22" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
 
-        <!-- ========== TEXTO DESCRIPTIVO ========== -->
-        <p class="texto-descripcion">Una herramienta diseñada para facilitar la gestión de tus finanzas personales. Registra tus ingresos y gastos, controla tus movimientos y analiza cómo administras tu dinero para tomar mejores decisiones financieras. Todo desde un solo lugar, de forma simple, clara y organizada.</p>
+                    <!-- Luna (derecha) -->
+                    <svg class="switch-icon switch-icon-luna" viewBox="0 0 24 24" fill="none" stroke="#185540" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
 
-        <!-- ========== SECCIÓN ESCRITURA (Empieza Aqui) ========== -->
-        <div class="seccion-escritura">
-            <div class="fondo-escritura">
-                <h4 class="subtitulo-empieza">Empieza Aqui</h4>
-                <p class="texto-empieza">Escribe o Pega varios a la vez</p>
-                <div class="recuadro-escritura">
-                    <div id="escrituraAnimada" class="texto-animado">Almuerzo 25 mil + uber 12k</div>
-                    <button id="btnEnviar" class="btn-enviar" style="display: none;">Enviar</button>
-                    <button id="btnConfirmar" class="btn-confirmar" style="display: none;">✓ Guardar</button>
+                    <div class="switch-thumb" id="switchThumb">
+                        <svg id="thumbIcono" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="11" height="11">
+                            <circle cx="12" cy="12" r="4"/>
+                            <line x1="12" y1="2" x2="12" y2="4"/>
+                            <line x1="12" y1="20" x2="12" y2="22"/>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                            <line x1="2" y1="12" x2="4" y2="12"/>
+                            <line x1="20" y1="12" x2="22" y2="12"/>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- ========== SECCIÓN AUDIO (ahora es un enlace directo) ========== -->
-        <a href="microfono/microfono.html" id="seccionAudio" class="seccion-audio" style="text-decoration: none; color: inherit; display: block;">
-            <div class="fondo-audio">
-                <div class="circulo-audio">
-                    <img src="./Finix/iconos/microfono.png" alt="micro" class="icono-audio" onerror="this.src='iconos/microfono.png'">
+        <!-- ========== TEXTO 1: Hola, ========== -->
+        <p class="txt-hola">Hola,</p>
+
+        <!-- ========== TEXTO 2: Nombre ========== -->
+        <h1 class="txt-nombre" id="nombreUsuario">Name</h1>
+
+        <!-- ========== TEXTO 3: Subtítulo ========== -->
+        <p class="txt-subtitulo">Tu bienestar financiero, en tus manos</p>
+
+        <!-- ========== RECTÁNGULO PRINCIPAL (Saldo total) ========== -->
+        <div class="card-saldo">
+            <div class="saldo-header">
+                <span class="saldo-label">Saldo total</span>
+
+                <a href="Billetera/billetera.html" class="btn-detalle">
+                    <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span>Ver detalle</span>
+                    <svg class="icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="saldo-valor" id="saldoTotal">$0</div>
+            <div class="saldo-moneda">Cop</div>
+
+            <svg class="grafica-ondas" viewBox="0 0 167 67" preserveAspectRatio="none">
+                <path id="lineaGrafica"
+                      d="M0,50 Q20,40 40,45 T80,35 T120,40 T160,30 L167,35"
+                      fill="none" stroke="#5F9184" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round"
+                      filter="url(#glowVerde)"/>
+
+                <defs>
+                    <filter id="glowVerde" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="2" result="blur"/>
+                        <feMerge>
+                            <feMergeNode in="blur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+            </svg>
+        </div>
+
+        <!-- ========== CARD AGREGAR ========== -->
+        <div class="card-agregar">
+            <div class="agregar-header">
+                <span class="agregar-titulo">Agregar</span>
+                <span class="agregar-sub">Gasto o deudas</span>
+            </div>
+
+            <div class="agregar-opciones">
+                <a href="#" class="opcion-card" id="btnTexto">
+                    <div class="opcion-cuadro cuadro-texto">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#244240" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="5" width="20" height="14" rx="2"/>
+                            <line x1="2" y1="10" x2="22" y2="10"/>
+                        </svg>
+                    </div>
+                    <span class="opcion-label">En texto</span>
+                </a>
+
+                <a href="Camara/Camara.html" class="opcion-card">
+                    <div class="opcion-cuadro cuadro-foto">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#6D0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                    </div>
+                    <span class="opcion-label">En Foto</span>
+                </a>
+
+                <a href="microfono/microfono.html" class="opcion-card">
+                    <div class="opcion-cuadro cuadro-audio">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#25024B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <span class="opcion-label">En Audio</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- ========== RESUMEN RÁPIDO ========== -->
+        <h2 class="titulo-resumen">Resumen rápido</h2>
+
+        <div class="resumen-grid">
+            <div class="resumen-card card-ingreso">
+                <div class="resumen-top">
+                    <div class="resumen-circulo circulo-verde">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#244240" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                    </div>
+                    <span class="resumen-titulo">Ingreso este mes</span>
                 </div>
-                <span class="texto-audio">Dicta tus movimientos</span>
+                <div class="resumen-valor" id="ingresoMes">$0</div>
+                <div class="resumen-moneda">Cop</div>
+                <div class="resumen-barra-wrap">
+                    <div class="resumen-barra">
+                        <div class="resumen-progreso progreso-verde" id="progresoIngreso" style="width:0%"></div>
+                    </div>
+                    <span class="resumen-porcentaje" id="porcentajeIngreso">0%</span>
+                </div>
+            </div>
+
+            <div class="resumen-card card-gasto">
+                <div class="resumen-top">
+                    <div class="resumen-circulo circulo-naranja">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#BA6F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <polyline points="19 12 12 19 5 12"/>
+                        </svg>
+                    </div>
+                    <span class="resumen-titulo">Gastos este mes</span>
+                </div>
+                <div class="resumen-valor" id="gastoMes">$0</div>
+                <div class="resumen-moneda">Cop</div>
+                <div class="resumen-barra-wrap">
+                    <div class="resumen-barra">
+                        <div class="resumen-progreso progreso-naranja" id="progresoGasto" style="width:0%"></div>
+                    </div>
+                    <span class="resumen-porcentaje" id="porcentajeGasto">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== METAS DE AHORRO ========== -->
+        <div class="metas-header">
+            <h2 class="titulo-metas">Metas de ahorro</h2>
+            <a href="Billetera/billetera.html#ahorros" class="btn-ver-todo">
+                <span>Ver todo</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="metas-lista" id="metasLista"></div>
+
+        <!-- ========== MOVIMIENTOS ========== -->
+        <h2 class="titulo-movimientos">Movimientos</h2>
+
+        <div class="movimientos-lista" id="movimientosLista"></div>
+
+        <div class="movimientos-vacio" id="movimientosVacio">
+            <p>Aún no tienes movimientos registrados</p>
+        </div>
+
+    </div>
+
+    <!-- ========== NAVEGACIÓN INFERIOR ========== -->
+    <div class="bottom-nav">
+        <a href="finix.html" data-page="finix.html" class="active">
+            <div class="nav-activo-rect">
+                <svg class="nav-activo-icono" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span class="nav-activo-texto">Home</span>
             </div>
         </a>
 
-        <!-- ========== SECCIÓN CÁMARA ========== -->
-        <a href="Camara/Camara.html" id="seccionCamara" class="seccion-camara" style="text-decoration: none; color: inherit; display: block;">
-            <div class="fondo-camara">
-                <div class="circulo-camara">
-                    <img src="./Finix/iconos/camara.png" alt="camara" class="icono-camara" onerror="this.src='iconos/camara.png'">
-                </div>
-                <span class="texto-camara">Toma foto del recibo</span>
-            </div>
+        <!-- Billetera -->
+        <a href="Billetera/billetera.html" data-page="billetera.html">
+            <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+                <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+                <path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>
+            </svg>
         </a>
 
-        <!-- ========== MENU OVERLAY ========== -->
-        <div id="menuOverlay" class="menu-overlay">
-            <div class="menu-card">
-                <div class="menu-close" id="menuClose">✕</div>
-                <div class="menu-title">MENU</div>
-                
-                <a href="../index.html" class="menu-item">
-                    <img src="./Finix/iconos/casaazul.png" alt="inicio" onerror="this.src='iconos/casaazul.png'">
-                    <span>Inicio</span>
-                </a>
-                
-                <a href="./Finix/movimietos.html" class="menu-item">
-                    <img src="./Finix/iconos/transicionazul.png" alt="movimientos" onerror="this.src='iconos/transicionazul.png'">
-                    <span>Movimientos</span>
-                </a>
-                <a href="./Finix/deudas.html" class="menu-item">
-                    <img src="./Finix/iconos/monedaazul.png" alt="deudas" onerror="this.src='iconos/monedaazul.png'">
-                    <span>Deudas</span>
-                </a>
-                <a href="./Finix/reportes.html" class="menu-item">
-                    <img src="./Finix/iconos/informeazul.png" alt="reportes" onerror="this.src='iconos/informeazul.png'">
-                    <span>Reportes</span>
-                </a>
+        <!-- Reportes -->
+        <a href="reportes.html" data-page="reportes.html">
+            <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="20" x2="12" y2="10"/>
+                <line x1="18" y1="20" x2="18" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="16"/>
+            </svg>
+        </a>
 
-                <!-- ========== ÍCONO DE USUARIO (CENTRADO AL FINAL) → LOGIN ========== -->
-                <a href="loguin.html" class="menu-user" id="btnUsuario">
-                    <img src="./Finix/iconos/usuarioazul.png" alt="usuario" onerror="this.src='iconos/usuarioazul.png'">
-                </a>
-            </div>
-        </div>
-
-        <!-- ========== NAVEGACIÓN INFERIOR ========== -->
-        <div class="bottom-nav">
-            <a href="finix.html" data-page="finix.html"><img src="./Finix/iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'"></a>
-            <a href="Billetera/billetera.html" data-page="billetera.html"><img src="./Finix/iconos/billetera.png" alt="billetera" onerror="this.src='iconos/billetera.png'"></a>
-            <a href="reportes.html" data-page="reportes.html"><img src="./Finix/iconos/barra.png" alt="reportes" onerror="this.src='iconos/barra.png'"></a>
-            <a href="configuracion.html" data-page="configuracion.html"><img src="./Finix/iconos/tuerca.png" alt="tuerca" onerror="this.src='iconos/tuerca.png'"></a>
-        </div>
+        <!-- Configuración -->
+        <a href="configuracion.html" data-page="configuracion.html">
+            <svg class="nav-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+        </a>
     </div>
 
     <script src="finixjs.js"></script>

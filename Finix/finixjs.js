@@ -1,825 +1,478 @@
-// ============================================
-// 1. FECHA ACTUAL
-// ============================================
-function actualizarFecha() {
-    const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-    const ahora = new Date();
-    const mes = meses[ahora.getMonth()];
-    const año = ahora.getFullYear();
-    const fechaElement = document.getElementById('fechaActual');
-    if (fechaElement) {
-        fechaElement.textContent = mes + " de " + año;
-    }
-}
-actualizarFecha();
-
-// ============================================
-// 2. MENÚ HAMBURGUESA
-// ============================================
-const menuBtn = document.getElementById('menuHamburguesa');
-const menuOverlay = document.getElementById('menuOverlay');
-const menuClose = document.getElementById('menuClose');
-
-function abrirMenu() { if (menuOverlay) menuOverlay.classList.add('active'); }
-function cerrarMenu() { if (menuOverlay) menuOverlay.classList.remove('active'); }
-
-if (menuBtn) menuBtn.addEventListener('click', abrirMenu);
-if (menuClose) menuClose.addEventListener('click', cerrarMenu);
-if (menuOverlay) {
-    menuOverlay.addEventListener('click', function(e) {
-        if (e.target === this) cerrarMenu();
-    });
+// ============================================================
+// 1. NOMBRE DEL USUARIO
+// ============================================================
+function cargarNombreUsuario() {
+    const el = document.getElementById('nombreUsuario');
+    if (!el) return;
+    const nombre = localStorage.getItem('finix_usuario')
+        || localStorage.getItem('nombreUsuario')
+        || 'Name';
+    el.textContent = nombre;
 }
 
-// ============================================
-// 3. AUDIO POPUP (se cierra solo al hacer clic afuera)
-// ============================================
-const seccionAudio = document.getElementById('seccionAudio');
-const audioPopup = document.getElementById('audioPopup');
-
-function abrirAudioPopup(e) {
-    if (e) e.stopPropagation();
-    if (audioPopup) audioPopup.classList.add('active');
+// ============================================================
+// 2. FORMATEAR PESOS COLOMBIANOS
+// ============================================================
+function formatoCOP(valor) {
+    const num = Math.round(Number(valor) || 0);
+    return '$' + num.toLocaleString('es-CO');
 }
 
-function cerrarAudioPopup() {
-    if (audioPopup) audioPopup.classList.remove('active');
-}
-
-if (seccionAudio) {
-    seccionAudio.addEventListener('click', function(e) {
-        e.stopPropagation();
-        abrirAudioPopup(e);
-    });
-}
-
-// Cierra el popup al hacer clic fuera de la tarjeta
-if (audioPopup) {
-    audioPopup.addEventListener('click', function(e) {
-        if (e.target === this) cerrarAudioPopup();
-    });
-}
-
-// ============================================
-// 4. CÁMARA → camara.html
-// ============================================
-const seccionCamara = document.getElementById('seccionCamara');
-if (seccionCamara) {
-    seccionCamara.addEventListener('click', function() {
-        window.location.href = 'camara.html';
-    });
-}
-
-// ============================================
-// 5. VARIABLES GLOBALES DE ESCRITURA
-// ============================================
-const escrituraEl = document.getElementById('escrituraAnimada');
-const btnEnviar = document.getElementById('btnEnviar');
-const btnConfirmar = document.getElementById('btnConfirmar');
-
-let animacionInterval = null;
-let estaEditando = false;
-let textoOriginal = '';
-let animacionEnCurso = false;
-let procesandoIA = false;
-
-const textosAnimacion = [
-    'Almuerzo 25 mil + uber 12k',
-    'Procesando...',
-    'Almuerzo: $25.000\nUber: $12.000'
-];
-
-// ============================================
-// DETECCIÓN DE TEXTO DE ANIMACIÓN
-// ============================================
-function esTextoDeAnimacion(texto) {
-    const textos = [
-        'Almuerzo 25 mil + uber 12k',
-        'Procesando...',
-        'Almuerzo: $25.000',
-        'Uber: $12.000',
-        'Almuerzo:',
-        'Uber:'
-    ];
-    const textoLimpio = texto.trim();
-    return textos.some(t => textoLimpio.includes(t));
-}
-
-function hayDatosValidos() {
-    if (!escrituraEl) return false;
-    const texto = escrituraEl.textContent.trim();
-    if (texto.length === 0) return false;
-    if (esTextoDeAnimacion(texto)) return false;
-    return true;
-}
-
-function actualizarBotonEnviar() {
-    if (!btnEnviar || !escrituraEl) return;
-    if (hayDatosValidos() && estaEditando) {
-        btnEnviar.style.display = 'block';
-    } else {
-        btnEnviar.style.display = 'none';
-    }
-}
-
-function ocultarBotones() {
-    if (btnEnviar) btnEnviar.style.display = 'none';
-    if (btnConfirmar) btnConfirmar.style.display = 'none';
-}
-
-// ============================================
-// 6. ENVIAR DATOS → PROCESAR CON IA
-// ============================================
-async function enviarDatos() {
-    const texto = escrituraEl.textContent.trim();
-    if (!texto) return;
-
-    procesandoIA = true;
-
-    ocultarBotones();
-
-    escrituraEl.innerHTML = '';
-    escrituraEl.classList.add('ia-analizando');
-    escrituraEl.textContent = 'Procesando con IA...';
-    escrituraEl.style.color = '#00FFD4';
-    escrituraEl.style.fontWeight = '600';
-    escrituraEl.style.display = 'block';
-    escrituraEl.style.padding = '8px';
-
-    let movimientos = [];
+// ============================================================
+// 3. LEER MOVIMIENTOS DE LOCALSTORAGE
+// ============================================================
+function leerMovimientos() {
     try {
-        movimientos = await analizarConIA(texto);
+        return JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
     } catch (e) {
-        console.error('Error IA:', e);
+        return [];
     }
+}
 
-    procesandoIA = false;
-    escrituraEl.classList.remove('ia-analizando');
+// ============================================================
+// 4. CALCULAR TOTALES
+// ============================================================
+function calcularTotales() {
+    const movs = leerMovimientos();
+    const ahora = new Date();
+    const mesActual = ahora.getMonth();
+    const añoActual = ahora.getFullYear();
 
-    if (!movimientos || movimientos.length === 0) {
-        escrituraEl.innerHTML = '<span style="color:#ff5555;">⚠️ No pude detectar movimientos. Intenta de nuevo.</span>';
-        escrituraEl.style.padding = '8px';
-        setTimeout(() => {
-            escrituraEl.innerHTML = '';
-            escrituraEl.dataset.textoPersonalizado = 'false';
-            estaEditando = false;
-            animacionEnCurso = false;
-            escrituraEl.contentEditable = false;
-            escrituraEl.style.cssText = '';
-            escrituraEl.style.color = '#c0d0e0';
-            iniciarAnimacion();
-        }, 2500);
+    let totalIngresos = 0;
+    let totalGastos = 0;
+    let ingresosMes = 0;
+    let gastosMes = 0;
+
+    movs.forEach(m => {
+        const precio = Number(m.precio) || 0;
+        const fecha = new Date(m.fecha || Date.now());
+        const esMesActual = fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual;
+
+        if (m.tipo === 'ingreso') {
+            totalIngresos += precio;
+            if (esMesActual) ingresosMes += precio;
+        } else {
+            totalGastos += precio;
+            if (esMesActual) gastosMes += precio;
+        }
+    });
+
+    return {
+        totalIngresos,
+        totalGastos,
+        saldo: totalIngresos - totalGastos,
+        ingresosMes,
+        gastosMes
+    };
+}
+
+// ============================================================
+// 5. ACTUALIZAR SALDO PRINCIPAL
+// ============================================================
+function actualizarSaldo() {
+    const { saldo } = calcularTotales();
+    const el = document.getElementById('saldoTotal');
+    if (el) el.textContent = formatoCOP(saldo);
+}
+
+// ============================================================
+// 6. ACTUALIZAR RESUMEN RÁPIDO
+// ============================================================
+function actualizarResumen() {
+    const { ingresosMes, gastosMes } = calcularTotales();
+    const totalMes = ingresosMes + gastosMes;
+
+    const ingresoEl = document.getElementById('ingresoMes');
+    const gastoEl = document.getElementById('gastoMes');
+    if (ingresoEl) ingresoEl.textContent = formatoCOP(ingresosMes);
+    if (gastoEl) gastoEl.textContent = formatoCOP(gastosMes);
+
+    const pctIngreso = totalMes > 0 ? Math.round((ingresosMes / totalMes) * 100) : 0;
+    const pctGasto = totalMes > 0 ? Math.round((gastosMes / totalMes) * 100) : 0;
+
+    const progIngreso = document.getElementById('progresoIngreso');
+    const progGasto = document.getElementById('progresoGasto');
+    const pctIngresoEl = document.getElementById('porcentajeIngreso');
+    const pctGastoEl = document.getElementById('porcentajeGasto');
+
+    if (progIngreso) progIngreso.style.width = pctIngreso + '%';
+    if (progGasto) progGasto.style.width = pctGasto + '%';
+    if (pctIngresoEl) pctIngresoEl.textContent = pctIngreso + '%';
+    if (pctGastoEl) pctGastoEl.textContent = pctGasto + '%';
+}
+
+// ============================================================
+// 7. ACTUALIZAR GRÁFICA DE ONDAS
+// ============================================================
+function actualizarGrafica() {
+    const linea = document.getElementById('lineaGrafica');
+    if (!linea) return;
+
+    const movs = leerMovimientos();
+
+    if (movs.length === 0) {
+        linea.setAttribute('d',
+            'M0,45 Q20,42 40,44 T80,43 T120,44 T160,42 L167,43'
+        );
         return;
     }
 
-    mostrarItemsDetectados(movimientos);
-}
-
-// ============================================
-// 7. MOSTRAR ITEMS DETECTADOS
-// ============================================
-function mostrarItemsDetectados(movimientos) {
-    escrituraEl.innerHTML = '';
-    escrituraEl.style.display = 'flex';
-    escrituraEl.style.flexDirection = 'column';
-    escrituraEl.style.gap = '6px';
-    escrituraEl.style.padding = '4px 0';
-    escrituraEl.style.color = '#c0d0e0';
-    escrituraEl.style.fontWeight = '500';
-
-    movimientos.forEach((mov, i) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.style.cssText = `
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: ${mov.tipo === 'ingreso' ? 'rgba(0, 255, 136, 0.12)' : 'rgba(255, 80, 80, 0.12)'};
-            border: 1px solid ${mov.tipo === 'ingreso' ? 'rgba(0, 255, 136, 0.3)' : 'rgba(255, 80, 80, 0.3)'};
-            border-radius: 8px;
-            padding: 6px 12px;
-            margin: 2px 0;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: all 0.35s ease;
-        `;
-
-        const icono = document.createElement('span');
-        icono.textContent = mov.icono || '📌';
-        icono.style.cssText = 'font-size: 18px;';
-
-        const nombre = document.createElement('span');
-        nombre.textContent = mov.nombre + ': ';
-        nombre.style.cssText = 'color: white; font-size: 13px; font-weight: 500; flex: 1;';
-
-        const precio = document.createElement('span');
-        precio.textContent = '$' + Number(mov.precio).toLocaleString('es-CO');
-        precio.style.cssText = `
-            color: ${mov.tipo === 'ingreso' ? '#00FF88' : '#00FFD4'};
-            font-weight: 700;
-            font-size: 13px;
-        `;
-
-        itemDiv.appendChild(icono);
-        itemDiv.appendChild(nombre);
-        itemDiv.appendChild(precio);
-        escrituraEl.appendChild(itemDiv);
-
-        setTimeout(() => {
-            itemDiv.style.opacity = '1';
-            itemDiv.style.transform = 'translateX(0)';
-        }, 80 * i);
+    const ordenados = [...movs].sort((a, b) => {
+        const fa = new Date(a.fecha || 0).getTime();
+        const fb = new Date(b.fecha || 0).getTime();
+        return fa - fb;
     });
 
-    escrituraEl.dataset.movimientosPendientes = JSON.stringify(movimientos);
+    const puntos = [0];
+    let acumulado = 0;
+    ordenados.forEach(m => {
+        const precio = Number(m.precio) || 0;
+        acumulado += (m.tipo === 'ingreso' ? precio : -precio);
+        puntos.push(acumulado);
+    });
 
-    setTimeout(() => {
-        if (btnConfirmar) btnConfirmar.style.display = 'block';
-    }, 300);
+    const min = Math.min(...puntos);
+    const max = Math.max(...puntos);
+    const rango = (max - min) || 1;
+
+    const Y_ARRIBA = 12;
+    const Y_ABAJO = 55;
+    const alto = Y_ABAJO - Y_ARRIBA;
+
+    const ys = puntos.map(p => {
+        const norm = (p - min) / rango;
+        return Y_ABAJO - norm * alto;
+    });
+
+    const ancho = 167;
+    const pasoX = ancho / (ys.length - 1 || 1);
+
+    let d = `M0,${ys[0].toFixed(2)}`;
+    for (let i = 1; i < ys.length; i++) {
+        const x = (i * pasoX).toFixed(2);
+        const y = ys[i].toFixed(2);
+        const xMid = ((i - 0.5) * pasoX).toFixed(2);
+        const yMid = ((ys[i - 1] + ys[i]) / 2).toFixed(2);
+        d += ` Q${xMid},${yMid} ${x},${y}`;
+    }
+
+    linea.setAttribute('d', d);
 }
 
-// ============================================
-// 8. CONFIRMAR Y ENVIAR A REPORTES
-// ============================================
-function confirmarYEnviar() {
-    const pendientes = escrituraEl.dataset.movimientosPendientes;
-    if (!pendientes) return;
+// ============================================================
+// 8. RENDERIZAR METAS DE AHORRO
+// ============================================================
+function renderizarMetas() {
+    const contenedor = document.getElementById('metasLista');
+    if (!contenedor) return;
 
+    let metas = [];
     try {
-        const movimientos = JSON.parse(pendientes);
-        guardarMovimientos(movimientos);
-
-        btnConfirmar.textContent = '✓ Guardado';
-        btnConfirmar.style.background = 'linear-gradient(135deg, #00FF88, #00cc66)';
-
-        setTimeout(() => {
-            escrituraEl.innerHTML = '';
-            escrituraEl.dataset.textoPersonalizado = 'false';
-            escrituraEl.dataset.movimientosPendientes = '';
-            estaEditando = false;
-            animacionEnCurso = false;
-            escrituraEl.contentEditable = false;
-            escrituraEl.style.cssText = '';
-            escrituraEl.style.color = '#c0d0e0';
-
-            btnConfirmar.style.display = 'none';
-            btnConfirmar.textContent = '✓ Guardar';
-            btnConfirmar.style.background = '';
-
-            window.location.href = 'reportes.html';
-        }, 800);
+        metas = JSON.parse(localStorage.getItem('finix_metas') || '[]');
     } catch (e) {
-        console.error('Error al confirmar:', e);
+        metas = [];
     }
-}
 
-// ============================================
-// GUARDAR MOVIMIENTOS EN LOCALSTORAGE
-// ============================================
-function guardarMovimientos(movimientos) {
-    try {
-        const existentes = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
-        const conFecha = movimientos.map(m => ({
-            ...m,
-            fecha: new Date().toISOString(),
-            id: Date.now() + Math.random().toString(36).slice(2, 8)
-        }));
-        const actualizados = existentes.concat(conFecha);
-        localStorage.setItem('finix_movimientos', JSON.stringify(actualizados));
-        console.log('✅ Guardados', conFecha.length, 'movimientos');
-    } catch (e) {
-        console.error('Error guardando en localStorage:', e);
-    }
-}
-
-// ============================================
-// 9. EVENTOS DE BOTONES
-// ============================================
-if (btnEnviar) {
-    btnEnviar.addEventListener('mousedown', e => e.preventDefault());
-    btnEnviar.addEventListener('click', e => {
-        e.stopPropagation();
-        e.preventDefault();
-        enviarDatos();
-    });
-}
-
-if (btnConfirmar) {
-    btnConfirmar.addEventListener('mousedown', e => e.preventDefault());
-    btnConfirmar.addEventListener('click', e => {
-        e.stopPropagation();
-        e.preventDefault();
-        confirmarYEnviar();
-    });
-}
-
-// ============================================
-// 10. FUNCIONES DE ANIMACIÓN
-// ============================================
-function escribirConEfecto(texto, velocidad = 50, callback) {
-    if (!escrituraEl || estaEditando) return;
-
-    animacionEnCurso = true;
-    let index = 0;
-    escrituraEl.textContent = '';
-    escrituraEl.style.color = '#c0d0e0';
-    escrituraEl.classList.add('animando');
-
-    function escribirLetra() {
-        if (estaEditando || procesandoIA) {
-            escrituraEl.classList.remove('animando');
-            return;
-        }
-        if (index < texto.length) {
-            const char = texto.charAt(index);
-            escrituraEl.textContent += char;
-            index++;
-
-            let velocidadActual = velocidad;
-            if (char === ' ' || char === '.') velocidadActual = velocidad * 1.5;
-            else if (index % 5 === 0) velocidadActual = velocidad * 0.8;
-
-            setTimeout(escribirLetra, velocidadActual);
-        } else {
-            escrituraEl.classList.remove('animando');
-            animacionEnCurso = false;
-            if (callback) callback();
-        }
-    }
-    escribirLetra();
-}
-
-function mostrarResultadoConEstilos() {
-    if (estaEditando || procesandoIA) return;
-
-    animacionEnCurso = true;
-    escrituraEl.innerHTML = '';
-    escrituraEl.style.color = '#c0d0e0';
-    escrituraEl.style.display = 'flex';
-    escrituraEl.style.flexDirection = 'column';
-    escrituraEl.style.gap = '6px';
-    escrituraEl.style.padding = '4px 0';
-
-    const items = [
-        {
-            icono: '🍽️',
-            texto: 'Almuerzo: $25.000',
-            color: 'rgba(255, 50, 50, 0.15)',
-            borderColor: 'rgba(255, 50, 50, 0.3)'
-        },
-        {
-            icono: '🚗',
-            texto: 'Uber: $12.000',
-            color: 'rgba(50, 150, 255, 0.15)',
-            borderColor: 'rgba(50, 150, 255, 0.3)'
-        }
-    ];
-
-    let itemIndex = 0;
-
-    function agregarItemConEfecto() {
-        if (itemIndex >= items.length || estaEditando || procesandoIA) {
-            animacionEnCurso = false;
-            setTimeout(function() {
-                if (!estaEditando && !animacionEnCurso && !procesandoIA) {
-                    escrituraEl.innerHTML = '';
-                    escrituraEl.style.display = 'block';
-                    escrituraEl.style.padding = '0';
-                    escrituraEl.style.gap = '0';
-                    cicloAnimacion();
-                }
-            }, 3000);
-            return;
-        }
-
-        const item = items[itemIndex];
-        const itemDiv = document.createElement('div');
-        itemDiv.style.cssText = `
-            display: flex; align-items: center; gap: 10px;
-            background: ${item.color};
-            border: 1px solid ${item.borderColor};
-            border-radius: 8px; padding: 6px 12px; margin: 2px 0;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-            opacity: 0; transform: translateX(-10px);
-            transition: all 0.3s ease;
+    if (!Array.isArray(metas) || metas.length === 0) {
+        contenedor.innerHTML = `
+            <div class="metas-vacio">
+                <div class="metas-vacio-icono">🎯</div>
+                <p class="metas-vacio-titulo">Aún no has creado una meta</p>
+                <p class="metas-vacio-sub">Empieza a ahorrar y crea tu primera meta</p>
+            </div>
         `;
-
-        const iconoSpan = document.createElement('span');
-        iconoSpan.textContent = item.icono;
-        iconoSpan.style.cssText = 'font-size: 18px; margin-right: 4px;';
-
-        const textoSpan = document.createElement('span');
-        textoSpan.style.cssText = 'color: white; font-size: 13px; font-weight: 500;';
-
-        const partes = item.texto.split(': ');
-        textoSpan.textContent = partes[0] + ': ';
-        const precio = document.createElement('span');
-        precio.textContent = partes[1];
-        precio.style.cssText = 'color: #00FFD4; font-weight: 700; font-size: 13px;';
-        textoSpan.appendChild(precio);
-
-        itemDiv.appendChild(iconoSpan);
-        itemDiv.appendChild(textoSpan);
-        escrituraEl.appendChild(itemDiv);
-
-        setTimeout(() => {
-            itemDiv.style.opacity = '1';
-            itemDiv.style.transform = 'translateX(0)';
-        }, 50);
-
-        itemIndex++;
-        setTimeout(agregarItemConEfecto, 500);
+        return;
     }
-    agregarItemConEfecto();
-}
 
-function cicloAnimacion() {
-    if (estaEditando || animacionEnCurso || procesandoIA) return;
+    metas = metas.slice(0, 2);
+    contenedor.innerHTML = '';
 
-    escrituraEl.style.display = 'block';
-    escrituraEl.style.padding = '0';
-    escrituraEl.style.gap = '0';
+    metas.forEach(meta => {
+        const actual = Number(meta.actual) || 0;
+        const objetivo = Number(meta.meta) || 1;
+        const pct = Math.min(Math.round((actual / objetivo) * 100), 100);
 
-    escribirConEfecto(textosAnimacion[0], 60, function() {
-        setTimeout(function() {
-            if (estaEditando || procesandoIA) return;
-
-            escrituraEl.innerHTML = '';
-            setTimeout(function() {
-                if (estaEditando || procesandoIA) return;
-
-                escrituraEl.textContent = 'Procesando...';
-                escrituraEl.classList.add('procesando');
-                escrituraEl.style.color = '#00FFD4';
-                escrituraEl.style.fontWeight = '600';
-
-                setTimeout(function() {
-                    if (estaEditando || procesandoIA) return;
-
-                    escrituraEl.classList.remove('procesando');
-                    escrituraEl.textContent = '';
-                    escrituraEl.style.color = '#c0d0e0';
-                    escrituraEl.style.fontWeight = '500';
-
-                    mostrarResultadoConEstilos();
-                }, 1500);
-            }, 300);
-        }, 1000);
+        const card = document.createElement('div');
+        card.className = 'meta-card';
+        card.innerHTML = `
+            <div class="meta-icono">${meta.icono || '🎯'}</div>
+            <div class="meta-info">
+                <div class="meta-nombre">${meta.nombre || 'Meta'}</div>
+                <div class="meta-progreso-texto">${formatoCOP(actual)} de ${formatoCOP(objetivo)}</div>
+                <div class="meta-barra">
+                    <div class="meta-barra-fill" style="width:${pct}%"></div>
+                </div>
+            </div>
+            <div class="meta-porcentaje">${pct}%</div>
+        `;
+        contenedor.appendChild(card);
     });
 }
 
-function iniciarAnimacion() {
-    if (animacionInterval) {
-        clearInterval(animacionInterval);
-        animacionInterval = null;
-    }
-    ocultarBotones();
+// ============================================================
+// 9. RENDERIZAR MOVIMIENTOS
+// ============================================================
+function renderizarMovimientos() {
+    const contenedor = document.getElementById('movimientosLista');
+    const vacio = document.getElementById('movimientosVacio');
+    if (!contenedor) return;
 
-    if (!estaEditando && !procesandoIA && escrituraEl &&
-        (!escrituraEl.dataset.textoPersonalizado || escrituraEl.dataset.textoPersonalizado === 'false')) {
-        escrituraEl.innerHTML = '';
-        escrituraEl.style.color = '#c0d0e0';
-        escrituraEl.style.fontWeight = '500';
-        escrituraEl.style.display = 'block';
-        escrituraEl.style.padding = '0';
-        escrituraEl.style.gap = '0';
+    const movs = leerMovimientos();
 
-        setTimeout(function() {
-            if (!estaEditando && !procesandoIA) {
-                cicloAnimacion();
-            }
-        }, 500);
-    }
-}
-
-function detenerAnimacion() {
-    animacionEnCurso = false;
-    if (animacionInterval) {
-        clearInterval(animacionInterval);
-        animacionInterval = null;
-    }
-}
-
-function entrarEnEdicion() {
-    if (procesandoIA) return;
-
-    detenerAnimacion();
-    animacionEnCurso = false;
-    estaEditando = true;
-
-    textoOriginal = escrituraEl.textContent;
-
-    escrituraEl.innerHTML = '';
-    escrituraEl.style.color = 'white';
-    escrituraEl.style.display = 'block';
-    escrituraEl.style.padding = '8px';
-    escrituraEl.style.gap = '0';
-    escrituraEl.style.fontWeight = '500';
-    escrituraEl.style.opacity = '1';
-
-    escrituraEl.contentEditable = true;
-    escrituraEl.focus();
-
-    const selection = window.getSelection();
-    if (selection) selection.removeAllRanges();
-
-    const range = document.createRange();
-    range.setStart(escrituraEl.firstChild || escrituraEl, 0);
-    range.collapse(true);
-    if (selection) {
-        selection.removeAllRanges();
-        selection.addRange(range);
+    if (movs.length === 0) {
+        contenedor.innerHTML = '';
+        if (vacio) vacio.style.display = 'block';
+        return;
     }
 
-    escrituraEl.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-    escrituraEl.style.border = '1px solid #00FFD4';
-    escrituraEl.style.borderRadius = '4px';
-    escrituraEl.style.outline = 'none';
-    escrituraEl.style.color = 'white';
+    if (vacio) vacio.style.display = 'none';
 
-    escrituraEl.dataset.textoPersonalizado = 'true';
-    ocultarBotones();
-}
-
-function salirDeEdicion(guardar = true) {
-    if (!estaEditando) return;
-
-    estaEditando = false;
-    animacionEnCurso = false;
-
-    escrituraEl.contentEditable = false;
-
-    escrituraEl.style.backgroundColor = 'transparent';
-    escrituraEl.style.border = 'none';
-    escrituraEl.style.borderRadius = '0';
-    escrituraEl.style.padding = '0';
-    escrituraEl.style.outline = 'none';
-    escrituraEl.style.color = '#c0d0e0';
-    escrituraEl.style.display = 'block';
-    escrituraEl.style.gap = '0';
-    escrituraEl.style.fontWeight = '500';
-    escrituraEl.innerHTML = escrituraEl.textContent.replace(/\n/g, '<br>');
-
-    if (!escrituraEl.textContent || escrituraEl.textContent.trim() === '') {
-        escrituraEl.dataset.textoPersonalizado = 'false';
-        escrituraEl.innerHTML = '';
-        escrituraEl.style.color = '#c0d0e0';
-        ocultarBotones();
-
-        setTimeout(function() {
-            if (!estaEditando && !procesandoIA) {
-                iniciarAnimacion();
-            }
-        }, 300);
-    } else {
-        escrituraEl.dataset.textoPersonalizado = 'true';
-        escrituraEl.style.color = '#c0d0e0';
-        detenerAnimacion();
-        if (btnEnviar) btnEnviar.style.display = 'block';
-    }
-
-    const selection = window.getSelection();
-    if (selection) selection.removeAllRanges();
-}
-
-// ============================================
-// 11. EVENTOS DE ESCRITURA
-// ============================================
-if (escrituraEl) {
-    escrituraEl.addEventListener('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        if (!estaEditando && !procesandoIA) entrarEnEdicion();
+    const ordenados = [...movs].sort((a, b) => {
+        const fa = new Date(a.fecha || 0).getTime();
+        const fb = new Date(b.fecha || 0).getTime();
+        return fb - fa;
     });
 
-    escrituraEl.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            if (!e.shiftKey) {
-                e.preventDefault();
-                salirDeEdicion(true);
-            }
-        }
-        if (e.key === 'Escape') {
+    contenedor.innerHTML = '';
+
+    ordenados.forEach(mov => {
+        const esIngreso = mov.tipo === 'ingreso';
+        const fecha = new Date(mov.fecha || Date.now());
+        const fechaStr = formatearFecha(fecha);
+
+        const card = document.createElement('div');
+        card.className = 'mov-card';
+        card.innerHTML = `
+            <div class="mov-icono ${esIngreso ? 'ingreso' : 'gasto'}">
+                ${mov.icono || (esIngreso ? '💰' : '💸')}
+            </div>
+            <div class="mov-info">
+                <div class="mov-nombre">${mov.nombre || 'Movimiento'}</div>
+                <div class="mov-fecha">${fechaStr}</div>
+            </div>
+            <div class="mov-precio ${esIngreso ? 'ingreso' : 'gasto'}">
+                ${esIngreso ? '+' : '-'}${formatoCOP(mov.precio)}
+            </div>
+        `;
+        contenedor.appendChild(card);
+    });
+}
+
+function formatearFecha(fecha) {
+    const ahora = new Date();
+    const diffMs = ahora - fecha;
+    const diffMin = Math.floor(diffMs / 60000);
+    const diffHrs = Math.floor(diffMs / 3600000);
+    const diffDias = Math.floor(diffMs / 86400000);
+
+    if (diffMin < 1) return 'Ahora mismo';
+    if (diffMin < 60) return `Hace ${diffMin} min`;
+    if (diffHrs < 24) return `Hace ${diffHrs} h`;
+    if (diffDias < 7) return `Hace ${diffDias} d`;
+
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    return `${dia}/${mes}/${fecha.getFullYear()}`;
+}
+
+// ============================================================
+// 10. BOTÓN "EN TEXTO"
+// ============================================================
+function configurarBotonTexto() {
+    const btn = document.getElementById('btnTexto');
+    if (btn) {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
-            if (textoOriginal && textoOriginal.trim() !== '' && !esTextoDeAnimacion(textoOriginal)) {
-                escrituraEl.innerHTML = textoOriginal;
-                escrituraEl.dataset.textoPersonalizado = 'true';
-                escrituraEl.style.color = '#c0d0e0';
-                if (btnEnviar) btnEnviar.style.display = 'block';
-            } else {
-                escrituraEl.dataset.textoPersonalizado = 'false';
-                escrituraEl.innerHTML = '';
-                escrituraEl.style.color = '#c0d0e0';
-                ocultarBotones();
-                setTimeout(function() {
-                    if (!estaEditando && !procesandoIA) iniciarAnimacion();
-                }, 300);
-            }
-            estaEditando = false;
-            animacionEnCurso = false;
-            escrituraEl.contentEditable = false;
-            escrituraEl.style.backgroundColor = 'transparent';
-            escrituraEl.style.border = 'none';
-            escrituraEl.style.borderRadius = '0';
-            escrituraEl.style.padding = '0';
-            escrituraEl.style.outline = 'none';
-            escrituraEl.style.color = '#c0d0e0';
+            window.location.href = 'finix-entrada.html';
+        });
+    }
+}
 
-            const selection = window.getSelection();
-            if (selection) selection.removeAllRanges();
+// ============================================================
+// 11. SWITCH DE TEMA CON DRAG (SVG sol/luna inline)
+// ============================================================
+function inicializarSwitchTema() {
+    const track = document.getElementById('switchTrack');
+    const thumb = document.getElementById('switchThumb');
+    const thumbIcono = document.getElementById('thumbIcono');
+
+    if (!track || !thumb || !thumbIcono) return;
+
+    const esModoOscuro = document.body.classList.contains('dark-mode');
+
+    const MIN_LEFT = 2;
+    const MAX_LEFT = 32;
+
+    const SVG_SOL = `
+        <circle cx="12" cy="12" r="4"/>
+        <line x1="12" y1="2" x2="12" y2="4"/>
+        <line x1="12" y1="20" x2="12" y2="22"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="2" y1="12" x2="4" y2="12"/>
+        <line x1="20" y1="12" x2="22" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    `;
+
+    const SVG_LUNA = `
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    `;
+
+    function aplicarEstadoInicial() {
+        if (esModoOscuro) {
+            document.body.classList.add('dark-mode');
+            thumbIcono.innerHTML = SVG_LUNA;
+            thumb.style.transition = 'none';
+            thumb.style.left = MAX_LEFT + 'px';
+            void thumb.offsetWidth;
+            thumb.style.transition = '';
+        } else {
+            document.body.classList.remove('dark-mode');
+            thumbIcono.innerHTML = SVG_SOL;
+            thumb.style.transition = 'none';
+            thumb.style.left = MIN_LEFT + 'px';
+            void thumb.offsetWidth;
+            thumb.style.transition = '';
         }
+    }
+
+    aplicarEstadoInicial();
+
+    let arrastrando = false;
+    let startX = 0;
+    let thumbStartLeft = 0;
+    const movimientoMinimo = 5;
+
+    function cambiarTema(nuevoModoOscuro) {
+        const temaActualOscuro = document.body.classList.contains('dark-mode');
+        if (nuevoModoOscuro === temaActualOscuro) return;
+
+        localStorage.setItem('finix_tema', nuevoModoOscuro ? 'oscuro' : 'claro');
+
+        if (nuevoModoOscuro) {
+            document.body.classList.add('dark-mode');
+            thumbIcono.innerHTML = SVG_LUNA;
+        } else {
+            document.body.classList.remove('dark-mode');
+            thumbIcono.innerHTML = SVG_SOL;
+        }
+    }
+
+    track.addEventListener('click', () => {
+        if (arrastrando) return;
+        const estaOscuro = document.body.classList.contains('dark-mode');
+        cambiarTema(!estaOscuro);
     });
 
-    escrituraEl.addEventListener('input', function() {
-        if (estaEditando) actualizarBotonEnviar();
-    });
+    thumb.addEventListener('mousedown', iniciarDrag);
+    thumb.addEventListener('touchstart', iniciarDrag, { passive: true });
 
-    escrituraEl.addEventListener('paste', function() {
-        setTimeout(function() {
-            if (estaEditando) actualizarBotonEnviar();
-        }, 10);
-    });
+    function iniciarDrag(e) {
+        arrastrando = false;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        startX = clientX;
+        thumbStartLeft = parseInt(thumb.style.left) || MIN_LEFT;
+        track.classList.add('dragging');
 
-    escrituraEl.addEventListener('blur', function() {
-        if (estaEditando) {
-            setTimeout(function() {
-                if (estaEditando) salirDeEdicion(true);
-            }, 150);
+        document.addEventListener('mousemove', moverDrag);
+        document.addEventListener('touchmove', moverDrag, { passive: false });
+        document.addEventListener('mouseup', terminarDrag);
+        document.addEventListener('touchend', terminarDrag);
+    }
+
+    function moverDrag(e) {
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const delta = clientX - startX;
+
+        if (Math.abs(delta) > movimientoMinimo) {
+            arrastrando = true;
+        }
+
+        if (!arrastrando) return;
+
+        let nuevoLeft = thumbStartLeft + delta;
+        nuevoLeft = Math.max(MIN_LEFT, Math.min(MAX_LEFT, nuevoLeft));
+        thumb.style.left = nuevoLeft + 'px';
+    }
+
+    function terminarDrag() {
+        document.removeEventListener('mousemove', moverDrag);
+        document.removeEventListener('touchmove', moverDrag);
+        document.removeEventListener('mouseup', terminarDrag);
+        document.removeEventListener('touchend', terminarDrag);
+        track.classList.remove('dragging');
+
+        if (!arrastrando) return;
+
+        const leftActual = parseInt(thumb.style.left) || MIN_LEFT;
+        const centro = (MIN_LEFT + MAX_LEFT) / 2;
+        const debeIrOscuro = leftActual > centro;
+
+        thumb.style.left = (debeIrOscuro ? MAX_LEFT : MIN_LEFT) + 'px';
+
+        setTimeout(() => {
+            cambiarTema(debeIrOscuro);
+        }, 180);
+
+        arrastrando = false;
+    }
+}
+
+// ============================================================
+// 12. MARCAR NAV ACTIVA
+// ============================================================
+function marcarActivo() {
+    const paginaActual = window.location.pathname.split('/').pop() || 'finix.html';
+    const enlaces = document.querySelectorAll('.bottom-nav a');
+    enlaces.forEach((enlace) => {
+        const dataPage = enlace.getAttribute('data-page');
+        if (dataPage === paginaActual) {
+            enlace.classList.add('active');
+        } else {
+            enlace.classList.remove('active');
         }
     });
 }
 
-document.addEventListener('click', function(e) {
-    if (escrituraEl && estaEditando) {
-        if (!escrituraEl.contains(e.target) &&
-            (!btnEnviar || !btnEnviar.contains(e.target)) &&
-            (!btnConfirmar || !btnConfirmar.contains(e.target))) {
-            salirDeEdicion(true);
-        }
+// ============================================================
+// 13. INICIALIZACIÓN
+// ============================================================
+function init() {
+    // Aplicar tema guardado antes de pintar
+    const temaGuardado = localStorage.getItem('finix_tema');
+    if (temaGuardado === 'oscuro') {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
     }
+
+    cargarNombreUsuario();
+    actualizarSaldo();
+    actualizarResumen();
+    actualizarGrafica();
+    renderizarMetas();
+    renderizarMovimientos();
+    configurarBotonTexto();
+    inicializarSwitchTema();
+    marcarActivo();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+// ============================================================
+// 14. ACTUALIZAR AL VOLVER A LA PESTAÑA
+// ============================================================
+window.addEventListener('focus', () => {
+    actualizarSaldo();
+    actualizarResumen();
+    actualizarGrafica();
+    renderizarMetas();
+    renderizarMovimientos();
 });
 
-// ============================================
-// 12. INICIO
-// ============================================
-setTimeout(function() {
-    iniciarAnimacion();
-}, 500);
-
-// ============================================
-// 13. ANÁLISIS CON IA (vía Cloudflare Worker)
-// ============================================
-
-// URL real del Worker desplegado en Cloudflare
-const WORKER_URL = 'https://finix-ai-proxy.nojavid-finix.workers.dev';
-
-async function analizarConIA(texto) {
-    if (!texto || !texto.trim()) return [];
-
-    try {
-        const res = await fetch(WORKER_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ texto: texto.trim() }),
-        });
-
-        if (!res.ok) {
-            console.error('Worker respondió con status', res.status);
-            return fallbackParser(texto);
-        }
-
-        const data = await res.json();
-
-        if (!Array.isArray(data) || data.length === 0) {
-            console.warn('IA devolvió array vacío o inválido, usando fallback');
-            return fallbackParser(texto);
-        }
-
-        return data.map(m => ({
-            tipo: m.tipo === 'ingreso' ? 'ingreso' : 'gasto',
-            nombre: String(m.nombre || 'Movimiento'),
-            precio: Math.round(Number(m.precio) || 0),
-            icono: m.icono || '📌',
-        }));
-    } catch (err) {
-        console.error('Error de red llamando al Worker:', err);
-        return fallbackParser(texto);
-    }
-}
-
-function fallbackParser(texto) {
-    const partes = texto
-        .split(/[+,\n;]+/)
-        .map(s => s.trim())
-        .filter(Boolean);
-
-    const iconosPorCategoria = [
-        { keys: ['comida', 'almuerzo', 'cena', 'desayuno', 'restaurante', 'café'], icono: '🍔' },
-        { keys: ['gasolina', 'uber', 'taxi', 'bus', 'transporte', 'pasaje', 'moto'], icono: '⛽' },
-        { keys: ['ropa', 'zapatos', 'camisa', 'pantalón', 'tenis'], icono: '👟' },
-        { keys: ['salario', 'sueldo', 'pago', 'nómina', 'recibí', 'me pagaron'], icono: '💰' },
-        { keys: ['mercado', 'supermercado', 'tienda', 'víveres'], icono: '🛒' },
-        { keys: ['arriendo', 'renta', 'alquiler'], icono: '🏠' },
-        { keys: ['luz', 'agua', 'gas', 'internet', 'teléfono', 'servicios'], icono: '💡' },
-        { keys: ['salud', 'médico', 'farmacia', 'medicinas'], icono: '💊' },
-        { keys: ['cine', 'juego', 'netflix', 'spotify', 'entretenimiento'], icono: '🎮' },
-    ];
-
-    const palabrasIngreso = ['me pagaron', 'recibí', 'sueldo', 'salario', 'ingreso', 'me consignaron', 'cobré', 'venta'];
-
-    const resultado = [];
-
-    for (const parte of partes) {
-        const match = parte.match(/([\d.,]+)\s*(k|mil|m|millones?)?/i);
-        if (!match) continue;
-
-        let numStr = match[1].replace(/\./g, '').replace(/,/g, '.');
-        let valor = parseFloat(numStr);
-        if (isNaN(valor)) continue;
-
-        const unidad = (match[2] || '').toLowerCase();
-        if (unidad === 'k' || unidad === 'mil') valor *= 1000;
-        else if (unidad === 'm' || unidad.startsWith('millon')) valor *= 1000000;
-
-        const nombreRaw = parte.slice(0, match.index).replace(/[-:]+$/, '').trim();
-        const nombre = nombreRaw
-            ? nombreRaw.charAt(0).toUpperCase() + nombreRaw.slice(1)
-            : 'Movimiento';
-
-        let icono = '📌';
-        const lower = nombre.toLowerCase();
-        for (const cat of iconosPorCategoria) {
-            if (cat.keys.some(k => lower.includes(k))) { icono = cat.icono; break; }
-        }
-
-        const textoLower = texto.toLowerCase();
-        const tipo = palabrasIngreso.some(p => textoLower.includes(p)) ? 'ingreso' : 'gasto';
-
-        resultado.push({
-            tipo,
-            nombre,
-            precio: Math.round(valor),
-            icono,
-        });
-    }
-
-    return resultado;
-}
-
-// ============================================
-// 14. MARCAR ÍCONO ACTIVO EN NAVEGACIÓN INFERIOR
-// ============================================
-function marcarNavegacionActiva() {
-    // Obtener el nombre del archivo actual (ej: "finix.html")
-    const ruta = window.location.pathname.split('/').pop() || 'finix.html';
-    const paginaActual = ruta === '' ? 'finix.html' : ruta;
-
-    const enlaces = document.querySelectorAll('.bottom-nav a');
-
-    enlaces.forEach(enlace => {
-        // Quitar cualquier clase activa previa
-        enlace.classList.remove('active');
-
-        // Prioridad 1: comparar por data-page
-        const dataPage = enlace.getAttribute('data-page');
-        if (dataPage && dataPage === paginaActual) {
-            enlace.classList.add('active');
-            return;
-        }
-
-        // Prioridad 2: comparar por href (por si no hay data-page)
-        const href = enlace.getAttribute('href');
-        if (href && href.split('/').pop() === paginaActual) {
-            enlace.classList.add('active');
-        }
-    });
-
-    console.log('🎯 Página actual:', paginaActual);
-}
-
-// Ejecutar cuando el DOM esté listo
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', marcarNavegacionActiva);
-} else {
-    marcarNavegacionActiva();
-}
-
-// ============================================
-// 15. IR A LOGIN DESDE EL ÍCONO DE USUARIO
-// ============================================
-const btnUsuario = document.getElementById('btnUsuario');
-if (btnUsuario) {
-    btnUsuario.addEventListener('click', function(e) {
-        e.preventDefault();          // evita el salto inmediato
-        cerrarMenu();                // cierra el menú lateral con animación
-
-        setTimeout(() => {
-            window.location.href = 'loguin.html';   // ajusta el nombre/ruta si es necesario
-        }, 350);                     // espera a que termine la animación de cierre
-    });
-}
-
-// ============================================
-// LOGS FINALES
-// ============================================
-console.log('✅ FinixJS cargado correctamente - IA integrada (gemini-3.1-flash-lite)');
-console.log('✅ Worker URL:', WORKER_URL);
+console.log('✅ finixjs.js cargado correctamente');
