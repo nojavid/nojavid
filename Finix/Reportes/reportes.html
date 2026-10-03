@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reportes - Finix</title>
+  <link rel="stylesheet" href="reportes.css">
+</head>
+<body>
+
+  <!-- ============================================
+       HEADER
+       ============================================ -->
+  <header class="header">
+    <div class="header-inner">
+
+      <h1 class="saludo">Reportes</h1>
+      <h2 class="subtitulo">Tus finanzas</h2>
+
+      <div class="interruptor-tema" id="interruptorTema">
+        <div class="switch-track" id="switchTrack">
+          <img src="../iconos/sol.png" alt="sol" class="switch-icon switch-icon-sol">
+          <img src="../iconos/luna.png" alt="luna" class="switch-icon switch-icon-luna">
+          <div class="switch-thumb" id="switchThumb">
+            <img src="../iconos/sol.png" alt="" id="thumbIcono">
+          </div>
+        </div>
+      </div>
+
+      <div class="fecha-contenedor" id="btnFecha">
+        <img src="../iconos/calendario1.4.png" alt="calendario" class="icono-calendario">
+        <p class="fecha">
+          <span id="fechaActual">Todos</span>
+        </p>
+        <span class="flecha">^</span>
+
+        <div class="meses-dropdown" id="mesesDropdown"></div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ============================================
+       RESUMEN SUPERIOR (3 tarjetas)
+       ============================================ -->
+  <section class="resumen-grid">
+    <div class="resumen-card card-ingreso">
+      <div class="resumen-top">
+        <div class="resumen-circulo circulo-verde">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#244240" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </div>
+        <span class="resumen-titulo">Ingresos</span>
+      </div>
+      <div class="resumen-valor" id="totalIngresos">$0</div>
+      <div class="resumen-moneda">Cop</div>
+    </div>
+
+    <div class="resumen-card card-gasto">
+      <div class="resumen-top">
+        <div class="resumen-circulo circulo-naranja">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#BA6F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <polyline points="19 12 12 19 5 12"/>
+          </svg>
+        </div>
+        <span class="resumen-titulo">Gastos</span>
+      </div>
+      <div class="resumen-valor" id="totalGastos">$0</div>
+      <div class="resumen-moneda">Cop</div>
+    </div>
+
+    <div class="resumen-card card-balance">
+      <div class="resumen-top">
+        <div class="resumen-circulo circulo-azul">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#025FD8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <span class="resumen-titulo">Balance</span>
+      </div>
+      <div class="resumen-valor" id="totalBalance">$0</div>
+      <div class="resumen-moneda">Cop</div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       GRÁFICA DE BARRAS (por mes)
+       ============================================ -->
+  <section class="seccion">
+    <h2 class="seccion-titulo">Últimos 6 meses</h2>
+    <p class="seccion-descripcion">Comparativa ingresos vs gastos</p>
+
+    <div class="grafica-barras" id="graficaBarras"></div>
+
+    <div class="leyenda">
+      <div class="leyenda-item">
+        <span class="leyenda-color leyenda-ingreso"></span>
+        <span class="leyenda-texto">Ingresos</span>
+      </div>
+      <div class="leyenda-item">
+        <span class="leyenda-color leyenda-gasto"></span>
+        <span class="leyenda-texto">Gastos</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TOP CATEGORÍAS
+       ============================================ -->
+  <section class="seccion">
+    <h2 class="seccion-titulo">Categorías más frecuentes</h2>
+    <p class="seccion-descripcion">En qué se va tu dinero</p>
+
+    <div class="categorias-lista" id="categoriasLista"></div>
+  </section>
+
+  <!-- ============================================
+       DONA / PORCENTAJE GASTOS
+       ============================================ -->
+  <section class="seccion">
+    <h2 class="seccion-titulo">Distribución de gastos</h2>
+    <p class="seccion-descripcion">Por categoría principal</p>
+
+    <div class="dona-wrap">
+      <svg class="dona-svg" viewBox="0 0 100 100" id="donaSvg">
+        <circle class="dona-fondo" cx="50" cy="50" r="38"/>
+        <circle class="dona-progreso" cx="50" cy="50" r="38" id="donaProgreso"/>
+        <text class="dona-texto" x="50" y="47" text-anchor="middle" id="donaPorcentaje">0%</text>
+        <text class="dona-subtexto" x="50" y="60" text-anchor="middle">del total</text>
+      </svg>
+
+      <div class="dona-leyenda" id="donaLeyenda"></div>
+    </div>
+  </section>
+
+  <!-- Estado vacío -->
+  <div class="reportes-vacio" id="reportesVacio">
+    <div class="reportes-vacio-icono">📊</div>
+    <p class="reportes-vacio-titulo">Aún no hay datos para mostrar</p>
+    <p class="reportes-vacio-sub">Registra movimientos para ver tus reportes</p>
+  </div>
+
+  <!-- ============================================
+       NAVEGACIÓN INFERIOR
+       ============================================ -->
+  <div class="bottom-nav">
+    <a href="../finix.html" data-page="finix.html">
+      <img src="../iconos/casa.png" alt="casa">
+    </a>
+
+    <a href="../Billetera/billetera.html" data-page="billetera.html">
+      <img src="../iconos/billetera1.4.png" alt="billetera">
+    </a>
+
+    <a href="reportes.html" data-page="reportes.html" class="active">
+      <div class="nav-activo-rect">
+        <img src="../iconos/barra.png" alt="reportes" class="nav-activo-icono">
+        <span class="nav-activo-texto">Reportes</span>
+      </div>
+    </a>
+
+    <a href="../configuracion.html" data-page="configuracion.html">
+      <img src="../iconos/tuerca.png" alt="tuerca">
+    </a>
+  </div>
+
+  <!-- 👇 SDK de Supabase (¡IMPORTANTE!) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="reportes.js"></script>
+</body>
+</html>

@@ -9,11 +9,16 @@ if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     console.log('✅ Supabase inicializado en finixjs.js');
 } else {
-    console.warn('⚠️ Librería de Supabase no detectada. Verifica el script en finix.html');
+    console.warn('⚠️ Librería de Supabase no detectada.');
 }
 
 // ============================================================
-// 1. CARGAR NOMBRE DEL USUARIO (desde Supabase o localStorage)
+// CACHÉ DE MOVIMIENTOS
+// ============================================================
+let cacheMovimientos = [];
+
+// ============================================================
+// 1. CARGAR NOMBRE DEL USUARIO
 // ============================================================
 async function cargarNombreUsuario() {
     const el = document.getElementById('nombreUsuario');
@@ -23,21 +28,15 @@ async function cargarNombreUsuario() {
 
     if (supabaseClient) {
         try {
-            const { data: { user }, error } = await supabaseClient.auth.getUser();
-
-            if (error) {
-                console.warn('⚠️ Error al obtener usuario:', error.message);
-            }
-
+            const { data: { user } } = await supabaseClient.auth.getUser();
             if (user) {
                 nombreCompleto = user.user_metadata?.fullname
                               || user.user_metadata?.name
                               || user.user_metadata?.full_name
                               || '';
-                console.log('👤 Usuario desde Supabase:', user.email, '| Nombre completo:', nombreCompleto);
             }
         } catch (e) {
-            console.warn('⚠️ No se pudo obtener usuario desde Supabase:', e);
+            console.warn('⚠️ Error obteniendo usuario:', e);
         }
     }
 
@@ -45,28 +44,19 @@ async function cargarNombreUsuario() {
         try {
             const userLS = JSON.parse(localStorage.getItem('finix_user') || '{}');
             nombreCompleto = userLS.name || userLS.nombre || '';
-            if (nombreCompleto) {
-                console.log('👤 Usuario desde localStorage:', nombreCompleto);
-            }
-        } catch (e) {
-            nombreCompleto = '';
-        }
+        } catch (e) {}
     }
 
     if (!nombreCompleto) {
-        nombreCompleto = localStorage.getItem('finix_usuario')
-                      || localStorage.getItem('nombreUsuario')
-                      || '';
+        nombreCompleto = localStorage.getItem('finix_usuario') || '';
     }
 
     const primerNombre = nombreCompleto.trim().split(/\s+/)[0] || 'Usuario';
-
     el.textContent = primerNombre;
-    console.log('✅ Nombre mostrado:', primerNombre);
 }
 
 // ============================================================
-// 2. FORMATEAR PESOS COLOMBIANOS
+// 2. FORMATEAR PESOS
 // ============================================================
 function formatoCOP(valor) {
     const num = Math.round(Number(valor) || 0);
@@ -74,13 +64,149 @@ function formatoCOP(valor) {
 }
 
 // ============================================================
-// 3. LEER MOVIMIENTOS DE LOCALSTORAGE
+// 3. LEER MOVIMIENTOS (SOLO desde caché)
 // ============================================================
 function leerMovimientos() {
+    return cacheMovimientos;
+}
+
+// ============================================================
+// 3.1 CARGAR MOVIMIENTOS DESDE SUPABASE
+// ============================================================
+async function cargarMovimientosDesdeSupabase() {
+    if (!supabaseClient) {
+        try {
+            cacheMovimientos = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
+        } catch (e) {
+            cacheMovimientos = [];
+        }
+        console.log('📦 Movimientos desde localStorage:', cacheMovimientos.length);
+        return;
+    }
+
     try {
-        return JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        if (!user) {
+            console.warn('⚠️ No hay usuario logueado, usando localStorage');
+            try {
+                cacheMovimientos = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
+            } catch (e) {
+                cacheMovimientos = [];
+            }
+            return;
+        }
+
+        const { data, error } = await supabaseClient
+            .from('movimientos')
+            .select('*')
+            .order('fecha', { ascending: false });
+
+        if (error) {
+            console.error('❌ Error leyendo movimientos:', error.message);
+            return;
+        }
+
+        // 👇 Eliminar duplicados por id
+        const mapa = new Map();
+        (data || []).forEach(m => {
+            mapa.set(m.id, {
+                id: m.id,
+                nombre: m.nombre,
+                precio: Number(m.precio) || 0,
+                tipo: m.tipo,
+                icono: m.icono || '💸',
+                fecha: m.fecha
+            });
+        });
+
+        cacheMovimientos = Array.from(mapa.values());
+
+        console.log('✅ Movimientos cargados desde Supabase:', cacheMovimientos.length);
+        console.log('   → Ingresos:',
+            cacheMovimientos.filter(m => m.tipo === 'ingreso').length);
+        console.log('   → Gastos:',
+            cacheMovimientos.filter(m => m.tipo === 'gasto').length);
+
     } catch (e) {
-        return [];
+        console.error('❌ Excepción leyendo movimientos:', e);
+    }
+}
+
+// ============================================================
+// 3.2 GUARDAR MOVIMIENTOS EN SUPABASE
+// ============================================================
+async function guardarMovimientosEnSupabase(lista) {
+    if (!supabaseClient) {
+        const existentes = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
+        localStorage.setItem('finix_movimientos', JSON.stringify([...existentes, ...lista]));
+        return true;
+    }
+
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        if (!user) {
+            console.warn('⚠️ No hay usuario logueado, usando localStorage');
+            const existentes = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
+            localStorage.setItem('finix_movimientos', JSON.stringify([...existentes, ...lista]));
+            return true;
+        }
+
+        const filas = lista.map(m => ({
+            user_id: user.id,
+            nombre: m.nombre,
+            precio: Number(m.precio) || 0,
+            tipo: m.tipo,
+            icono: m.icono || '💸',
+            fecha: m.fecha || new Date().toISOString()
+        }));
+
+        const { error } = await supabaseClient
+            .from('movimientos')
+            .insert(filas);
+
+        if (error) {
+            console.error('❌ Error guardando movimientos:', error.message);
+            return false;
+        }
+
+        console.log('✅ Movimientos guardados en Supabase:', filas.length);
+        return true;
+
+    } catch (e) {
+        console.error('❌ Excepción guardando movimientos:', e);
+        return false;
+    }
+}
+
+// ============================================================
+// 3.3 ELIMINAR MOVIMIENTO
+// ============================================================
+async function eliminarMovimientoEnSupabase(id) {
+    if (!supabaseClient) {
+        let movs = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
+        movs = movs.filter(m => String(m.id) !== String(id));
+        localStorage.setItem('finix_movimientos', JSON.stringify(movs));
+        return true;
+    }
+
+    try {
+        const { error } = await supabaseClient
+            .from('movimientos')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            console.error('❌ Error eliminando:', error.message);
+            return false;
+        }
+
+        return true;
+
+    } catch (e) {
+        console.error('❌ Excepción eliminando:', e);
+        return false;
     }
 }
 
@@ -106,23 +232,34 @@ function calcularTotales() {
         if (m.tipo === 'ingreso') {
             totalIngresos += precio;
             if (esMesActual) ingresosMes += precio;
-        } else {
+        } else if (m.tipo === 'gasto') {
             totalGastos += precio;
             if (esMesActual) gastosMes += precio;
         }
     });
 
+    const saldo = totalIngresos - totalGastos;
+
+    console.log('💰 Totales:', {
+        totalIngresos,
+        totalGastos,
+        saldo,
+        ingresosMes,
+        gastosMes,
+        movimientosTotales: movs.length
+    });
+
     return {
         totalIngresos,
         totalGastos,
-        saldo: totalIngresos - totalGastos,
+        saldo,
         ingresosMes,
         gastosMes
     };
 }
 
 // ============================================================
-// 5. ACTUALIZAR SALDO PRINCIPAL
+// 5. SALDO
 // ============================================================
 function actualizarSaldo() {
     const { saldo } = calcularTotales();
@@ -131,7 +268,7 @@ function actualizarSaldo() {
 }
 
 // ============================================================
-// 6. ACTUALIZAR RESUMEN RÁPIDO
+// 6. RESUMEN
 // ============================================================
 function actualizarResumen() {
     const { ingresosMes, gastosMes } = calcularTotales();
@@ -157,7 +294,7 @@ function actualizarResumen() {
 }
 
 // ============================================================
-// 7. ACTUALIZAR GRÁFICA DE ONDAS
+// 7. GRÁFICA
 // ============================================================
 function actualizarGrafica() {
     const linea = document.getElementById('lineaGrafica');
@@ -166,17 +303,11 @@ function actualizarGrafica() {
     const movs = leerMovimientos();
 
     if (movs.length === 0) {
-        linea.setAttribute('d',
-            'M0,45 Q20,42 40,44 T80,43 T120,44 T160,42 L167,43'
-        );
+        linea.setAttribute('d', 'M0,45 Q20,42 40,44 T80,43 T120,44 T160,42 L167,43');
         return;
     }
 
-    const ordenados = [...movs].sort((a, b) => {
-        const fa = new Date(a.fecha || 0).getTime();
-        const fb = new Date(b.fecha || 0).getTime();
-        return fa - fb;
-    });
+    const ordenados = [...movs].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
     const puntos = [0];
     let acumulado = 0;
@@ -194,13 +325,8 @@ function actualizarGrafica() {
     const Y_ABAJO = 55;
     const alto = Y_ABAJO - Y_ARRIBA;
 
-    const ys = puntos.map(p => {
-        const norm = (p - min) / rango;
-        return Y_ABAJO - norm * alto;
-    });
-
-    const ancho = 167;
-    const pasoX = ancho / (ys.length - 1 || 1);
+    const ys = puntos.map(p => Y_ABAJO - ((p - min) / rango) * alto);
+    const pasoX = 167 / (ys.length - 1 || 1);
 
     let d = `M0,${ys[0].toFixed(2)}`;
     for (let i = 1; i < ys.length; i++) {
@@ -210,12 +336,11 @@ function actualizarGrafica() {
         const yMid = ((ys[i - 1] + ys[i]) / 2).toFixed(2);
         d += ` Q${xMid},${yMid} ${x},${y}`;
     }
-
     linea.setAttribute('d', d);
 }
 
 // ============================================================
-// 8. RENDERIZAR METAS DE AHORRO (desde Supabase)
+// 8. METAS DE AHORRO (desde Supabase)
 // ============================================================
 async function renderizarMetas() {
     const contenedor = document.getElementById('metasLista');
@@ -223,7 +348,6 @@ async function renderizarMetas() {
 
     let metas = [];
 
-    // 👇 1) Intentar leer desde Supabase (tabla registros, seccion = 'ahorro')
     if (supabaseClient) {
         try {
             const { data, error } = await supabaseClient
@@ -232,33 +356,26 @@ async function renderizarMetas() {
                 .eq('seccion', 'ahorro')
                 .order('fecha', { ascending: true });
 
-            if (error) {
-                console.warn('⚠️ Error al leer metas desde Supabase:', error.message);
-            } else if (Array.isArray(data)) {
+            if (!error && Array.isArray(data)) {
                 metas = data.map(r => ({
                     nombre: r.nombre || 'Meta',
                     icono: r.icono || '🎯',
                     actual: Number(r.montoPagado) || 0,
                     meta: Number(r.monto) || 0
                 }));
-                console.log('🎯 Metas desde Supabase:', metas.length);
             }
         } catch (e) {
-            console.warn('⚠️ Excepción leyendo metas desde Supabase:', e);
+            console.warn('⚠️ Error metas:', e);
         }
     }
 
-    // 👇 2) Fallback: si no hay nada en Supabase, intentar localStorage
     if (metas.length === 0) {
         try {
             const local = JSON.parse(localStorage.getItem('finix_metas') || '[]');
             if (Array.isArray(local)) metas = local;
-        } catch (e) {
-            metas = [];
-        }
+        } catch (e) {}
     }
 
-    // 👇 3) Estado vacío
     if (metas.length === 0) {
         contenedor.innerHTML = `
             <div class="metas-vacio">
@@ -270,7 +387,6 @@ async function renderizarMetas() {
         return;
     }
 
-    // 👇 4) Solo las 2 primeras
     metas = metas.slice(0, 2);
     contenedor.innerHTML = '';
 
@@ -297,7 +413,7 @@ async function renderizarMetas() {
 }
 
 // ============================================================
-// 9. RENDERIZAR MOVIMIENTOS (solo los 5 últimos)
+// 9. MOVIMIENTOS (solo 5 últimos)
 // ============================================================
 function renderizarMovimientos() {
     const contenedor = document.getElementById('movimientosLista');
@@ -314,18 +430,15 @@ function renderizarMovimientos() {
 
     if (vacio) vacio.style.display = 'none';
 
-    // 👇 Ordena del más reciente al más antiguo y toma solo los 5 primeros
     const ordenados = [...movs].sort((a, b) => {
-        const fa = new Date(a.fecha || 0).getTime();
-        const fb = new Date(b.fecha || 0).getTime();
-        return fb - fa;
+        return new Date(b.fecha) - new Date(a.fecha);
     }).slice(0, 5);
 
     contenedor.innerHTML = '';
 
     ordenados.forEach(mov => {
         const esIngreso = mov.tipo === 'ingreso';
-        const fecha = new Date(mov.fecha || Date.now());
+        const fecha = new Date(mov.fecha);
         const fechaStr = formatearFecha(fecha);
 
         const card = document.createElement('div');
@@ -368,7 +481,7 @@ function formatearFecha(fecha) {
 }
 
 // ============================================================
-// 9.1 LONG PRESS PARA ELIMINAR MOVIMIENTO
+// 9.1 LONG PRESS
 // ============================================================
 let longPressTimer = null;
 let movimientoAEliminarId = null;
@@ -388,7 +501,6 @@ function inicializarLongPress() {
             const punto = e.touches ? e.touches[0] : e;
             startX = punto.clientX;
             startY = punto.clientY;
-
             card.classList.add('presionado');
 
             longPressTimer = setTimeout(() => {
@@ -408,9 +520,7 @@ function inicializarLongPress() {
 
         const mover = (e) => {
             const punto = e.touches ? e.touches[0] : e;
-            const dx = Math.abs(punto.clientX - startX);
-            const dy = Math.abs(punto.clientY - startY);
-            if (dx > 8 || dy > 8) {
+            if (Math.abs(punto.clientX - startX) > 8 || Math.abs(punto.clientY - startY) > 8) {
                 movido = true;
                 cancelar();
             }
@@ -420,12 +530,10 @@ function inicializarLongPress() {
         card.addEventListener('mouseup', cancelar);
         card.addEventListener('mouseleave', cancelar);
         card.addEventListener('mousemove', mover);
-
         card.addEventListener('touchstart', iniciar, { passive: true });
         card.addEventListener('touchend', cancelar);
         card.addEventListener('touchcancel', cancelar);
         card.addEventListener('touchmove', mover, { passive: true });
-
         card.addEventListener('contextmenu', (e) => e.preventDefault());
     });
 }
@@ -456,22 +564,23 @@ function cerrarModalEliminar() {
     movimientoAEliminarId = null;
 }
 
-function confirmarEliminar() {
+async function confirmarEliminar() {
     if (!movimientoAEliminarId) return;
 
-    let movs = leerMovimientos();
-    movs = movs.filter(m => String(m.id) !== String(movimientoAEliminarId));
+    const ok = await eliminarMovimientoEnSupabase(movimientoAEliminarId);
 
-    localStorage.setItem('finix_movimientos', JSON.stringify(movs));
+    if (ok) {
+        cacheMovimientos = cacheMovimientos.filter(
+            m => String(m.id) !== String(movimientoAEliminarId)
+        );
 
-    actualizarSaldo();
-    actualizarResumen();
-    actualizarGrafica();
-    renderizarMovimientos();
+        actualizarSaldo();
+        actualizarResumen();
+        actualizarGrafica();
+        renderizarMovimientos();
+    }
 
     cerrarModalEliminar();
-
-    console.log('🗑️ Movimiento eliminado:', movimientoAEliminarId);
 }
 
 function inicializarModalEliminar() {
@@ -494,48 +603,30 @@ function inicializarModalEliminar() {
 }
 
 // ============================================================
-// 10. BOTÓN "EN TEXTO"
+// 10. BOTÓN TEXTO
 // ============================================================
 function configurarBotonTexto() {
     const btn = document.getElementById('btnTexto');
     if (btn) {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            // La pantalla de texto se abre con inicializarPantallaTexto()
-        });
+        btn.addEventListener('click', (e) => e.preventDefault());
     }
 }
 
 // ============================================================
-// 11. SWITCH DE TEMA CON DRAG
+// 11. SWITCH DE TEMA
 // ============================================================
 function inicializarSwitchTema() {
     const track = document.getElementById('switchTrack');
     const thumb = document.getElementById('switchThumb');
     const thumbIcono = document.getElementById('thumbIcono');
-
     if (!track || !thumb || !thumbIcono) return;
 
     const esModoOscuro = document.body.classList.contains('dark-mode');
-
     const MIN_LEFT = 2;
     const MAX_LEFT = 32;
 
-    const SVG_SOL = `
-        <circle cx="12" cy="12" r="4"/>
-        <line x1="12" y1="2" x2="12" y2="4"/>
-        <line x1="12" y1="20" x2="12" y2="22"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="2" y1="12" x2="4" y2="12"/>
-        <line x1="20" y1="12" x2="22" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-    `;
-
-    const SVG_LUNA = `
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    `;
+    const SVG_SOL = `<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+    const SVG_LUNA = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
 
     function aplicarEstadoInicial() {
         if (esModoOscuro) {
@@ -554,13 +645,11 @@ function inicializarSwitchTema() {
             thumb.style.transition = '';
         }
     }
-
     aplicarEstadoInicial();
 
     let arrastrando = false;
     let startX = 0;
     let thumbStartLeft = 0;
-    const movimientoMinimo = 5;
 
     function cambiarTema(nuevoModoOscuro) {
         const temaActualOscuro = document.body.classList.contains('dark-mode');
@@ -592,7 +681,6 @@ function inicializarSwitchTema() {
         startX = clientX;
         thumbStartLeft = parseInt(thumb.style.left) || MIN_LEFT;
         track.classList.add('dragging');
-
         document.addEventListener('mousemove', moverDrag);
         document.addEventListener('touchmove', moverDrag, { passive: false });
         document.addEventListener('mouseup', terminarDrag);
@@ -602,13 +690,8 @@ function inicializarSwitchTema() {
     function moverDrag(e) {
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const delta = clientX - startX;
-
-        if (Math.abs(delta) > movimientoMinimo) {
-            arrastrando = true;
-        }
-
+        if (Math.abs(delta) > 5) arrastrando = true;
         if (!arrastrando) return;
-
         let nuevoLeft = thumbStartLeft + delta;
         nuevoLeft = Math.max(MIN_LEFT, Math.min(MAX_LEFT, nuevoLeft));
         thumb.style.left = nuevoLeft + 'px';
@@ -628,33 +711,25 @@ function inicializarSwitchTema() {
         const debeIrOscuro = leftActual > centro;
 
         thumb.style.left = (debeIrOscuro ? MAX_LEFT : MIN_LEFT) + 'px';
-
-        setTimeout(() => {
-            cambiarTema(debeIrOscuro);
-        }, 180);
-
+        setTimeout(() => cambiarTema(debeIrOscuro), 180);
         arrastrando = false;
     }
 }
 
 // ============================================================
-// 12. MARCAR NAV ACTIVA
+// 12. NAV ACTIVA
 // ============================================================
 function marcarActivo() {
     const paginaActual = window.location.pathname.split('/').pop() || 'finix.html';
-    const enlaces = document.querySelectorAll('.bottom-nav a');
-    enlaces.forEach((enlace) => {
+    document.querySelectorAll('.bottom-nav a').forEach((enlace) => {
         const dataPage = enlace.getAttribute('data-page');
-        if (dataPage === paginaActual) {
-            enlace.classList.add('active');
-        } else {
-            enlace.classList.remove('active');
-        }
+        if (dataPage === paginaActual) enlace.classList.add('active');
+        else enlace.classList.remove('active');
     });
 }
 
 // ============================================================
-// 13. PANTALLA ENTRADA POR TEXTO
+// 13. PANTALLA TEXTO
 // ============================================================
 function inicializarPantallaTexto() {
     const overlay        = document.getElementById('pantallaTexto');
@@ -676,35 +751,24 @@ function inicializarPantallaTexto() {
     if (!overlay || !btnTexto) return;
 
     const EJEMPLOS = [
-        {
-            texto: 'almuerzo 18k + uber 15mil',
-            resultados: [
-                { icono: '🍽️', nombre: 'Almuerzo', valor: '$18.000', tipo: 'gasto' },
-                { icono: '🚗', nombre: 'Uber',     valor: '$15.000', tipo: 'gasto' }
-            ]
-        },
-        {
-            texto: 'ingreso de didi 25k',
-            resultados: [
-                { icono: '🚗', nombre: 'Didi', valor: '$25.000', tipo: 'ingreso' }
-            ]
-        },
-        {
-            texto: 'café 5mil + mercado 120.000',
-            resultados: [
-                { icono: '☕', nombre: 'Café',    valor: '$5.000',   tipo: 'gasto' },
-                { icono: '🛒', nombre: 'Mercado', valor: '$120.000', tipo: 'gasto' }
-            ]
-        }
+        { texto: 'almuerzo 18k + uber 15mil', resultados: [
+            { icono: '🍽️', nombre: 'Almuerzo', valor: '$18.000', tipo: 'gasto' },
+            { icono: '🚗', nombre: 'Uber', valor: '$15.000', tipo: 'gasto' }
+        ]},
+        { texto: 'ingreso de didi 25k', resultados: [
+            { icono: '🚗', nombre: 'Didi', valor: '$25.000', tipo: 'ingreso' }
+        ]},
+        { texto: 'café 5mil + mercado 120.000', resultados: [
+            { icono: '☕', nombre: 'Café', valor: '$5.000', tipo: 'gasto' },
+            { icono: '🛒', nombre: 'Mercado', valor: '$120.000', tipo: 'gasto' }
+        ]}
     ];
 
     let ejemplosIndex = 0;
-
     let typingTimeout = null;
     let inputVacioTimeout = null;
     let loopActivo = false;
     let escribiendoAhora = false;
-
     let movimientosPendientes = [];
 
     btnTexto.addEventListener('click', (e) => {
@@ -713,7 +777,6 @@ function inicializarPantallaTexto() {
         document.body.style.overflow = 'hidden';
         movimientosPendientes = [];
         ejemplosIndex = 0;
-
         loopActivo = true;
         setTimeout(() => iniciarCiclo(), 350);
     });
@@ -724,40 +787,22 @@ function inicializarPantallaTexto() {
         loopActivo = false;
         escribiendoAhora = false;
         movimientosPendientes = [];
-
-        if (typingTimeout) {
-            clearTimeout(typingTimeout);
-            typingTimeout = null;
-        }
-        if (inputVacioTimeout) {
-            clearTimeout(inputVacioTimeout);
-            inputVacioTimeout = null;
-        }
+        if (typingTimeout) { clearTimeout(typingTimeout); typingTimeout = null; }
+        if (inputVacioTimeout) { clearTimeout(inputVacioTimeout); inputVacioTimeout = null; }
     }
 
     btnCerrar.addEventListener('click', cerrarPantalla);
-
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) cerrarPantalla();
-    });
-
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) cerrarPantalla(); });
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && overlay.classList.contains('activo')) {
-            cerrarPantalla();
-        }
+        if (e.key === 'Escape' && overlay.classList.contains('activo')) cerrarPantalla();
     });
 
-    function iniciarCiclo() {
-        if (!loopActivo) return;
-        escribirTexto();
-    }
+    function iniciarCiclo() { if (loopActivo) escribirTexto(); }
 
     function escribirTexto() {
         if (!loopActivo) return;
         escribiendoAhora = true;
-
-        const ejemploActual = EJEMPLOS[ejemplosIndex];
-        const textoActual = ejemploActual.texto;
+        const textoActual = EJEMPLOS[ejemplosIndex].texto;
 
         typing.textContent = '';
         cursor.style.display = 'inline-block';
@@ -769,15 +814,12 @@ function inicializarPantallaTexto() {
         btnDoble.classList.remove('activo');
 
         let i = 0;
-        const velocidad = 55;
-
         function escribir() {
             if (!loopActivo) return;
-
             if (i < textoActual.length) {
                 typing.textContent += textoActual.charAt(i);
                 i++;
-                typingTimeout = setTimeout(escribir, velocidad);
+                typingTimeout = setTimeout(escribir, 55);
             } else {
                 typingTimeout = setTimeout(() => {
                     cursor.style.display = 'none';
@@ -785,16 +827,13 @@ function inicializarPantallaTexto() {
                 }, 600);
             }
         }
-
         escribir();
     }
 
     function mostrarProcesando() {
         if (!loopActivo) return;
-
         animacion.style.display = 'none';
         procesando.classList.add('activo');
-
         typingTimeout = setTimeout(() => {
             if (!loopActivo) return;
             procesando.classList.remove('activo');
@@ -804,14 +843,11 @@ function inicializarPantallaTexto() {
 
     function mostrarTarjetas() {
         if (!loopActivo) return;
-
-        const ejemploActual = EJEMPLOS[ejemplosIndex];
-        const resultadosActuales = ejemploActual.resultados;
-
+        const resultados = EJEMPLOS[ejemplosIndex].resultados;
         tarjetas.innerHTML = '';
         tarjetas.classList.add('activo');
 
-        resultadosActuales.forEach((item, index) => {
+        resultados.forEach((item, index) => {
             const esIngreso = item.tipo === 'ingreso';
             const card = document.createElement('div');
             card.className = 'pt-tarjeta ' + (esIngreso ? 'pt-tarjeta-ingreso' : 'pt-tarjeta-gasto');
@@ -831,9 +867,7 @@ function inicializarPantallaTexto() {
             tarjetas.classList.remove('activo');
             tarjetas.innerHTML = '';
             escribiendoAhora = false;
-
             ejemplosIndex = (ejemplosIndex + 1) % EJEMPLOS.length;
-
             iniciarCiclo();
         }, 1800);
     }
@@ -841,11 +875,7 @@ function inicializarPantallaTexto() {
     function detenerBucleYHabilitarInput() {
         loopActivo = false;
         escribiendoAhora = false;
-
-        if (typingTimeout) {
-            clearTimeout(typingTimeout);
-            typingTimeout = null;
-        }
+        if (typingTimeout) { clearTimeout(typingTimeout); typingTimeout = null; }
 
         typing.textContent = '';
         cursor.style.display = 'none';
@@ -864,10 +894,8 @@ function inicializarPantallaTexto() {
     if (rectangulo) {
         rectangulo.addEventListener('click', (e) => {
             if (e.target === input) return;
-
-            if (loopActivo) {
-                detenerBucleYHabilitarInput();
-            } else if (!input.classList.contains('activo') && !preview.classList.contains('activo')) {
+            if (loopActivo) detenerBucleYHabilitarInput();
+            else if (!input.classList.contains('activo') && !preview.classList.contains('activo')) {
                 input.classList.add('activo');
                 input.focus();
             }
@@ -875,14 +903,9 @@ function inicializarPantallaTexto() {
     }
 
     input.addEventListener('input', () => {
-        const texto = input.value.trim();
-        const tieneTexto = texto.length > 0;
-
-        if (tieneTexto) {
-            btnProcesar.classList.add('activo');
-        } else {
-            btnProcesar.classList.remove('activo');
-        }
+        const tieneTexto = input.value.trim().length > 0;
+        if (tieneTexto) btnProcesar.classList.add('activo');
+        else btnProcesar.classList.remove('activo');
 
         if (!tieneTexto) {
             if (inputVacioTimeout) clearTimeout(inputVacioTimeout);
@@ -892,10 +915,7 @@ function inicializarPantallaTexto() {
                 }
             }, 900);
         } else {
-            if (inputVacioTimeout) {
-                clearTimeout(inputVacioTimeout);
-                inputVacioTimeout = null;
-            }
+            if (inputVacioTimeout) { clearTimeout(inputVacioTimeout); inputVacioTimeout = null; }
         }
     });
 
@@ -906,14 +926,12 @@ function inicializarPantallaTexto() {
         btnDoble.classList.remove('activo');
         preview.classList.remove('activo');
         previewLista.innerHTML = '';
-
         tarjetas.classList.remove('activo');
         tarjetas.innerHTML = '';
         procesando.classList.remove('activo');
         animacion.style.display = 'flex';
         typing.textContent = '';
         cursor.style.display = 'inline-block';
-
         loopActivo = true;
         iniciarCiclo();
     }
@@ -921,8 +939,6 @@ function inicializarPantallaTexto() {
     btnProcesar.addEventListener('click', async () => {
         const texto = input.value.trim();
         if (!texto) return;
-
-        console.log('📝 Procesar texto con IA:', texto);
 
         input.classList.remove('activo');
         btnProcesar.classList.remove('activo');
@@ -939,7 +955,7 @@ function inicializarPantallaTexto() {
         }
 
         const nuevos = movimientos.map((m, idx) => ({
-            id: Date.now() + idx,
+            id: 'temp-' + Date.now() + '-' + idx,
             nombre: m.nombre,
             precio: m.valor,
             tipo: m.tipo,
@@ -948,15 +964,11 @@ function inicializarPantallaTexto() {
         }));
 
         movimientosPendientes = [...movimientosPendientes, ...nuevos];
-
-        console.log('📦 Pendientes acumulados:', movimientosPendientes.length);
-
         mostrarPreview();
     });
 
     function mostrarPreview() {
         previewLista.innerHTML = '';
-
         movimientosPendientes.forEach((m, index) => {
             const esIngreso = m.tipo === 'ingreso';
             const card = document.createElement('div');
@@ -971,10 +983,8 @@ function inicializarPantallaTexto() {
             `;
             previewLista.appendChild(card);
         });
-
         preview.classList.add('activo');
         btnDoble.classList.add('activo');
-
         input.value = '';
     }
 
@@ -986,23 +996,32 @@ function inicializarPantallaTexto() {
         input.focus();
     });
 
-    btnEnviar.addEventListener('click', () => {
+    btnEnviar.addEventListener('click', async () => {
         if (movimientosPendientes.length === 0) return;
 
-        const existentes = leerMovimientos();
-        localStorage.setItem(
-            'finix_movimientos',
-            JSON.stringify([...existentes, ...movimientosPendientes])
-        );
+        // 👇 Evitar doble click
+        btnEnviar.disabled = true;
+        btnEnviar.style.opacity = '0.5';
+
+        const ok = await guardarMovimientosEnSupabase(movimientosPendientes);
+
+        if (!ok) {
+            alert('No se pudieron guardar los movimientos. Intenta de nuevo.');
+            btnEnviar.disabled = false;
+            btnEnviar.style.opacity = '1';
+            return;
+        }
+
+        await cargarMovimientosDesdeSupabase();
 
         actualizarSaldo();
         actualizarResumen();
         actualizarGrafica();
         renderizarMovimientos();
 
-        console.log('✅ Movimientos guardados:', movimientosPendientes.length);
-
         movimientosPendientes = [];
+        btnEnviar.disabled = false;
+        btnEnviar.style.opacity = '1';
         cerrarPantalla();
     });
 
@@ -1021,22 +1040,14 @@ function inicializarPantallaTexto() {
                 }
             );
 
-            if (!response.ok) {
-                const err = await response.text();
-                throw new Error(`HTTP ${response.status}: ${err}`);
-            }
-
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
-
             if (!data.movimientos || !Array.isArray(data.movimientos)) {
-                throw new Error('Respuesta inválida del servidor');
+                throw new Error('Respuesta inválida');
             }
-
-            console.log('🤖 IA respondió:', data.movimientos.length, 'movimientos');
             return data.movimientos;
-
         } catch (err) {
-            console.error('❌ Error IA, usando parser local:', err);
+            console.error('❌ Error IA:', err);
             return parsearTextoLocal(texto);
         }
     }
@@ -1054,10 +1065,8 @@ function inicializarPantallaTexto() {
                 let numStr = match[1].replace(/\./g, '').replace(',', '.');
                 let num = parseFloat(numStr);
                 const unidad = (match[2] || '').toLowerCase();
-
                 if (unidad === 'k' || unidad === 'mil') num *= 1000;
                 else if (unidad.startsWith('millon')) num *= 1000000;
-
                 valor = Math.round(num);
                 nombre = parte.replace(match[0], '').trim() || 'Movimiento';
             }
@@ -1065,17 +1074,14 @@ function inicializarPantallaTexto() {
             if (!nombre || valor <= 0) return;
 
             const n = nombre.toLowerCase();
-            const esIngreso = /\b(ingreso|ingresó|recibí|recibi|me pagaron|consignaron|entró|entro|ganancia|sueldo|salario|venta|cobré|cobre)\b/.test(n);
+            const esIngreso = /\b(ingreso|recibí|recibi|me pagaron|consignaron|ganancia|sueldo|salario|venta|cobré|cobre)\b/.test(n);
 
             let icono = esIngreso ? '💰' : '💸';
             if (n.includes('almuerzo') || n.includes('comida') || n.includes('cena')) icono = '🍽️';
             else if (n.includes('uber') || n.includes('taxi') || n.includes('bus') || n.includes('didi')) icono = '🚗';
             else if (n.includes('café') || n.includes('cafe')) icono = '☕';
-            else if (n.includes('zapato') || n.includes('tenis')) icono = '👟';
-            else if (n.includes('ropa') || n.includes('camisa')) icono = '👕';
             else if (n.includes('mercado') || n.includes('supermercado')) icono = '🛒';
             else if (n.includes('gasolina')) icono = '⛽';
-            else if (n.includes('regalo')) icono = '🎁';
             else if (n.includes('sueldo') || n.includes('salario')) icono = '💰';
 
             resultados.push({
@@ -1091,22 +1097,20 @@ function inicializarPantallaTexto() {
 }
 
 // ============================================================
-// 14. INICIALIZACIÓN
+// 14. INIT
 // ============================================================
 async function init() {
     const temaGuardado = localStorage.getItem('finix_tema');
-    if (temaGuardado === 'oscuro') {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
+    if (temaGuardado === 'oscuro') document.body.classList.add('dark-mode');
+    else document.body.classList.remove('dark-mode');
 
     await cargarNombreUsuario();
+    await cargarMovimientosDesdeSupabase();
 
     actualizarSaldo();
     actualizarResumen();
     actualizarGrafica();
-    await renderizarMetas();      // 👈 ahora async
+    await renderizarMetas();
     renderizarMovimientos();
     configurarBotonTexto();
     inicializarSwitchTema();
@@ -1122,14 +1126,14 @@ if (document.readyState === 'loading') {
 }
 
 // ============================================================
-// 15. ACTUALIZAR AL VOLVER A LA PESTAÑA
+// 15. FOCUS
 // ============================================================
 window.addEventListener('focus', async () => {
-    cargarNombreUsuario();
+    await cargarMovimientosDesdeSupabase();
     actualizarSaldo();
     actualizarResumen();
     actualizarGrafica();
-    await renderizarMetas();      // 👈 ahora async
+    await renderizarMetas();
     renderizarMovimientos();
 });
 
