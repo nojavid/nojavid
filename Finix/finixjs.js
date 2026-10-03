@@ -265,7 +265,7 @@ function renderizarMetas() {
 }
 
 // ============================================================
-// 9. RENDERIZAR MOVIMIENTOS
+// 9. RENDERIZAR MOVIMIENTOS (solo los 5 últimos)
 // ============================================================
 function renderizarMovimientos() {
     const contenedor = document.getElementById('movimientosLista');
@@ -282,11 +282,12 @@ function renderizarMovimientos() {
 
     if (vacio) vacio.style.display = 'none';
 
+    // 👇 Ordena del más reciente al más antiguo y toma solo los 5 primeros
     const ordenados = [...movs].sort((a, b) => {
         const fa = new Date(a.fecha || 0).getTime();
         const fb = new Date(b.fecha || 0).getTime();
         return fb - fa;
-    });
+    }).slice(0, 5);
 
     contenedor.innerHTML = '';
 
@@ -642,7 +643,6 @@ function inicializarPantallaTexto() {
 
     if (!overlay || !btnTexto) return;
 
-    // 👇 Los ejemplos DEBEN coincidir con lo que se muestra en las tarjetas
     const EJEMPLOS = [
         {
             texto: 'almuerzo 18k + uber 15mil',
@@ -673,10 +673,8 @@ function inicializarPantallaTexto() {
     let loopActivo = false;
     let escribiendoAhora = false;
 
-    // 👇 ACUMULA todos los movimientos procesados en la sesión actual
     let movimientosPendientes = [];
 
-    // -------- Abrir pantalla --------
     btnTexto.addEventListener('click', (e) => {
         e.preventDefault();
         overlay.classList.add('activo');
@@ -688,7 +686,6 @@ function inicializarPantallaTexto() {
         setTimeout(() => iniciarCiclo(), 350);
     });
 
-    // -------- Cerrar pantalla --------
     function cerrarPantalla() {
         overlay.classList.remove('activo');
         document.body.style.overflow = '';
@@ -718,7 +715,6 @@ function inicializarPantallaTexto() {
         }
     });
 
-    // -------- CICLO --------
     function iniciarCiclo() {
         if (!loopActivo) return;
         escribirTexto();
@@ -804,14 +800,12 @@ function inicializarPantallaTexto() {
             tarjetas.innerHTML = '';
             escribiendoAhora = false;
 
-            // Rotar al siguiente ejemplo
             ejemplosIndex = (ejemplosIndex + 1) % EJEMPLOS.length;
 
             iniciarCiclo();
         }, 1800);
     }
 
-    // -------- Detener bucle y habilitar input --------
     function detenerBucleYHabilitarInput() {
         loopActivo = false;
         escribiendoAhora = false;
@@ -834,7 +828,6 @@ function inicializarPantallaTexto() {
         input.focus();
     }
 
-    // Clic en el rectángulo → detener bucle
     const rectangulo = document.getElementById('ptRectangulo');
     if (rectangulo) {
         rectangulo.addEventListener('click', (e) => {
@@ -849,7 +842,6 @@ function inicializarPantallaTexto() {
         });
     }
 
-    // -------- Input listener --------
     input.addEventListener('input', () => {
         const texto = input.value.trim();
         const tieneTexto = texto.length > 0;
@@ -894,7 +886,6 @@ function inicializarPantallaTexto() {
         iniciarCiclo();
     }
 
-    // -------- BOTÓN PROCESAR → llama a la IA y muestra vista previa --------
     btnProcesar.addEventListener('click', async () => {
         const texto = input.value.trim();
         if (!texto) return;
@@ -905,7 +896,6 @@ function inicializarPantallaTexto() {
         btnProcesar.classList.remove('activo');
         procesando.classList.add('activo');
 
-        // Llamada a la IA (espera la respuesta real)
         const movimientos = await parsearTextoConIA(texto);
 
         procesando.classList.remove('activo');
@@ -916,7 +906,6 @@ function inicializarPantallaTexto() {
             return;
         }
 
-        // Acumula en lugar de reemplazar
         const nuevos = movimientos.map((m, idx) => ({
             id: Date.now() + idx,
             nombre: m.nombre,
@@ -933,7 +922,6 @@ function inicializarPantallaTexto() {
         mostrarPreview();
     });
 
-    // -------- Vista previa de los datos procesados --------
     function mostrarPreview() {
         previewLista.innerHTML = '';
 
@@ -958,17 +946,14 @@ function inicializarPantallaTexto() {
         input.value = '';
     }
 
-    // -------- BOTÓN "Agregar otro" → volver al input --------
     btnAgregarOtro.addEventListener('click', () => {
         preview.classList.remove('activo');
         btnDoble.classList.remove('activo');
         input.value = '';
         input.classList.add('activo');
         input.focus();
-        // ✅ movimientosPendientes se mantiene intacto
     });
 
-    // -------- BOTÓN "Enviar" → guardar y cerrar pantalla (sin redirigir) --------
     btnEnviar.addEventListener('click', () => {
         if (movimientosPendientes.length === 0) return;
 
@@ -985,13 +970,10 @@ function inicializarPantallaTexto() {
 
         console.log('✅ Movimientos guardados:', movimientosPendientes.length);
 
-        // ✅ Ya NO redirige a reportes.html
-        // Solo cierra la pantalla y limpia los pendientes
         movimientosPendientes = [];
         cerrarPantalla();
     });
 
-    // -------- Parser con IA (vía Supabase Edge Function) --------
     async function parsearTextoConIA(texto) {
         try {
             const response = await fetch(
@@ -1027,7 +1009,6 @@ function inicializarPantallaTexto() {
         }
     }
 
-    // -------- Parser local (fallback si falla la IA) --------
     function parsearTextoLocal(texto) {
         const partes = texto.split(/[+,]/).map(p => p.trim()).filter(Boolean);
         const resultados = [];
@@ -1119,5 +1100,5 @@ window.addEventListener('focus', () => {
     renderizarMetas();
     renderizarMovimientos();
 });
-http://127.0.0.1:5500/Finix/Billetera/billetera.html
+
 console.log('✅ finixjs.js cargado correctamente');
