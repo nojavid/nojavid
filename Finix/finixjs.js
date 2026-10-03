@@ -215,20 +215,51 @@ function actualizarGrafica() {
 }
 
 // ============================================================
-// 8. RENDERIZAR METAS DE AHORRO
+// 8. RENDERIZAR METAS DE AHORRO (desde Supabase)
 // ============================================================
-function renderizarMetas() {
+async function renderizarMetas() {
     const contenedor = document.getElementById('metasLista');
     if (!contenedor) return;
 
     let metas = [];
-    try {
-        metas = JSON.parse(localStorage.getItem('finix_metas') || '[]');
-    } catch (e) {
-        metas = [];
+
+    // 👇 1) Intentar leer desde Supabase (tabla registros, seccion = 'ahorro')
+    if (supabaseClient) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('registros')
+                .select('*')
+                .eq('seccion', 'ahorro')
+                .order('fecha', { ascending: true });
+
+            if (error) {
+                console.warn('⚠️ Error al leer metas desde Supabase:', error.message);
+            } else if (Array.isArray(data)) {
+                metas = data.map(r => ({
+                    nombre: r.nombre || 'Meta',
+                    icono: r.icono || '🎯',
+                    actual: Number(r.montoPagado) || 0,
+                    meta: Number(r.monto) || 0
+                }));
+                console.log('🎯 Metas desde Supabase:', metas.length);
+            }
+        } catch (e) {
+            console.warn('⚠️ Excepción leyendo metas desde Supabase:', e);
+        }
     }
 
-    if (!Array.isArray(metas) || metas.length === 0) {
+    // 👇 2) Fallback: si no hay nada en Supabase, intentar localStorage
+    if (metas.length === 0) {
+        try {
+            const local = JSON.parse(localStorage.getItem('finix_metas') || '[]');
+            if (Array.isArray(local)) metas = local;
+        } catch (e) {
+            metas = [];
+        }
+    }
+
+    // 👇 3) Estado vacío
+    if (metas.length === 0) {
         contenedor.innerHTML = `
             <div class="metas-vacio">
                 <div class="metas-vacio-icono">🎯</div>
@@ -239,6 +270,7 @@ function renderizarMetas() {
         return;
     }
 
+    // 👇 4) Solo las 2 primeras
     metas = metas.slice(0, 2);
     contenedor.innerHTML = '';
 
@@ -1074,7 +1106,7 @@ async function init() {
     actualizarSaldo();
     actualizarResumen();
     actualizarGrafica();
-    renderizarMetas();
+    await renderizarMetas();      // 👈 ahora async
     renderizarMovimientos();
     configurarBotonTexto();
     inicializarSwitchTema();
@@ -1092,12 +1124,12 @@ if (document.readyState === 'loading') {
 // ============================================================
 // 15. ACTUALIZAR AL VOLVER A LA PESTAÑA
 // ============================================================
-window.addEventListener('focus', () => {
+window.addEventListener('focus', async () => {
     cargarNombreUsuario();
     actualizarSaldo();
     actualizarResumen();
     actualizarGrafica();
-    renderizarMetas();
+    await renderizarMetas();      // 👈 ahora async
     renderizarMovimientos();
 });
 
