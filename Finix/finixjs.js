@@ -7,7 +7,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8';
 let supabaseClient = null;
 if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('✅ Supabase inicializado en finix.js');
+    console.log('✅ Supabase inicializado en finixjs.js');
 } else {
     console.warn('⚠️ Librería de Supabase no detectada. Verifica el script en finix.html');
 }
@@ -21,7 +21,6 @@ async function cargarNombreUsuario() {
 
     let nombreCompleto = '';
 
-    // 1️⃣ Intentar obtener el usuario desde Supabase (sesión activa)
     if (supabaseClient) {
         try {
             const { data: { user }, error } = await supabaseClient.auth.getUser();
@@ -31,7 +30,6 @@ async function cargarNombreUsuario() {
             }
 
             if (user) {
-                // El nombre está en user_metadata (así lo guardamos al registrar)
                 nombreCompleto = user.user_metadata?.fullname
                               || user.user_metadata?.name
                               || user.user_metadata?.full_name
@@ -43,7 +41,6 @@ async function cargarNombreUsuario() {
         }
     }
 
-    // 2️⃣ Si no hay usuario en Supabase, intentar con localStorage
     if (!nombreCompleto) {
         try {
             const userLS = JSON.parse(localStorage.getItem('finix_user') || '{}');
@@ -56,14 +53,12 @@ async function cargarNombreUsuario() {
         }
     }
 
-    // 3️⃣ Fallback a claves antiguas
     if (!nombreCompleto) {
         nombreCompleto = localStorage.getItem('finix_usuario')
                       || localStorage.getItem('nombreUsuario')
                       || '';
     }
 
-    // 4️⃣ Extraer SOLO el primer nombre
     const primerNombre = nombreCompleto.trim().split(/\s+/)[0] || 'Usuario';
 
     el.textContent = primerNombre;
@@ -473,7 +468,7 @@ function configurarBotonTexto() {
     if (btn) {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            window.location.href = 'finix-entrada.html';
+            // La pantalla de texto se abre con inicializarPantallaTexto()
         });
     }
 }
@@ -626,7 +621,464 @@ function marcarActivo() {
 }
 
 // ============================================================
-// 13. INICIALIZACIÓN
+// 13. PANTALLA ENTRADA POR TEXTO
+// ============================================================
+function inicializarPantallaTexto() {
+    const overlay        = document.getElementById('pantallaTexto');
+    const btnCerrar      = document.getElementById('ptBtnCerrar');
+    const btnProcesar    = document.getElementById('ptBtnProcesar');
+    const btnDoble       = document.getElementById('ptBtnDoble');
+    const btnAgregarOtro = document.getElementById('ptBtnAgregarOtro');
+    const btnEnviar      = document.getElementById('ptBtnEnviar');
+    const input          = document.getElementById('ptInput');
+    const typing         = document.getElementById('ptTyping');
+    const cursor         = document.getElementById('ptCursor');
+    const animacion      = document.getElementById('ptAnimacion');
+    const procesando     = document.getElementById('ptProcesando');
+    const tarjetas       = document.getElementById('ptTarjetas');
+    const preview        = document.getElementById('ptPreview');
+    const previewLista   = document.getElementById('ptPreviewLista');
+    const btnTexto       = document.getElementById('btnTexto');
+
+    if (!overlay || !btnTexto) return;
+
+    // 👇 Los ejemplos DEBEN coincidir con lo que se muestra en las tarjetas
+    const EJEMPLOS = [
+        {
+            texto: 'almuerzo 18k + uber 15mil',
+            resultados: [
+                { icono: '🍽️', nombre: 'Almuerzo', valor: '$18.000', tipo: 'gasto' },
+                { icono: '🚗', nombre: 'Uber',     valor: '$15.000', tipo: 'gasto' }
+            ]
+        },
+        {
+            texto: 'ingreso de didi 25k',
+            resultados: [
+                { icono: '🚗', nombre: 'Didi', valor: '$25.000', tipo: 'ingreso' }
+            ]
+        },
+        {
+            texto: 'café 5mil + mercado 120.000',
+            resultados: [
+                { icono: '☕', nombre: 'Café',    valor: '$5.000',   tipo: 'gasto' },
+                { icono: '🛒', nombre: 'Mercado', valor: '$120.000', tipo: 'gasto' }
+            ]
+        }
+    ];
+
+    let ejemplosIndex = 0;
+
+    let typingTimeout = null;
+    let inputVacioTimeout = null;
+    let loopActivo = false;
+    let escribiendoAhora = false;
+
+    // 👇 ACUMULA todos los movimientos procesados en la sesión actual
+    let movimientosPendientes = [];
+
+    // -------- Abrir pantalla --------
+    btnTexto.addEventListener('click', (e) => {
+        e.preventDefault();
+        overlay.classList.add('activo');
+        document.body.style.overflow = 'hidden';
+        movimientosPendientes = [];
+        ejemplosIndex = 0;
+
+        loopActivo = true;
+        setTimeout(() => iniciarCiclo(), 350);
+    });
+
+    // -------- Cerrar pantalla --------
+    function cerrarPantalla() {
+        overlay.classList.remove('activo');
+        document.body.style.overflow = '';
+        loopActivo = false;
+        escribiendoAhora = false;
+        movimientosPendientes = [];
+
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+            typingTimeout = null;
+        }
+        if (inputVacioTimeout) {
+            clearTimeout(inputVacioTimeout);
+            inputVacioTimeout = null;
+        }
+    }
+
+    btnCerrar.addEventListener('click', cerrarPantalla);
+
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) cerrarPantalla();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('activo')) {
+            cerrarPantalla();
+        }
+    });
+
+    // -------- CICLO --------
+    function iniciarCiclo() {
+        if (!loopActivo) return;
+        escribirTexto();
+    }
+
+    function escribirTexto() {
+        if (!loopActivo) return;
+        escribiendoAhora = true;
+
+        const ejemploActual = EJEMPLOS[ejemplosIndex];
+        const textoActual = ejemploActual.texto;
+
+        typing.textContent = '';
+        cursor.style.display = 'inline-block';
+        animacion.style.display = 'flex';
+        procesando.classList.remove('activo');
+        tarjetas.classList.remove('activo');
+        tarjetas.innerHTML = '';
+        preview.classList.remove('activo');
+        btnDoble.classList.remove('activo');
+
+        let i = 0;
+        const velocidad = 55;
+
+        function escribir() {
+            if (!loopActivo) return;
+
+            if (i < textoActual.length) {
+                typing.textContent += textoActual.charAt(i);
+                i++;
+                typingTimeout = setTimeout(escribir, velocidad);
+            } else {
+                typingTimeout = setTimeout(() => {
+                    cursor.style.display = 'none';
+                    mostrarProcesando();
+                }, 600);
+            }
+        }
+
+        escribir();
+    }
+
+    function mostrarProcesando() {
+        if (!loopActivo) return;
+
+        animacion.style.display = 'none';
+        procesando.classList.add('activo');
+
+        typingTimeout = setTimeout(() => {
+            if (!loopActivo) return;
+            procesando.classList.remove('activo');
+            mostrarTarjetas();
+        }, 1200);
+    }
+
+    function mostrarTarjetas() {
+        if (!loopActivo) return;
+
+        const ejemploActual = EJEMPLOS[ejemplosIndex];
+        const resultadosActuales = ejemploActual.resultados;
+
+        tarjetas.innerHTML = '';
+        tarjetas.classList.add('activo');
+
+        resultadosActuales.forEach((item, index) => {
+            const esIngreso = item.tipo === 'ingreso';
+            const card = document.createElement('div');
+            card.className = 'pt-tarjeta ' + (esIngreso ? 'pt-tarjeta-ingreso' : 'pt-tarjeta-gasto');
+            card.style.animationDelay = (index * 0.15) + 's';
+            card.innerHTML = `
+                <div class="pt-tarjeta-icono">${item.icono}</div>
+                <div class="pt-tarjeta-nombre">${item.nombre}</div>
+                <div class="pt-tarjeta-valor ${esIngreso ? 'valor-ingreso' : 'valor-gasto'}">
+                    ${esIngreso ? '+' : '-'}${item.valor}
+                </div>
+            `;
+            tarjetas.appendChild(card);
+        });
+
+        typingTimeout = setTimeout(() => {
+            if (!loopActivo) return;
+            tarjetas.classList.remove('activo');
+            tarjetas.innerHTML = '';
+            escribiendoAhora = false;
+
+            // Rotar al siguiente ejemplo
+            ejemplosIndex = (ejemplosIndex + 1) % EJEMPLOS.length;
+
+            iniciarCiclo();
+        }, 1800);
+    }
+
+    // -------- Detener bucle y habilitar input --------
+    function detenerBucleYHabilitarInput() {
+        loopActivo = false;
+        escribiendoAhora = false;
+
+        if (typingTimeout) {
+            clearTimeout(typingTimeout);
+            typingTimeout = null;
+        }
+
+        typing.textContent = '';
+        cursor.style.display = 'none';
+        animacion.style.display = 'none';
+        procesando.classList.remove('activo');
+        tarjetas.classList.remove('activo');
+        tarjetas.innerHTML = '';
+        preview.classList.remove('activo');
+        btnDoble.classList.remove('activo');
+
+        input.classList.add('activo');
+        input.focus();
+    }
+
+    // Clic en el rectángulo → detener bucle
+    const rectangulo = document.getElementById('ptRectangulo');
+    if (rectangulo) {
+        rectangulo.addEventListener('click', (e) => {
+            if (e.target === input) return;
+
+            if (loopActivo) {
+                detenerBucleYHabilitarInput();
+            } else if (!input.classList.contains('activo') && !preview.classList.contains('activo')) {
+                input.classList.add('activo');
+                input.focus();
+            }
+        });
+    }
+
+    // -------- Input listener --------
+    input.addEventListener('input', () => {
+        const texto = input.value.trim();
+        const tieneTexto = texto.length > 0;
+
+        if (tieneTexto) {
+            btnProcesar.classList.add('activo');
+        } else {
+            btnProcesar.classList.remove('activo');
+        }
+
+        if (!tieneTexto) {
+            if (inputVacioTimeout) clearTimeout(inputVacioTimeout);
+            inputVacioTimeout = setTimeout(() => {
+                if (input.value.trim().length === 0 && !preview.classList.contains('activo')) {
+                    volverAlBucle();
+                }
+            }, 900);
+        } else {
+            if (inputVacioTimeout) {
+                clearTimeout(inputVacioTimeout);
+                inputVacioTimeout = null;
+            }
+        }
+    });
+
+    function volverAlBucle() {
+        input.value = '';
+        input.classList.remove('activo');
+        btnProcesar.classList.remove('activo');
+        btnDoble.classList.remove('activo');
+        preview.classList.remove('activo');
+        previewLista.innerHTML = '';
+
+        tarjetas.classList.remove('activo');
+        tarjetas.innerHTML = '';
+        procesando.classList.remove('activo');
+        animacion.style.display = 'flex';
+        typing.textContent = '';
+        cursor.style.display = 'inline-block';
+
+        loopActivo = true;
+        iniciarCiclo();
+    }
+
+    // -------- BOTÓN PROCESAR → llama a la IA y muestra vista previa --------
+    btnProcesar.addEventListener('click', async () => {
+        const texto = input.value.trim();
+        if (!texto) return;
+
+        console.log('📝 Procesar texto con IA:', texto);
+
+        input.classList.remove('activo');
+        btnProcesar.classList.remove('activo');
+        procesando.classList.add('activo');
+
+        // Llamada a la IA (espera la respuesta real)
+        const movimientos = await parsearTextoConIA(texto);
+
+        procesando.classList.remove('activo');
+
+        if (movimientos.length === 0) {
+            input.classList.add('activo');
+            input.focus();
+            return;
+        }
+
+        // Acumula en lugar de reemplazar
+        const nuevos = movimientos.map((m, idx) => ({
+            id: Date.now() + idx,
+            nombre: m.nombre,
+            precio: m.valor,
+            tipo: m.tipo,
+            icono: m.icono,
+            fecha: new Date().toISOString()
+        }));
+
+        movimientosPendientes = [...movimientosPendientes, ...nuevos];
+
+        console.log('📦 Pendientes acumulados:', movimientosPendientes.length);
+
+        mostrarPreview();
+    });
+
+    // -------- Vista previa de los datos procesados --------
+    function mostrarPreview() {
+        previewLista.innerHTML = '';
+
+        movimientosPendientes.forEach((m, index) => {
+            const esIngreso = m.tipo === 'ingreso';
+            const card = document.createElement('div');
+            card.className = 'pt-tarjeta ' + (esIngreso ? 'pt-tarjeta-ingreso' : 'pt-tarjeta-gasto');
+            card.style.animationDelay = (index * 0.12) + 's';
+            card.innerHTML = `
+                <div class="pt-tarjeta-icono">${m.icono}</div>
+                <div class="pt-tarjeta-nombre">${m.nombre}</div>
+                <div class="pt-tarjeta-valor ${esIngreso ? 'valor-ingreso' : 'valor-gasto'}">
+                    ${esIngreso ? '+' : '-'}${formatoCOP(m.precio)}
+                </div>
+            `;
+            previewLista.appendChild(card);
+        });
+
+        preview.classList.add('activo');
+        btnDoble.classList.add('activo');
+
+        input.value = '';
+    }
+
+    // -------- BOTÓN "Agregar otro" → volver al input --------
+    btnAgregarOtro.addEventListener('click', () => {
+        preview.classList.remove('activo');
+        btnDoble.classList.remove('activo');
+        input.value = '';
+        input.classList.add('activo');
+        input.focus();
+        // ✅ movimientosPendientes se mantiene intacto
+    });
+
+    // -------- BOTÓN "Enviar" → guardar y cerrar pantalla (sin redirigir) --------
+    btnEnviar.addEventListener('click', () => {
+        if (movimientosPendientes.length === 0) return;
+
+        const existentes = leerMovimientos();
+        localStorage.setItem(
+            'finix_movimientos',
+            JSON.stringify([...existentes, ...movimientosPendientes])
+        );
+
+        actualizarSaldo();
+        actualizarResumen();
+        actualizarGrafica();
+        renderizarMovimientos();
+
+        console.log('✅ Movimientos guardados:', movimientosPendientes.length);
+
+        // ✅ Ya NO redirige a reportes.html
+        // Solo cierra la pantalla y limpia los pendientes
+        movimientosPendientes = [];
+        cerrarPantalla();
+    });
+
+    // -------- Parser con IA (vía Supabase Edge Function) --------
+    async function parsearTextoConIA(texto) {
+        try {
+            const response = await fetch(
+                `${SUPABASE_URL}/functions/v1/parsear-texto`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'apikey': SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify({ texto })
+                }
+            );
+
+            if (!response.ok) {
+                const err = await response.text();
+                throw new Error(`HTTP ${response.status}: ${err}`);
+            }
+
+            const data = await response.json();
+
+            if (!data.movimientos || !Array.isArray(data.movimientos)) {
+                throw new Error('Respuesta inválida del servidor');
+            }
+
+            console.log('🤖 IA respondió:', data.movimientos.length, 'movimientos');
+            return data.movimientos;
+
+        } catch (err) {
+            console.error('❌ Error IA, usando parser local:', err);
+            return parsearTextoLocal(texto);
+        }
+    }
+
+    // -------- Parser local (fallback si falla la IA) --------
+    function parsearTextoLocal(texto) {
+        const partes = texto.split(/[+,]/).map(p => p.trim()).filter(Boolean);
+        const resultados = [];
+
+        partes.forEach(parte => {
+            const match = parte.match(/(\d{1,3}(?:[.,]\d{3})+|\d+(?:[.,]\d+)?)\s*(k|mil|millones?)?/i);
+            let valor = 0;
+            let nombre = parte;
+
+            if (match) {
+                let numStr = match[1].replace(/\./g, '').replace(',', '.');
+                let num = parseFloat(numStr);
+                const unidad = (match[2] || '').toLowerCase();
+
+                if (unidad === 'k' || unidad === 'mil') num *= 1000;
+                else if (unidad.startsWith('millon')) num *= 1000000;
+
+                valor = Math.round(num);
+                nombre = parte.replace(match[0], '').trim() || 'Movimiento';
+            }
+
+            if (!nombre || valor <= 0) return;
+
+            const n = nombre.toLowerCase();
+            const esIngreso = /\b(ingreso|ingresó|recibí|recibi|me pagaron|consignaron|entró|entro|ganancia|sueldo|salario|venta|cobré|cobre)\b/.test(n);
+
+            let icono = esIngreso ? '💰' : '💸';
+            if (n.includes('almuerzo') || n.includes('comida') || n.includes('cena')) icono = '🍽️';
+            else if (n.includes('uber') || n.includes('taxi') || n.includes('bus') || n.includes('didi')) icono = '🚗';
+            else if (n.includes('café') || n.includes('cafe')) icono = '☕';
+            else if (n.includes('zapato') || n.includes('tenis')) icono = '👟';
+            else if (n.includes('ropa') || n.includes('camisa')) icono = '👕';
+            else if (n.includes('mercado') || n.includes('supermercado')) icono = '🛒';
+            else if (n.includes('gasolina')) icono = '⛽';
+            else if (n.includes('regalo')) icono = '🎁';
+            else if (n.includes('sueldo') || n.includes('salario')) icono = '💰';
+
+            resultados.push({
+                nombre: nombre.charAt(0).toUpperCase() + nombre.slice(1),
+                valor,
+                icono,
+                tipo: esIngreso ? 'ingreso' : 'gasto'
+            });
+        });
+
+        return resultados;
+    }
+}
+
+// ============================================================
+// 14. INICIALIZACIÓN
 // ============================================================
 async function init() {
     const temaGuardado = localStorage.getItem('finix_tema');
@@ -646,6 +1098,7 @@ async function init() {
     configurarBotonTexto();
     inicializarSwitchTema();
     inicializarModalEliminar();
+    inicializarPantallaTexto();
     marcarActivo();
 }
 
@@ -656,7 +1109,7 @@ if (document.readyState === 'loading') {
 }
 
 // ============================================================
-// 14. ACTUALIZAR AL VOLVER A LA PESTAÑA
+// 15. ACTUALIZAR AL VOLVER A LA PESTAÑA
 // ============================================================
 window.addEventListener('focus', () => {
     cargarNombreUsuario();

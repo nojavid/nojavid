@@ -764,6 +764,8 @@ body.dark-mode .mov-card.presionado {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -886,6 +888,459 @@ body.dark-mode .modal-btn-cancelar {
 }
 
 body.dark-mode .modal-btn-cancelar:hover { background-color: #33383E; }
+
+/* ============================================================
+   PANTALLA ENTRADA POR TEXTO
+   ============================================================ */
+.pantalla-texto-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 998;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.pantalla-texto-overlay.activo {
+    visibility: visible;
+    opacity: 1;
+}
+
+.pantalla-texto-card {
+    position: relative;
+    width: 319px;
+    height: 188px;
+    background-color: #012A2A;
+    border-radius: 10px;
+    padding: 0;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+    transform: scale(0.92) translateY(10px);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+}
+
+.pantalla-texto-overlay.activo .pantalla-texto-card {
+    transform: scale(1) translateY(0);
+}
+
+/* Texto 1: Empieza aquí (una sola línea, sin salto) */
+.pt-texto1 {
+    position: absolute;
+    left: 54px;
+    top: 20px;
+    color: #00FFD4;
+    font-size: 9px;
+    font-weight: 800;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: inline-block;
+    width: auto;
+    height: auto;
+}
+
+/* Texto 2: Escribe o Pega varios a la vez */
+.pt-texto2 {
+    position: absolute;
+    left: 54px;
+    top: 33px;
+    width: 176px;
+    height: 11px;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 11px;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+}
+
+/* Rectángulo interior */
+.pt-rectangulo {
+    position: absolute;
+    left: 54px;
+    top: 52px;
+    width: 236px;
+    height: 117px;
+    background-color: #000210;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Animación de escritura */
+.pt-animacion {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.pt-cursor {
+    display: inline-block;
+    color: #00FFD4;
+    font-weight: 300;
+    margin-left: 1px;
+    animation: ptParpadeo 0.7s infinite;
+}
+
+@keyframes ptParpadeo {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Procesando */
+.pt-procesando {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #00FFD4;
+    height: 100%;
+    width: 100%;
+}
+
+.pt-procesando.activo {
+    display: flex;
+}
+
+.pt-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 255, 212, 0.25);
+    border-top-color: #00FFD4;
+    border-radius: 50%;
+    animation: ptGirar 0.7s linear infinite;
+}
+
+@keyframes ptGirar {
+    to { transform: rotate(360deg); }
+}
+
+/* Tarjetas de resultados */
+.pt-tarjetas {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.pt-tarjetas.activo {
+    display: flex;
+}
+
+.pt-tarjeta {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background-color: #0A1A1A;
+    border: 1px solid rgba(0, 255, 212, 0.18);
+    border-radius: 8px;
+    padding: 5px 8px;
+    animation: ptAparecer 0.35s ease forwards;
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+@keyframes ptAparecer {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pt-tarjeta-icono {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background-color: rgba(0, 255, 212, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.pt-tarjeta-nombre {
+    flex: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: #FFFFFF;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pt-tarjeta-valor {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #00FFD4;
+    flex-shrink: 0;
+}
+
+/* Vista previa de datos procesados */
+.pt-preview {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.pt-preview.activo {
+    display: flex;
+}
+
+.pt-preview-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 2px;
+}
+
+.pt-preview-lista::-webkit-scrollbar {
+    width: 3px;
+}
+.pt-preview-lista::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 255, 212, 0.3);
+    border-radius: 3px;
+}
+
+/* Input real del usuario */
+.pt-input {
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+    line-height: 1.5;
+    caret-color: #00FFD4;
+}
+
+.pt-input.activo {
+    display: block;
+}
+
+.pt-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 500;
+}
+
+/* Botón Procesar */
+.pt-btn-procesar {
+    position: absolute;
+    bottom: 12px;
+    left: 54px;
+    width: 236px;
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #00FFD4, #00C9A7);
+    color: #012A2A;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: height 0.3s ease, opacity 0.3s ease, visibility 0.3s ease, transform 0.2s ease;
+    overflow: hidden;
+}
+
+.pt-btn-procesar.activo {
+    height: 32px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.pt-btn-procesar:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 255, 212, 0.35);
+}
+
+.pt-btn-procesar:active {
+    transform: scale(0.97);
+}
+
+.pt-btn-procesar svg {
+    width: 13px;
+    height: 13px;
+}
+
+/* Botones duales (Agregar otro / Enviar) */
+.pt-btn-doble {
+    position: absolute;
+    bottom: 12px;
+    left: 54px;
+    width: 236px;
+    height: 0;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    gap: 6px;
+    transition: height 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+    overflow: hidden;
+}
+
+.pt-btn-doble.activo {
+    height: 32px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.pt-btn-agregar-otro,
+.pt-btn-enviar {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 0 6px;
+    white-space: nowrap;
+}
+
+.pt-btn-agregar-otro {
+    background: rgba(0, 255, 212, 0.15);
+    color: #00FFD4;
+    border: 1px solid rgba(0, 255, 212, 0.4);
+}
+
+.pt-btn-agregar-otro:hover {
+    background: rgba(0, 255, 212, 0.25);
+    transform: scale(1.03);
+}
+
+.pt-btn-enviar {
+    background: linear-gradient(135deg, #00FFD4, #00C9A7);
+    color: #012A2A;
+}
+
+.pt-btn-enviar:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 16px rgba(0, 255, 212, 0.35);
+}
+
+.pt-btn-agregar-otro:active,
+.pt-btn-enviar:active {
+    transform: scale(0.97);
+}
+
+.pt-btn-agregar-otro svg,
+.pt-btn-enviar svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+/* Botón cerrar */
+.pt-btn-cerrar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.pt-btn-cerrar:hover {
+    background-color: rgba(255, 255, 255, 0.18);
+    transform: rotate(90deg);
+}
+
+.pt-btn-cerrar svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Scrollbar sutil en tarjetas */
+.pt-tarjetas::-webkit-scrollbar {
+    width: 3px;
+}
+
+.pt-tarjetas::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 255, 212, 0.3);
+    border-radius: 3px;
+}
+
+/* ============================================================
+   TARJETAS DE PREVIEW - INGRESO vs GASTO
+   ============================================================ */
+.pt-tarjeta-ingreso {
+    border-color: rgba(46, 204, 113, 0.55) !important;
+    background-color: rgba(46, 204, 113, 0.12) !important;
+}
+
+.pt-tarjeta-gasto {
+    border-color: rgba(231, 76, 60, 0.55) !important;
+    background-color: rgba(231, 76, 60, 0.12) !important;
+}
+
+.pt-tarjeta-valor.valor-ingreso {
+    color: #2ECC71 !important;
+}
+
+.pt-tarjeta-valor.valor-gasto {
+    color: #E74C3C !important;
+}
+
+.pt-tarjeta-ingreso .pt-tarjeta-icono {
+    background-color: rgba(46, 204, 113, 0.22) !important;
+}
+
+.pt-tarjeta-gasto .pt-tarjeta-icono {
+    background-color: rgba(231, 76, 60, 0.22) !important;
+}
 
 /* ============================================================
    MODO OSCURO
@@ -1024,4 +1479,32 @@ body.dark-mode .nav-activo-icono {
     }
 
     .agregar-opciones { gap: 40px; }
+
+    .pantalla-texto-card {
+        width: calc(100% - 40px);
+        max-width: 319px;
+    }
+
+    .pt-texto1,
+    .pt-texto2 {
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        width: auto;
+    }
+
+    .pt-rectangulo {
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 40px);
+        max-width: 236px;
+    }
+
+    .pt-btn-procesar,
+    .pt-btn-doble {
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 40px);
+        max-width: 236px;
+    }
 }
