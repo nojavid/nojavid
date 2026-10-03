@@ -30,8 +30,7 @@
         </p>
         <span class="flecha">^</span>
 
-        <div class="meses-dropdown" id="mesesDropdown">
-        </div>
+        <div class="meses-dropdown" id="mesesDropdown"></div>
       </div>
     </div>
   </header>
@@ -42,7 +41,7 @@
       <img src="../iconos/billetera1.4.png" alt="billetera" class="icono-billetera-total">
     </div>
     <h2 class="titulo-balance">Balance total</h2>
-    <p class="valor-balance" id="balanceTotal">$3.240.000</p>
+    <p class="valor-balance" id="balanceTotal">$0</p>
     <div class="linea-vertical-total"></div>
     <img src="../iconos/flechaverde.png" alt="ahorro" class="flecha-total flecha-verde-total">
     <h3 class="titulo-ahorro-total">Ahorro</h3>
@@ -77,6 +76,11 @@
     <div class="metas-lista" id="metasLista"></div>
   </section>
 
+  <!-- ============================================
+       CONTENEDOR DE SECCIONES PERSONALIZADAS
+       ============================================ -->
+  <div id="seccionesPersonalizadas"></div>
+
   <a href="editar.html" class="btn-lapiz" id="btnLapiz" aria-label="Registros">
     <img src="../iconos/lapiz.png" alt="Registros" class="icono-lapiz">
   </a>
@@ -97,9 +101,7 @@
           <label class="form-label" for="selectSeccion">Sección</label>
           <select class="form-select" id="selectSeccion" required>
             <option value="" disabled selected>Selecciona una sección</option>
-            <option value="deudas">Deudas</option>
-            <option value="ahorro">Ahorro</option>
-            <option value="nueva">+ Agregar nueva sección</option>
+            <!-- Las opciones se generan dinámicamente con JS -->
           </select>
         </div>
 
@@ -124,7 +126,7 @@
 
         <div class="form-grupo">
           <label class="form-label" for="inputMonto">Monto</label>
-          <input type="number" class="form-input" id="inputMonto" placeholder="Ej: 150000" min="0" step="any" required>
+          <input type="text" inputmode="numeric" class="form-input" id="inputMonto" placeholder="Ej: 150.000" required>
         </div>
 
         <div class="form-grupo">
@@ -155,8 +157,7 @@
 
         <div class="form-grupo" id="grupoDiaRecordatorio">
           <label class="form-label" for="selectDiaRecordatorio">¿Qué día recordar?</label>
-          <select class="form-select" id="selectDiaRecordatorio">
-          </select>
+          <select class="form-select" id="selectDiaRecordatorio"></select>
         </div>
 
         <div class="form-botones">
@@ -187,6 +188,9 @@
     </a>
   </div>
 
+  <!-- SDK de Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
   <script src="Black.js"></script>
 </body>
 </html>

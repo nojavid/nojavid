@@ -7,12 +7,22 @@ const MESES_NOMBRES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
                        "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
 // ============================================
-// NOMBRE DEL USUARIO
+// CACHÉ DE REGISTROS (desde Supabase)
 // ============================================
-function cargarNombre() {
-  const nombre = localStorage.getItem("nombreUsuario") || "Name";
+let cacheRegistros = [];
+
+// ============================================
+// NOMBRE DEL USUARIO (desde profiles)
+// ============================================
+async function cargarNombre() {
   const el = document.getElementById("nombreUsuario");
-  if (el) el.textContent = nombre;
+  if (!el) return;
+
+  const perfil = await dbObtenerPerfil();
+  const nombre = perfil?.full_name
+              || localStorage.getItem("nombreUsuario")
+              || "Name";
+  el.textContent = nombre;
 }
 
 // ============================================
@@ -32,22 +42,8 @@ function marcarActivo() {
 }
 
 // ============================================
-// SISTEMA DE REGISTROS
+// UTILIDADES
 // ============================================
-const STORAGE_KEY = "finix_registros";
-
-function obtenerRegistros() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch (e) {
-    return [];
-  }
-}
-
-function guardarRegistros(registros) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(registros));
-}
-
 function formatearMonto(valor) {
   const numero = Number(valor) || 0;
   return "$" + numero.toLocaleString("es-CO");
@@ -80,10 +76,9 @@ function filtrarRegistrosPorMes(registros) {
 }
 
 function obtenerMesesConDatos() {
-  const registros = obtenerRegistros();
   const meses = new Set();
 
-  registros.forEach(r => {
+  cacheRegistros.forEach(r => {
     if (r.fecha) {
       const fecha = new Date(r.fecha + "T00:00:00");
       const clave = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, "0")}`;
@@ -97,6 +92,39 @@ function obtenerMesesConDatos() {
 function formatearMesClave(clave) {
   const [anio, mes] = clave.split("-");
   return `${MESES_NOMBRES[parseInt(mes) - 1]} ${anio}`;
+}
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+// ============================================
+// FORMATEO DE MONTO EN VIVO
+// ============================================
+function inicializarFormateoMonto() {
+  const inputMonto = document.getElementById("inputMonto");
+  if (!inputMonto) return;
+
+  inputMonto.addEventListener("input", (e) => {
+    let valor = e.target.value.replace(/\D/g, "");
+    if (valor.length > 15) valor = valor.slice(0, 15);
+
+    if (valor === "") {
+      e.target.value = "";
+    } else {
+      e.target.value = Number(valor).toLocaleString("es-CO");
+    }
+  });
+}
+
+function leerMontoLimpio() {
+  const inputMonto = document.getElementById("inputMonto");
+  if (!inputMonto) return 0;
+  const limpio = inputMonto.value.replace(/\D/g, "");
+  return Number(limpio) || 0;
 }
 
 // ============================================
@@ -156,6 +184,7 @@ function seleccionarMes(clave) {
 
   renderizarDeudas();
   renderizarMetas();
+  renderizarSeccionesPersonalizadas();
   actualizarTotales();
 }
 
@@ -196,6 +225,19 @@ function inicializarSelectorMes() {
 }
 
 // ============================================
+// REFRESCAR REGISTROS DESDE SUPABASE
+// ============================================
+async function refrescarRegistros() {
+  cacheRegistros = await dbObtenerRegistros();
+
+  renderizarDeudas();
+  renderizarMetas();
+  renderizarSeccionesPersonalizadas();
+  actualizarTotales();
+  renderizarDropdownMeses();
+}
+
+// ============================================
 // RENDERIZAR DEUDAS
 // ============================================
 function renderizarDeudas() {
@@ -203,7 +245,7 @@ function renderizarDeudas() {
   if (!lista) return;
 
   const registros = filtrarRegistrosPorMes(
-    obtenerRegistros().filter(r => r.seccion === "deudas")
+    cacheRegistros.filter(r => r.seccion === "deudas")
   );
   lista.innerHTML = "";
 
@@ -227,7 +269,7 @@ function renderizarDeudas() {
         </div>
         <h4 class="deuda-item-nombre">${registro.nombre}</h4>
       </div>
-      <p class="deuda-item-fecha">Vence ${formatearFecha(registro.fecha)}</p>
+      <p class="deuda-item-fecha">Vence ${formatearFecha(registro.fecha)} · ${formatearMonto(registro.monto)}</p>
       <div class="deuda-progreso-container">
         <div class="deuda-progreso-barra">
           <div class="deuda-progreso-relleno" style="width: ${porcentaje}%;"></div>
@@ -247,7 +289,7 @@ function renderizarMetas() {
   if (!lista) return;
 
   const registros = filtrarRegistrosPorMes(
-    obtenerRegistros().filter(r => r.seccion === "ahorro")
+    cacheRegistros.filter(r => r.seccion === "ahorro")
   );
   lista.innerHTML = "";
 
@@ -271,7 +313,7 @@ function renderizarMetas() {
         </div>
         <h4 class="meta-item-nombre">${registro.nombre}</h4>
       </div>
-      <p class="meta-item-fecha">Vence ${formatearFecha(registro.fecha)}</p>
+      <p class="meta-item-fecha">Vence ${formatearFecha(registro.fecha)} · ${formatearMonto(registro.monto)}</p>
       <div class="meta-progreso-container">
         <div class="meta-progreso-barra">
           <div class="meta-progreso-relleno" style="width: ${porcentaje}%;"></div>
@@ -287,20 +329,144 @@ function renderizarMetas() {
 // SECCIONES PERSONALIZADAS
 // ============================================
 function renderizarSeccionesPersonalizadas() {
-  const registros = obtenerRegistros();
-  const seccionesCustom = [...new Set(
-    registros
+  const contenedor = document.getElementById("seccionesPersonalizadas");
+  if (!contenedor) return;
+
+  contenedor.innerHTML = "";
+
+  // Agrupar registros personalizados por nombre de sección
+  const personalizadas = {};
+  cacheRegistros
+    .filter(r => r.seccion === "nueva")
+    .forEach(r => {
+      const key = r.nombreSeccion || "Sin nombre";
+      if (!personalizadas[key]) {
+        personalizadas[key] = {
+          color: r.colorSeccion || "#398869",
+          items: []
+        };
+      }
+      personalizadas[key].items.push(r);
+    });
+
+  if (Object.keys(personalizadas).length === 0) return;
+
+  Object.keys(personalizadas).forEach(nombre => {
+    const data = personalizadas[nombre];
+    const itemsFiltrados = filtrarRegistrosPorMes(data.items);
+
+    const seccion = document.createElement("section");
+    seccion.className = "seccion personalizada";
+    seccion.style.backgroundColor = hexToRgba(data.color, 0.1);
+    seccion.style.border = `1px solid ${data.color}`;
+
+    let itemsHTML = "";
+    if (itemsFiltrados.length === 0) {
+      itemsHTML = `
+        <div style="text-align:center; padding:12px; font-size:10px; color:#69747A;">
+          No hay registros en este mes
+        </div>
+      `;
+    } else {
+      itemsFiltrados.forEach(item => {
+        const porcentaje = calcularPorcentaje(item);
+        itemsHTML += `
+          <div class="personalizada-item">
+            <div class="personalizada-item-header">
+              <div class="personalizada-item-circulo" style="background-color:${data.color};">
+                <img src="../iconos/Meta.png" alt="" class="personalizada-item-icono">
+              </div>
+              <h4 class="personalizada-item-nombre">${item.nombre}</h4>
+            </div>
+            <p class="personalizada-item-fecha">Vence ${formatearFecha(item.fecha)} · ${formatearMonto(item.monto)}</p>
+            <div class="personalizada-progreso-container">
+              <div class="personalizada-progreso-barra">
+                <div class="personalizada-progreso-relleno" style="width:${porcentaje}%; background-color:${data.color};"></div>
+              </div>
+              <span class="personalizada-progreso-texto">${porcentaje}%</span>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    seccion.innerHTML = `
+      <div class="personalizada-header">
+        <div class="personalizada-circulo" style="background-color:${data.color};">
+          <img src="../iconos/Meta.png" alt="" class="personalizada-icono">
+        </div>
+        <h2 class="personalizada-titulo">${nombre}</h2>
+      </div>
+      <p class="personalizada-descripcion">Sección personalizada</p>
+      <div class="personalizada-lista">${itemsHTML}</div>
+    `;
+
+    contenedor.appendChild(seccion);
+  });
+}
+
+// ============================================
+// RELLENAR SELECT DE SECCIONES EN EL MODAL
+// ============================================
+function rellenarSelectSecciones() {
+  const selectSeccion = document.getElementById("selectSeccion");
+  if (!selectSeccion) return;
+
+  const valorActual = selectSeccion.value;
+
+  selectSeccion.innerHTML = "";
+
+  // Placeholder
+  const optDefault = document.createElement("option");
+  optDefault.value = "";
+  optDefault.disabled = true;
+  optDefault.selected = true;
+  optDefault.textContent = "Selecciona una sección";
+  selectSeccion.appendChild(optDefault);
+
+  // Fijas
+  const optDeudas = document.createElement("option");
+  optDeudas.value = "deudas";
+  optDeudas.textContent = "Deudas";
+  selectSeccion.appendChild(optDeudas);
+
+  const optAhorro = document.createElement("option");
+  optAhorro.value = "ahorro";
+  optAhorro.textContent = "Ahorro";
+  selectSeccion.appendChild(optAhorro);
+
+  // Personalizadas (únicas por nombre)
+  const nombresCustom = [...new Set(
+    cacheRegistros
       .filter(r => r.seccion === "nueva")
       .map(r => r.nombreSeccion)
+      .filter(Boolean)
   )];
-  console.log("Secciones personalizadas:", seccionesCustom);
+
+  nombresCustom.forEach(nombre => {
+    const opt = document.createElement("option");
+    opt.value = `custom:${nombre}`;
+    opt.textContent = nombre;
+    selectSeccion.appendChild(opt);
+  });
+
+  // Nueva
+  const optNueva = document.createElement("option");
+  optNueva.value = "nueva";
+  optNueva.textContent = "+ Agregar nueva sección";
+  selectSeccion.appendChild(optNueva);
+
+  // Restaurar valor si aún existe
+  if (valorActual && [...selectSeccion.options].some(o => o.value === valorActual)) {
+    selectSeccion.value = valorActual;
+  }
 }
 
 // ============================================
 // ACTUALIZAR TOTALES
 // ============================================
 function actualizarTotales() {
-  const registros = filtrarRegistrosPorMes(obtenerRegistros());
+  const registros = filtrarRegistrosPorMes(cacheRegistros);
 
   const totalDeudas = registros
     .filter(r => r.seccion === "deudas")
@@ -354,6 +520,9 @@ function inicializarModal() {
     const hoy = new Date().toISOString().split("T")[0];
     const inputFecha = document.getElementById("inputFecha");
     if (inputFecha) inputFecha.value = hoy;
+
+    // 👇 Rellenar el select con las secciones actuales
+    rellenarSelectSecciones();
   });
 
   function cerrarModal() {
@@ -443,37 +612,52 @@ function inicializarModal() {
   });
 
   if (formRegistro) {
-    formRegistro.addEventListener("submit", (e) => {
+    formRegistro.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const seccionSeleccionada = selectSeccion.value;
       const tipoRecordatorio = document.querySelector('input[name="recordatorio"]:checked').value;
 
+      // 👇 Interpretar el valor seleccionado
+      let seccionFinal = seccionSeleccionada;
+      let nombreSeccionFinal = null;
+      let colorSeccionFinal = null;
+
+      if (seccionSeleccionada === "nueva") {
+        seccionFinal = "nueva";
+        nombreSeccionFinal = inputNombreSeccion.value;
+        colorSeccionFinal = inputColorSeccion.value;
+
+      } else if (seccionSeleccionada.startsWith("custom:")) {
+        const nombreExistente = seccionSeleccionada.replace("custom:", "");
+        seccionFinal = "nueva";
+        nombreSeccionFinal = nombreExistente;
+
+        const ejemplo = cacheRegistros.find(
+          r => r.seccion === "nueva" && r.nombreSeccion === nombreExistente
+        );
+        colorSeccionFinal = ejemplo?.colorSeccion || "#398869";
+      }
+
       const nuevoRegistro = {
-        id: Date.now(),
-        seccion: seccionSeleccionada,
-        nombreSeccion: seccionSeleccionada === "nueva" ? inputNombreSeccion.value : null,
-        colorSeccion: seccionSeleccionada === "nueva" ? inputColorSeccion.value : null,
-        nombre: document.getElementById("inputNombre").value,
-        monto: Number(document.getElementById("inputMonto").value) || 0,
-        fecha: document.getElementById("inputFecha").value,
-        recordatorio: tipoRecordatorio,
+        seccion:         seccionFinal,
+        nombreSeccion:   nombreSeccionFinal,
+        colorSeccion:    colorSeccionFinal,
+        nombre:          document.getElementById("inputNombre").value,
+        monto:           leerMontoLimpio(),
+        fecha:           document.getElementById("inputFecha").value,
+        recordatorio:    tipoRecordatorio,
         diaRecordatorio: selectDiaRecordatorio ? selectDiaRecordatorio.value : null,
-        fechaCreacion: new Date().toISOString()
       };
 
-      const registros = obtenerRegistros();
-      registros.push(nuevoRegistro);
-      guardarRegistros(registros);
+      const guardado = await dbCrearRegistro(nuevoRegistro);
 
-      renderizarDeudas();
-      renderizarMetas();
-      renderizarSeccionesPersonalizadas();
-      actualizarTotales();
-      renderizarDropdownMeses();
+      if (!guardado) {
+        alert("No se pudo guardar el registro. Intenta de nuevo.");
+        return;
+      }
 
-      console.log("Nuevo registro guardado:", nuevoRegistro);
-
+      await refrescarRegistros();
       cerrarModal();
     });
   }
@@ -595,8 +779,7 @@ function inicializarSwitchTema() {
 // ============================================
 // INICIALIZAR TODO
 // ============================================
-document.addEventListener("DOMContentLoaded", () => {
-  // ---- Redirección automática según tema guardado ----
+document.addEventListener("DOMContentLoaded", async () => {
   const temaGuardado = localStorage.getItem("finix_tema");
   const esBlack = window.location.pathname.includes("Black");
 
@@ -609,15 +792,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  cargarNombre();
+  await cargarNombre();
   marcarActivo();
-
-  renderizarDeudas();
-  renderizarMetas();
-  renderizarSeccionesPersonalizadas();
-  actualizarTotales();
+  await refrescarRegistros();
 
   inicializarModal();
   inicializarSwitchTema();
   inicializarSelectorMes();
+  inicializarFormateoMonto();
 });

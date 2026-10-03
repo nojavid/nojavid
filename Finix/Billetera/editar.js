@@ -5,14 +5,13 @@
   const temaGuardado = localStorage.getItem("finix_tema");
   const esTemaOscuro = temaGuardado === "oscuro";
 
-  // Aplicar modo oscuro si corresponde
   if (esTemaOscuro) {
     document.body.classList.add("dark-mode");
   } else {
     document.body.classList.remove("dark-mode");
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
     // Ajustar enlaces del bottom-nav según tema
     const enlaces = document.querySelectorAll(".bottom-nav a");
     enlaces.forEach((enlace) => {
@@ -30,21 +29,21 @@
       btnRegresar.setAttribute("href", esTemaOscuro ? "Black.html" : "billetera.html");
     }
 
-    // Renderizar secciones
-    renderizarSeccionesEditar();
+    // 👇 Cargar desde Supabase
+    const registros = await dbObtenerRegistros();
+    renderizarSeccionesEditar(registros);
   });
 
   // ============================================
   // RENDERIZAR SECCIONES EN EDITAR
   // ============================================
-  function renderizarSeccionesEditar() {
+  function renderizarSeccionesEditar(registros) {
     const contenedor = document.getElementById("contenedorSecciones");
     if (!contenedor) return;
 
-    const registros = obtenerRegistros();
     contenedor.innerHTML = "";
 
-    // ---- Sección DEUDAS (siempre visible) ----
+    // ---- Sección DEUDAS ----
     const deudas = registros.filter(r => r.seccion === "deudas");
     contenedor.appendChild(
       crearSeccionEditable(
@@ -55,7 +54,7 @@
       )
     );
 
-    // ---- Sección METAS (siempre visible) ----
+    // ---- Sección METAS ----
     const metas = registros.filter(r => r.seccion === "ahorro");
     contenedor.appendChild(
       crearSeccionEditable(
@@ -113,7 +112,7 @@
               </div>
               <h4 class="item-nombre">${item.nombre}</h4>
             </div>
-            <p class="item-fecha">Vence ${formatearFecha(item.fecha)}</p>
+            <p class="item-fecha">Vence ${formatearFecha(item.fecha)} · ${formatearMonto(item.monto)}</p>
             <div class="item-progreso-container">
               <div class="item-progreso-barra">
                 <div class="item-progreso-relleno" style="width:${porcentaje}%; background-color:${colorRelleno};"></div>
@@ -163,7 +162,7 @@
               </div>
               <h4 class="item-nombre">${item.nombre}</h4>
             </div>
-            <p class="item-fecha">Vence ${formatearFecha(item.fecha)}</p>
+            <p class="item-fecha">Vence ${formatearFecha(item.fecha)} · ${formatearMonto(item.monto)}</p>
             <div class="item-progreso-container">
               <div class="item-progreso-barra">
                 <div class="item-progreso-relleno" style="width:${porcentaje}%; background-color:${color};"></div>
@@ -190,16 +189,8 @@
   }
 
   // ============================================
-  // UTILIDADES
+  // UTILIDADES LOCALES
   // ============================================
-  function obtenerRegistros() {
-    try {
-      return JSON.parse(localStorage.getItem("finix_registros")) || [];
-    } catch (e) {
-      return [];
-    }
-  }
-
   function calcularPorcentaje(registro) {
     if (registro.montoTotal && registro.montoPagado) {
       return Math.min(100, Math.round((registro.montoPagado / registro.montoTotal) * 100));
@@ -214,6 +205,11 @@
     if (!fechaISO) return "Sin fecha";
     const fecha = new Date(fechaISO + "T00:00:00");
     return `${fecha.getDate()} ${MESES_NOMBRES[fecha.getMonth()]}`;
+  }
+
+  function formatearMonto(valor) {
+    const numero = Number(valor) || 0;
+    return "$" + numero.toLocaleString("es-CO");
   }
 
   function hexToRgba(hex, alpha) {

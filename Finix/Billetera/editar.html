@@ -8,36 +8,20 @@
 </head>
 <body>
 
-  <!-- ============================================
-       HEADER
-       ============================================ -->
   <header class="header">
     <div class="header-inner">
-
-      <!-- Botón regresar -->
       <a href="billetera.html" class="btn-regresar" id="btnRegresar" aria-label="Regresar">
         <img src="../iconos/flecharegreso.png" alt="Regresar" class="icono-regresar" onerror="this.src='iconos/flecharegreso.png'">
       </a>
 
-      <!-- Título -->
       <h1 class="titulo-editar">Actualizar datos</h1>
 
-      <!-- Subtítulo / descripción -->
       <p class="subtitulo-editar">Administra tus secciones de deudas y metas de ahorro</p>
-
     </div>
   </header>
 
-  <!-- ============================================
-       SECCIONES DINÁMICAS
-       ============================================ -->
-  <main class="contenedor-secciones" id="contenedorSecciones">
-    <!-- Se llena dinámicamente con JS -->
-  </main>
+  <main class="contenedor-secciones" id="contenedorSecciones"></main>
 
-  <!-- ============================================
-       NAVEGACIÓN INFERIOR
-       ============================================ -->
   <div class="bottom-nav">
     <a href="../finix.html" data-page="finix.html">
       <img src="../iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'">
@@ -58,6 +42,9 @@
     </a>
   </div>
 
+  <!-- SDK de Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
   <script src="editar.js"></script>
 </body>
 </html>

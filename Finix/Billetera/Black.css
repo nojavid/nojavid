@@ -686,6 +686,105 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
 }
 
 /* ============================================
+   SECCIONES PERSONALIZADAS
+   ============================================ */
+.seccion.personalizada {
+  position: relative;
+  max-width: 373px;
+  margin: 16px auto;
+  padding: 11px 12px 12px 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  z-index: 10;
+}
+
+.personalizada-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 2px;
+}
+
+.personalizada-circulo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.personalizada-icono { width: 18px; height: 18px; object-fit: contain; }
+
+.personalizada-titulo {
+  font-size: 11px;
+  font-weight: 800;
+  color: #000000;
+  line-height: 1;
+}
+
+.personalizada-descripcion {
+  font-size: 8px;
+  font-weight: 500;
+  color: #000000;
+  padding-left: 35px;
+  margin-bottom: 8px;
+  line-height: 13px;
+}
+
+.personalizada-lista {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.personalizada-item { display: flex; flex-direction: column; gap: 4px; }
+.personalizada-item-header { display: flex; align-items: center; gap: 6px; }
+
+.personalizada-item-circulo {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.personalizada-item-icono { width: 7px; height: 7px; object-fit: contain; }
+.personalizada-item-nombre { font-size: 11px; font-weight: 800; color: #000000; line-height: 1; }
+.personalizada-item-fecha { font-size: 8px; font-weight: 500; color: #000000; padding-left: 18px; line-height: 1; }
+
+.personalizada-progreso-container { display: flex; align-items: center; gap: 8px; padding-left: 18px; }
+
+.personalizada-progreso-barra {
+  flex: 1;
+  height: 5px;
+  background-color: #D9D9D9;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.personalizada-progreso-relleno {
+  height: 100%;
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.personalizada-progreso-texto {
+  font-size: 8px;
+  font-weight: 500;
+  color: #000000;
+  min-width: 25px;
+  text-align: right;
+}
+
+/* ============================================
    BOTONES FLOTANTES
    ============================================ */
 .btn-lapiz {
@@ -1151,6 +1250,19 @@ body.dark-mode .total-metas-box {
   text-shadow: 0 0 6px rgba(60, 150, 255, 0.8);
 }
 
+/* ---- Secciones personalizadas en modo oscuro ---- */
+body.dark-mode .seccion.personalizada {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .personalizada-titulo { color: #FFFFFF; }
+body.dark-mode .personalizada-descripcion { color: #A8B8BE; }
+body.dark-mode .personalizada-lista { background-color: #FFFFFF; }
+body.dark-mode .personalizada-item-nombre,
+body.dark-mode .personalizada-item-fecha,
+body.dark-mode .personalizada-progreso-texto { color: #000000; }
+body.dark-mode .personalizada-progreso-barra { background-color: #D9D9D9; }
+
 /* ---- Modal oscuro ---- */
 body.dark-mode .modal-registro { background-color: #1A1D21; }
 body.dark-mode .modal-titulo { color: #FFFFFF; }
@@ -1181,6 +1293,7 @@ body.dark-mode .btn-cancelar { background-color: #2A2E33; color: #A8B8BE; }
   .seccion { max-width: 100%; margin-left: 15px; margin-right: 15px; width: calc(100% - 30px); }
   .seccion.total { margin-left: 10px; margin-right: 10px; width: calc(100% - 20px); }
   .seccion.deudas, .seccion.metas { margin-left: 10px; margin-right: 10px; width: calc(100% - 20px); }
+  .seccion.personalizada { margin-left: 10px; margin-right: 10px; width: calc(100% - 20px); }
   .btn-agregar-mas { right: 10px; bottom: 84px; }
   .btn-lapiz { top: auto; left: auto; right: 21px; bottom: 138px; }
 }

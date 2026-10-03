@@ -14,11 +14,9 @@
   <header class="header">
     <div class="header-inner">
 
-      <!-- Saludo -->
       <h1 class="saludo">Hola, <span id="nombreUsuario">Name</span></h1>
       <h2 class="subtitulo">Billetera</h2>
 
-      <!-- Interruptor modo oscuro / claro (switch animado) -->
       <div class="interruptor-tema" id="interruptorTema">
         <div class="switch-track" id="switchTrack">
           <img src="../iconos/sol.png" alt="sol" class="switch-icon switch-icon-sol">
@@ -29,7 +27,6 @@
         </div>
       </div>
 
-      <!-- Botón de fecha (selector de mes) -->
       <div class="fecha-contenedor" id="btnFecha">
         <img src="../iconos/calendario1.4.png" alt="calendario" class="icono-calendario">
         <p class="fecha">
@@ -37,10 +34,7 @@
         </p>
         <span class="flecha">^</span>
 
-        <!-- Dropdown de meses -->
-        <div class="meses-dropdown" id="mesesDropdown">
-          <!-- Se llena dinámicamente con JS -->
-        </div>
+        <div class="meses-dropdown" id="mesesDropdown"></div>
       </div>
 
     </div>
@@ -57,7 +51,7 @@
     </div>
 
     <h2 class="titulo-balance">Balance total</h2>
-    <p class="valor-balance" id="balanceTotal">$3.240.000</p>
+    <p class="valor-balance" id="balanceTotal">$0</p>
 
     <div class="linea-vertical-total"></div>
 
@@ -76,10 +70,7 @@
        SECCIÓN DEUDAS
        ============================================ -->
   <section class="seccion deudas">
-
-    <div class="total-deudas-box" id="totalDeudasBox">
-      Total: $0
-    </div>
+    <div class="total-deudas-box" id="totalDeudasBox">Total: $0</div>
 
     <div class="deudas-header">
       <div class="deudas-circulo">
@@ -90,18 +81,14 @@
 
     <p class="deudas-descripcion">En lo que debes y en que va cada una</p>
 
-    <div class="deudas-lista" id="deudasLista">
-    </div>
+    <div class="deudas-lista" id="deudasLista"></div>
   </section>
 
   <!-- ============================================
        SECCIÓN METAS DE AHORRO
        ============================================ -->
   <section class="seccion metas">
-
-    <div class="total-metas-box" id="totalMetasBox">
-      Total: $0
-    </div>
+    <div class="total-metas-box" id="totalMetasBox">Total: $0</div>
 
     <div class="metas-header">
       <div class="metas-circulo">
@@ -112,9 +99,13 @@
 
     <p class="metas-descripcion">Tus planes a futuro</p>
 
-    <div class="metas-lista" id="metasLista">
-    </div>
+    <div class="metas-lista" id="metasLista"></div>
   </section>
+
+  <!-- ============================================
+       CONTENEDOR DE SECCIONES PERSONALIZADAS
+       ============================================ -->
+  <div id="seccionesPersonalizadas"></div>
 
   <!-- ============================================
        BOTÓN LÁPIZ
@@ -147,9 +138,7 @@
           <label class="form-label" for="selectSeccion">Sección</label>
           <select class="form-select" id="selectSeccion" required>
             <option value="" disabled selected>Selecciona una sección</option>
-            <option value="deudas">Deudas</option>
-            <option value="ahorro">Ahorro</option>
-            <option value="nueva">+ Agregar nueva sección</option>
+            <!-- Las opciones se generan dinámicamente con JS -->
           </select>
         </div>
 
@@ -174,7 +163,7 @@
 
         <div class="form-grupo">
           <label class="form-label" for="inputMonto">Monto</label>
-          <input type="number" class="form-input" id="inputMonto" placeholder="Ej: 150000" min="0" step="any" required>
+          <input type="text" inputmode="numeric" class="form-input" id="inputMonto" placeholder="Ej: 150.000" required>
         </div>
 
         <div class="form-grupo">
@@ -205,8 +194,7 @@
 
         <div class="form-grupo" id="grupoDiaRecordatorio">
           <label class="form-label" for="selectDiaRecordatorio">¿Qué día recordar?</label>
-          <select class="form-select" id="selectDiaRecordatorio">
-          </select>
+          <select class="form-select" id="selectDiaRecordatorio"></select>
         </div>
 
         <div class="form-botones">
@@ -241,6 +229,9 @@
     </a>
   </div>
 
+  <!-- SDK de Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
   <script src="billetera.js"></script>
 </body>
 </html>
