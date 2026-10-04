@@ -12,7 +12,53 @@ const MESES_NOMBRES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
 let cacheRegistros = [];
 
 // ============================================
-// NOMBRE DEL USUARIO (desde profiles)
+// ÍCONOS SVG DE CADA SECCIÓN PERSONALIZADA
+// ============================================
+const ICONOS_SVG = {
+  "chart-bar": `
+    <svg class="personalizada-icono-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+      <path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+      <path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+      <path d="M4 20h14"/>
+    </svg>
+  `,
+  "credit-card": `
+    <svg class="personalizada-icono-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/>
+      <path d="M3 10l18 0"/>
+      <path d="M7 15l.01 0"/>
+      <path d="M11 15l2 0"/>
+    </svg>
+  `,
+  "coin-bitcoin": `
+    <svg class="personalizada-icono-svg" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17 3.34a10 10 0 1 1 -15 8.66l.005 -.324a10 10 0 0 1 14.995 -8.336zm-4 2.66a1 1 0 0 0 -1 1h-1a1 1 0 0 0 -2 0a1 1 0 1 0 0 2v6a1 1 0 0 0 0 2c0 1.333 2 1.333 2 0h1a1 1 0 0 0 2 0v-.15c1.167 -.394 2 -1.527 2 -2.85l-.005 -.175a3.063 3.063 0 0 0 -.734 -1.827c.46 -.532 .739 -1.233 .739 -1.998c0 -1.323 -.833 -2.456 -2 -2.85v-.15a1 1 0 0 0 -1 -1zm.09 7c.492 0 .91 .437 .91 1s-.418 1 -.91 1h-2.09v-2h2.09zm0 -4c.492 0 .91 .437 .91 1c0 .522 -.36 .937 -.806 .993l-.104 .007h-2.09v-2h2.09z"/>
+    </svg>
+  `,
+  "home": `
+    <svg class="personalizada-icono-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12l-2 0l9 -9l9 9l-2 0"/>
+      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/>
+      <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/>
+    </svg>
+  `,
+  "slack": `
+    <svg class="personalizada-icono-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 12v-6a2 2 0 0 1 4 0v6m0 -2a2 2 0 1 1 2 2h-6"/>
+      <path d="M12 12h6a2 2 0 0 1 0 4h-6m2 0a2 2 0 1 1 -2 2v-6"/>
+      <path d="M12 12v6a2 2 0 0 1 -4 0v-6m0 2a2 2 0 1 1 -2 -2h6"/>
+      <path d="M12 12h-6a2 2 0 0 1 0 -4h6m-2 0a2 2 0 1 1 2 -2v6"/>
+    </svg>
+  `
+};
+
+function obtenerIconoSVG(nombre) {
+  return ICONOS_SVG[nombre] || ICONOS_SVG["chart-bar"];
+}
+
+// ============================================
+// NOMBRE DEL USUARIO
 // ============================================
 async function cargarNombre() {
   const el = document.getElementById("nombreUsuario");
@@ -77,7 +123,6 @@ function filtrarRegistrosPorMes(registros) {
 
 function obtenerMesesConDatos() {
   const meses = new Set();
-
   cacheRegistros.forEach(r => {
     if (r.fecha) {
       const fecha = new Date(r.fecha + "T00:00:00");
@@ -85,7 +130,6 @@ function obtenerMesesConDatos() {
       meses.add(clave);
     }
   });
-
   return [...meses].sort().reverse();
 }
 
@@ -139,11 +183,7 @@ function renderizarDropdownMeses() {
   const btnTodos = document.createElement("button");
   btnTodos.className = "mes-opcion" + (mesSeleccionado === "todos" ? " seleccionado" : "");
   btnTodos.textContent = "Todos los meses";
-  btnTodos.dataset.mes = "todos";
-  btnTodos.addEventListener("click", (e) => {
-    e.stopPropagation();
-    seleccionarMes("todos");
-  });
+  btnTodos.addEventListener("click", (e) => { e.stopPropagation(); seleccionarMes("todos"); });
   dropdown.appendChild(btnTodos);
 
   const meses = obtenerMesesConDatos();
@@ -160,11 +200,7 @@ function renderizarDropdownMeses() {
     const btn = document.createElement("button");
     btn.className = "mes-opcion" + (mesSeleccionado === clave ? " seleccionado" : "");
     btn.textContent = formatearMesClave(clave);
-    btn.dataset.mes = clave;
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      seleccionarMes(clave);
-    });
+    btn.addEventListener("click", (e) => { e.stopPropagation(); seleccionarMes(clave); });
     dropdown.appendChild(btn);
   });
 }
@@ -191,7 +227,6 @@ function seleccionarMes(clave) {
 function inicializarSelectorMes() {
   const btnFecha = document.getElementById("btnFecha");
   const dropdown = document.getElementById("mesesDropdown");
-
   if (!btnFecha || !dropdown) return;
 
   renderizarDropdownMeses();
@@ -225,7 +260,7 @@ function inicializarSelectorMes() {
 }
 
 // ============================================
-// REFRESCAR REGISTROS DESDE SUPABASE
+// REFRESCAR REGISTROS
 // ============================================
 async function refrescarRegistros() {
   cacheRegistros = await dbObtenerRegistros();
@@ -250,11 +285,7 @@ function renderizarDeudas() {
   lista.innerHTML = "";
 
   if (registros.length === 0) {
-    lista.innerHTML = `
-      <div class="deuda-item-vacio" style="text-align:center; padding:12px; font-size:10px; color:#69747A;">
-        No hay deudas registradas
-      </div>
-    `;
+    lista.innerHTML = `<div class="deuda-item-vacio" style="text-align:center; padding:12px; font-size:10px; color:#69747A;">No hay deudas registradas</div>`;
     return;
   }
 
@@ -294,11 +325,7 @@ function renderizarMetas() {
   lista.innerHTML = "";
 
   if (registros.length === 0) {
-    lista.innerHTML = `
-      <div class="meta-item-vacio" style="text-align:center; padding:12px; font-size:10px; color:#69747A;">
-        No hay metas registradas
-      </div>
-    `;
+    lista.innerHTML = `<div class="meta-item-vacio" style="text-align:center; padding:12px; font-size:10px; color:#69747A;">No hay metas registradas</div>`;
     return;
   }
 
@@ -334,7 +361,6 @@ function renderizarSeccionesPersonalizadas() {
 
   contenedor.innerHTML = "";
 
-  // Agrupar registros personalizados por nombre de sección
   const personalizadas = {};
   cacheRegistros
     .filter(r => r.seccion === "nueva")
@@ -343,6 +369,7 @@ function renderizarSeccionesPersonalizadas() {
       if (!personalizadas[key]) {
         personalizadas[key] = {
           color: r.colorSeccion || "#398869",
+          icono: r.iconoSeccion || "chart-bar",
           items: []
         };
       }
@@ -354,6 +381,7 @@ function renderizarSeccionesPersonalizadas() {
   Object.keys(personalizadas).forEach(nombre => {
     const data = personalizadas[nombre];
     const itemsFiltrados = filtrarRegistrosPorMes(data.items);
+    const svgIcono = obtenerIconoSVG(data.icono);
 
     const seccion = document.createElement("section");
     seccion.className = "seccion personalizada";
@@ -362,19 +390,16 @@ function renderizarSeccionesPersonalizadas() {
 
     let itemsHTML = "";
     if (itemsFiltrados.length === 0) {
-      itemsHTML = `
-        <div style="text-align:center; padding:12px; font-size:10px; color:#69747A;">
-          No hay registros en este mes
-        </div>
-      `;
+      itemsHTML = `<div style="text-align:center; padding:12px; font-size:10px; color:#69747A;">No hay registros en este mes</div>`;
     } else {
       itemsFiltrados.forEach(item => {
         const porcentaje = calcularPorcentaje(item);
+        const svgItem = svgIcono.replace('class="personalizada-icono-svg"', 'class="personalizada-item-icono-svg"');
         itemsHTML += `
           <div class="personalizada-item">
             <div class="personalizada-item-header">
-              <div class="personalizada-item-circulo" style="background-color:${data.color};">
-                <img src="../iconos/Meta.png" alt="" class="personalizada-item-icono">
+              <div class="personalizada-item-circulo" style="background-color:${data.color}; color:#FFFFFF;">
+                ${svgItem}
               </div>
               <h4 class="personalizada-item-nombre">${item.nombre}</h4>
             </div>
@@ -392,8 +417,8 @@ function renderizarSeccionesPersonalizadas() {
 
     seccion.innerHTML = `
       <div class="personalizada-header">
-        <div class="personalizada-circulo" style="background-color:${data.color};">
-          <img src="../iconos/Meta.png" alt="" class="personalizada-icono">
+        <div class="personalizada-circulo" style="background-color:${data.color}; color:#FFFFFF;">
+          ${svgIcono}
         </div>
         <h2 class="personalizada-titulo">${nombre}</h2>
       </div>
@@ -406,17 +431,15 @@ function renderizarSeccionesPersonalizadas() {
 }
 
 // ============================================
-// RELLENAR SELECT DE SECCIONES EN EL MODAL
+// RELLENAR SELECT DE SECCIONES
 // ============================================
 function rellenarSelectSecciones() {
   const selectSeccion = document.getElementById("selectSeccion");
   if (!selectSeccion) return;
 
   const valorActual = selectSeccion.value;
-
   selectSeccion.innerHTML = "";
 
-  // Placeholder
   const optDefault = document.createElement("option");
   optDefault.value = "";
   optDefault.disabled = true;
@@ -424,7 +447,6 @@ function rellenarSelectSecciones() {
   optDefault.textContent = "Selecciona una sección";
   selectSeccion.appendChild(optDefault);
 
-  // Fijas
   const optDeudas = document.createElement("option");
   optDeudas.value = "deudas";
   optDeudas.textContent = "Deudas";
@@ -435,7 +457,6 @@ function rellenarSelectSecciones() {
   optAhorro.textContent = "Ahorro";
   selectSeccion.appendChild(optAhorro);
 
-  // Personalizadas (únicas por nombre)
   const nombresCustom = [...new Set(
     cacheRegistros
       .filter(r => r.seccion === "nueva")
@@ -450,13 +471,11 @@ function rellenarSelectSecciones() {
     selectSeccion.appendChild(opt);
   });
 
-  // Nueva
   const optNueva = document.createElement("option");
   optNueva.value = "nueva";
   optNueva.textContent = "+ Agregar nueva sección";
   selectSeccion.appendChild(optNueva);
 
-  // Restaurar valor si aún existe
   if (valorActual && [...selectSeccion.options].some(o => o.value === valorActual)) {
     selectSeccion.value = valorActual;
   }
@@ -476,16 +495,34 @@ function actualizarTotales() {
     .filter(r => r.seccion === "ahorro")
     .reduce((sum, r) => sum + (Number(r.monto) || 0), 0);
 
-  const balanceTotal = totalAhorro - totalDeudas;
+  // 👇 Cuando se implementen los abonos, este valor vendrá de la BD.
+  // Por ahora, siempre 0.
+  const totalAbonado = 0;
+
+  // Balance de ahorro = total abonado
+  const balanceAhorro = totalAbonado;
+
+  // Porcentaje = (abonado / totalAhorro) * 100
+  let porcentaje = 0;
+  if (totalAhorro > 0) {
+    porcentaje = Math.min(100, Math.round((totalAbonado / totalAhorro) * 100));
+  }
 
   const elBalance = document.getElementById("balanceTotal");
-  if (elBalance) elBalance.textContent = formatearMonto(balanceTotal);
+  if (elBalance) elBalance.textContent = formatearMonto(balanceAhorro);
 
   const elAhorro = document.getElementById("totalAhorro");
   if (elAhorro) elAhorro.textContent = formatearMonto(totalAhorro);
 
   const elDeudas = document.getElementById("totalDeudas");
   if (elDeudas) elDeudas.textContent = formatearMonto(totalDeudas);
+
+  // Barra de progreso
+  const elBarra = document.getElementById("balanceProgresoRelleno");
+  if (elBarra) elBarra.style.width = porcentaje + "%";
+
+  const elTexto = document.getElementById("balanceProgresoTexto");
+  if (elTexto) elTexto.textContent = porcentaje + "%";
 
   const boxDeudas = document.getElementById("totalDeudasBox");
   if (boxDeudas) boxDeudas.textContent = "Total: " + formatearMonto(totalDeudas);
@@ -508,11 +545,23 @@ function inicializarModal() {
   const inputNombreSeccion = document.getElementById("inputNombreSeccion");
   const inputColorSeccion = document.getElementById("inputColorSeccion");
   const colorTexto = document.getElementById("colorTexto");
+  const inputIconoSeccion = document.getElementById("inputIconoSeccion");
+  const iconoSelector = document.getElementById("iconoSelector");
   const selectDiaRecordatorio = document.getElementById("selectDiaRecordatorio");
   const grupoDiaRecordatorio = document.getElementById("grupoDiaRecordatorio");
   const radiosRecordatorio = document.querySelectorAll('input[name="recordatorio"]');
 
   if (!btnAgregar || !modalOverlay) return;
+
+  if (iconoSelector) {
+    iconoSelector.querySelectorAll(".icono-opcion").forEach(btn => {
+      btn.addEventListener("click", () => {
+        iconoSelector.querySelectorAll(".icono-opcion").forEach(b => b.classList.remove("activo"));
+        btn.classList.add("activo");
+        if (inputIconoSeccion) inputIconoSeccion.value = btn.getAttribute("data-icono");
+      });
+    });
+  }
 
   btnAgregar.addEventListener("click", () => {
     modalOverlay.classList.add("activo");
@@ -521,7 +570,6 @@ function inicializarModal() {
     const inputFecha = document.getElementById("inputFecha");
     if (inputFecha) inputFecha.value = hoy;
 
-    // 👇 Rellenar el select con las secciones actuales
     rellenarSelectSecciones();
   });
 
@@ -535,6 +583,15 @@ function inicializarModal() {
       formRegistro.reset();
       camposNuevaSeccion.classList.remove("activo");
       if (colorTexto) colorTexto.textContent = "#398869";
+
+      if (iconoSelector) {
+        iconoSelector.querySelectorAll(".icono-opcion").forEach(b => {
+          if (b.getAttribute("data-icono") === "chart-bar") b.classList.add("activo");
+          else b.classList.remove("activo");
+        });
+      }
+      if (inputIconoSeccion) inputIconoSeccion.value = "chart-bar";
+
       actualizarDiasRecordatorio("diario");
       const inputFecha = document.getElementById("inputFecha");
       if (inputFecha) inputFecha.value = new Date().toISOString().split("T")[0];
@@ -618,15 +675,16 @@ function inicializarModal() {
       const seccionSeleccionada = selectSeccion.value;
       const tipoRecordatorio = document.querySelector('input[name="recordatorio"]:checked').value;
 
-      // 👇 Interpretar el valor seleccionado
       let seccionFinal = seccionSeleccionada;
       let nombreSeccionFinal = null;
       let colorSeccionFinal = null;
+      let iconoSeccionFinal = null;
 
       if (seccionSeleccionada === "nueva") {
         seccionFinal = "nueva";
         nombreSeccionFinal = inputNombreSeccion.value;
         colorSeccionFinal = inputColorSeccion.value;
+        iconoSeccionFinal = inputIconoSeccion ? inputIconoSeccion.value : "chart-bar";
 
       } else if (seccionSeleccionada.startsWith("custom:")) {
         const nombreExistente = seccionSeleccionada.replace("custom:", "");
@@ -637,12 +695,14 @@ function inicializarModal() {
           r => r.seccion === "nueva" && r.nombreSeccion === nombreExistente
         );
         colorSeccionFinal = ejemplo?.colorSeccion || "#398869";
+        iconoSeccionFinal = ejemplo?.iconoSeccion || "chart-bar";
       }
 
       const nuevoRegistro = {
         seccion:         seccionFinal,
         nombreSeccion:   nombreSeccionFinal,
         colorSeccion:    colorSeccionFinal,
+        iconoSeccion:    iconoSeccionFinal,
         nombre:          document.getElementById("inputNombre").value,
         monto:           leerMontoLimpio(),
         fecha:           document.getElementById("inputFecha").value,
@@ -674,7 +734,6 @@ function inicializarSwitchTema() {
   if (!track || !thumb) return;
 
   const esModoOscuro = document.body.classList.contains("dark-mode");
-
   const MIN_LEFT = 2;
   const MAX_LEFT = 32;
 
@@ -741,11 +800,7 @@ function inicializarSwitchTema() {
   function moverDrag(e) {
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const delta = clientX - startX;
-
-    if (Math.abs(delta) > movimientoMinimo) {
-      arrastrando = true;
-    }
-
+    if (Math.abs(delta) > movimientoMinimo) arrastrando = true;
     if (!arrastrando) return;
 
     let nuevoLeft = thumbStartLeft + delta;
@@ -768,10 +823,7 @@ function inicializarSwitchTema() {
 
     thumb.style.left = (debeIrOscuro ? MAX_LEFT : MIN_LEFT) + "px";
 
-    setTimeout(() => {
-      cambiarTema(debeIrOscuro);
-    }, 180);
-
+    setTimeout(() => { cambiarTema(debeIrOscuro); }, 180);
     arrastrando = false;
   }
 }

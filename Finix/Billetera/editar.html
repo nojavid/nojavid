@@ -8,7 +8,10 @@
 </head>
 <body>
 
-  <header class="header">
+  <!-- ============================================
+       HEADER PRINCIPAL (vista lista)
+       ============================================ -->
+  <header class="header" id="headerPrincipal">
     <div class="header-inner">
       <a href="billetera.html" class="btn-regresar" id="btnRegresar" aria-label="Regresar">
         <img src="../iconos/flecharegreso.png" alt="Regresar" class="icono-regresar" onerror="this.src='iconos/flecharegreso.png'">
@@ -20,9 +23,120 @@
     </div>
   </header>
 
+  <!-- ============================================
+       VISTA LISTA (secciones)
+       ============================================ -->
   <main class="contenedor-secciones" id="contenedorSecciones"></main>
 
-  <div class="bottom-nav">
+  <!-- ============================================
+       VISTA DE EDICIÓN INDIVIDUAL (oculta por defecto)
+       ============================================ -->
+  <section class="vista-edicion" id="vistaEdicion" hidden>
+
+    <header class="header-edicion">
+      <div class="header-edicion-inner">
+        <button class="btn-regresar-edicion" id="btnRegresarEdicion" aria-label="Regresar">
+          <svg class="icono-regresar-svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <g class="arrow-group">
+              <path d="M5 12l14 0" />
+              <path d="M5 12l4 4" />
+              <path d="M5 12l4 -4" />
+            </g>
+          </svg>
+        </button>
+        <h1 class="titulo-edicion">Actualizar datos</h1>
+      </div>
+    </header>
+
+    <!-- Card de contexto (rectángulo con color de la sección) -->
+    <div class="card-contexto" id="cardContexto">
+      <div class="card-contexto-circulo" id="cardContextoCirculo">
+        <img src="" alt="" class="card-contexto-icono" id="cardContextoIcono">
+      </div>
+      <div class="card-contexto-textos">
+        <h2 class="card-contexto-titulo" id="cardContextoTitulo">Deudas</h2>
+        <p class="card-contexto-nombre" id="cardContextoNombre">Tarjeta de crédito</p>
+      </div>
+    </div>
+
+    <!-- Formulario de edición -->
+    <form class="form-edicion" id="formEdicion">
+
+      <div class="form-grupo">
+        <label class="form-label" for="editNombre">Nombre</label>
+        <input type="text" class="form-input" id="editNombre" required>
+      </div>
+
+      <div class="form-grupo">
+        <label class="form-label" for="editMonto">Monto</label>
+        <input type="text" inputmode="numeric" class="form-input" id="editMonto" required>
+      </div>
+
+      <div class="form-grupo">
+        <label class="form-label" for="editFecha">Fecha</label>
+        <input type="date" class="form-input" id="editFecha" required>
+      </div>
+
+      <div class="form-grupo">
+        <label class="form-label">Recordatorio</label>
+        <div class="form-recordatorio">
+          <label class="radio-opcion">
+            <input type="radio" name="editRecordatorio" value="diario">
+            <span class="radio-custom"></span>
+            <span class="radio-texto">Diario</span>
+          </label>
+          <label class="radio-opcion">
+            <input type="radio" name="editRecordatorio" value="semanal">
+            <span class="radio-custom"></span>
+            <span class="radio-texto">Semanal</span>
+          </label>
+          <label class="radio-opcion">
+            <input type="radio" name="editRecordatorio" value="mensual">
+            <span class="radio-custom"></span>
+            <span class="radio-texto">Mensual</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-grupo" id="grupoEditDiaRecordatorio">
+        <label class="form-label" for="editDiaRecordatorio">¿Qué día recordar?</label>
+        <select class="form-select" id="editDiaRecordatorio"></select>
+      </div>
+
+      <button type="submit" class="btn-guardar-cambios" id="btnGuardarCambios">
+        Guardar cambios
+      </button>
+
+      <button type="button" class="btn-eliminar" id="btnEliminar">
+        Eliminar
+      </button>
+
+    </form>
+  </section>
+
+  <!-- ============================================
+       MODAL CONFIRMACIÓN ELIMINAR
+       ============================================ -->
+  <div class="modal-confirm-overlay" id="modalConfirmOverlay">
+    <div class="modal-confirm" id="modalConfirm">
+      <h3 class="modal-confirm-titulo">¿Eliminar registro?</h3>
+      <p class="modal-confirm-texto">Esta acción es permanente y no se puede deshacer.</p>
+
+      <div class="modal-confirm-botones">
+        <button type="button" class="modal-confirm-btn modal-confirm-btn-cancelar" id="btnConfirmCancelar">
+          Cancelar
+        </button>
+        <button type="button" class="modal-confirm-btn modal-confirm-btn-eliminar" id="btnConfirmEliminar">
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       NAVEGACIÓN INFERIOR
+       ============================================ -->
+  <div class="bottom-nav" id="bottomNav">
     <a href="../finix.html" data-page="finix.html">
       <img src="../iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'">
     </a>
@@ -34,7 +148,7 @@
       </div>
     </a>
 
-    <a href="../reportes.html" data-page="reportes.html">
+    <a href="Reportes/reportes.html" data-page="reportes.html">
       <img src="../iconos/barra.png" alt="reportes" onerror="this.src='iconos/barra.png'">
     </a>
     <a href="../configuracion.html" data-page="configuracion.html">

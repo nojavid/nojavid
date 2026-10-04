@@ -40,6 +40,27 @@ function mapRegistro(r) {
 }
 
 // ============================================
+// CONVERSIÓN camelCase → snake_case
+// (para insertar/actualizar en Supabase)
+// ============================================
+function mapRegistroToDB(registro) {
+  const payload = {};
+
+  if (registro.seccion         !== undefined) payload.seccion          = registro.seccion;
+  if (registro.nombreSeccion   !== undefined) payload.nombre_seccion   = registro.nombreSeccion;
+  if (registro.colorSeccion    !== undefined) payload.color_seccion    = registro.colorSeccion;
+  if (registro.nombre          !== undefined) payload.nombre           = registro.nombre;
+  if (registro.monto           !== undefined) payload.monto            = registro.monto;
+  if (registro.montoTotal      !== undefined) payload.monto_total      = registro.montoTotal  || null;
+  if (registro.montoPagado     !== undefined) payload.monto_pagado     = registro.montoPagado || null;
+  if (registro.fecha           !== undefined) payload.fecha            = registro.fecha;
+  if (registro.recordatorio    !== undefined) payload.recordatorio     = registro.recordatorio;
+  if (registro.diaRecordatorio !== undefined) payload.dia_recordatorio = registro.diaRecordatorio;
+
+  return payload;
+}
+
+// ============================================
 // CRUD
 // ============================================
 async function dbObtenerRegistros() {
@@ -66,21 +87,12 @@ async function dbCrearRegistro(registro) {
     return null;
   }
 
+  const payload = mapRegistroToDB(registro);
+  payload.user_id = user.id;
+
   const { data, error } = await supabaseClient
     .from("registros")
-    .insert({
-      user_id:          user.id,
-      seccion:          registro.seccion,
-      nombre_seccion:   registro.nombreSeccion,
-      color_seccion:    registro.colorSeccion,
-      nombre:           registro.nombre,
-      monto:            registro.monto,
-      monto_total:      registro.montoTotal  || null,
-      monto_pagado:     registro.montoPagado || null,
-      fecha:            registro.fecha,
-      recordatorio:     registro.recordatorio,
-      dia_recordatorio: registro.diaRecordatorio,
-    })
+    .insert(payload)
     .select()
     .single();
 
@@ -91,10 +103,27 @@ async function dbCrearRegistro(registro) {
   return mapRegistro(data);
 }
 
+// Acepta cambios en camelCase (desde editar.js) o snake_case (desde otros sitios)
 async function dbActualizarRegistro(id, cambios) {
+  if (!id) {
+    console.error("dbActualizarRegistro: falta el id");
+    return null;
+  }
+
+  // Si las claves vienen en snake_case tal cual, no las convertimos.
+  // Detectamos camelCase por la presencia de "diaRecordatorio" o "montoTotal".
+  const esCamelCase =
+    "diaRecordatorio" in cambios ||
+    "montoTotal"      in cambios ||
+    "montoPagado"     in cambios ||
+    "nombreSeccion"   in cambios ||
+    "colorSeccion"    in cambios;
+
+  const payload = esCamelCase ? mapRegistroToDB(cambios) : cambios;
+
   const { data, error } = await supabaseClient
     .from("registros")
-    .update(cambios)
+    .update(payload)
     .eq("id", id)
     .select()
     .single();
@@ -107,6 +136,11 @@ async function dbActualizarRegistro(id, cambios) {
 }
 
 async function dbEliminarRegistro(id) {
+  if (!id) {
+    console.error("dbEliminarRegistro: falta el id");
+    return false;
+  }
+
   const { error } = await supabaseClient
     .from("registros")
     .delete()

@@ -35,18 +35,35 @@
     </div>
   </header>
 
+  <!-- ============================================
+       SECCIÓN TOTAL (Balance de ahorro)
+       ============================================ -->
   <section class="seccion total">
     <img src="../iconos/ondas1.png" alt="" class="ondas-total">
+
     <div class="circulo-billetera">
       <img src="../iconos/billetera1.4.png" alt="billetera" class="icono-billetera-total">
     </div>
-    <h2 class="titulo-balance">Balance total</h2>
+
+    <h2 class="titulo-balance">Balance de ahorro</h2>
     <p class="valor-balance" id="balanceTotal">$0</p>
+
+    <!-- Barra de progreso del ahorro -->
+    <div class="balance-progreso">
+      <div class="balance-progreso-barra">
+        <div class="balance-progreso-relleno" id="balanceProgresoRelleno" style="width: 0%;"></div>
+      </div>
+      <span class="balance-progreso-texto" id="balanceProgresoTexto">0%</span>
+    </div>
+
     <div class="linea-vertical-total"></div>
+
     <img src="../iconos/flechaverde.png" alt="ahorro" class="flecha-total flecha-verde-total">
     <h3 class="titulo-ahorro-total">Ahorro</h3>
     <p class="valor-ahorro-total" id="totalAhorro">$0</p>
+
     <div class="linea-horizontal-total"></div>
+
     <img src="../iconos/flecharoga.png" alt="deudas" class="flecha-total flecha-roja-total">
     <h3 class="titulo-deudas-total">Deudas</h3>
     <p class="valor-deudas-total" id="totalDeudas">$0</p>
@@ -76,9 +93,6 @@
     <div class="metas-lista" id="metasLista"></div>
   </section>
 
-  <!-- ============================================
-       CONTENEDOR DE SECCIONES PERSONALIZADAS
-       ============================================ -->
   <div id="seccionesPersonalizadas"></div>
 
   <a href="editar.html" class="btn-lapiz" id="btnLapiz" aria-label="Registros">
@@ -101,7 +115,6 @@
           <label class="form-label" for="selectSeccion">Sección</label>
           <select class="form-select" id="selectSeccion" required>
             <option value="" disabled selected>Selecciona una sección</option>
-            <!-- Las opciones se generan dinámicamente con JS -->
           </select>
         </div>
 
@@ -110,12 +123,56 @@
             <label class="form-label" for="inputNombreSeccion">Nombre de la sección</label>
             <input type="text" class="form-input" id="inputNombreSeccion" placeholder="Ej: Inversiones">
           </div>
+
           <div class="form-grupo">
             <label class="form-label" for="inputColorSeccion">Color de la sección</label>
             <div class="form-color-wrapper">
               <input type="color" class="form-color" id="inputColorSeccion" value="#398869">
               <span class="form-color-texto" id="colorTexto">#398869</span>
             </div>
+          </div>
+
+          <div class="form-grupo">
+            <label class="form-label">Ícono de la sección</label>
+            <div class="icono-selector" id="iconoSelector">
+              <button type="button" class="icono-opcion activo" data-icono="chart-bar" aria-label="Gráfico">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+                  <path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+                  <path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/>
+                  <path d="M4 20h14"/>
+                </svg>
+              </button>
+              <button type="button" class="icono-opcion" data-icono="credit-card" aria-label="Tarjeta">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/>
+                  <path d="M3 10l18 0"/>
+                  <path d="M7 15l.01 0"/>
+                  <path d="M11 15l2 0"/>
+                </svg>
+              </button>
+              <button type="button" class="icono-opcion" data-icono="coin-bitcoin" aria-label="Moneda">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17 3.34a10 10 0 1 1 -15 8.66l.005 -.324a10 10 0 0 1 14.995 -8.336zm-4 2.66a1 1 0 0 0 -1 1h-1a1 1 0 0 0 -2 0a1 1 0 1 0 0 2v6a1 1 0 0 0 0 2c0 1.333 2 1.333 2 0h1a1 1 0 0 0 2 0v-.15c1.167 -.394 2 -1.527 2 -2.85l-.005 -.175a3.063 3.063 0 0 0 -.734 -1.827c.46 -.532 .739 -1.233 .739 -1.998c0 -1.323 -.833 -2.456 -2 -2.85v-.15a1 1 0 0 0 -1 -1zm.09 7c.492 0 .91 .437 .91 1s-.418 1 -.91 1h-2.09v-2h2.09zm0 -4c.492 0 .91 .437 .91 1c0 .522 -.36 .937 -.806 .993l-.104 .007h-2.09v-2h2.09z"/>
+                </svg>
+              </button>
+              <button type="button" class="icono-opcion" data-icono="home" aria-label="Hogar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12l-2 0l9 -9l9 9l-2 0"/>
+                  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/>
+                  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/>
+                </svg>
+              </button>
+              <button type="button" class="icono-opcion" data-icono="slack" aria-label="Slack">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 12v-6a2 2 0 0 1 4 0v6m0 -2a2 2 0 1 1 2 2h-6"/>
+                  <path d="M12 12h6a2 2 0 0 1 0 4h-6m2 0a2 2 0 1 1 -2 2v-6"/>
+                  <path d="M12 12v6a2 2 0 0 1 -4 0v-6m0 2a2 2 0 1 1 -2 -2h6"/>
+                  <path d="M12 12h-6a2 2 0 0 1 0 -4h6m-2 0a2 2 0 1 1 2 -2v6"/>
+                </svg>
+              </button>
+            </div>
+            <input type="hidden" id="inputIconoSeccion" value="chart-bar">
           </div>
         </div>
 
@@ -180,7 +237,7 @@
       </div>
     </a>
 
-    <a href="../reportes.html" data-page="reportes.html">
+    <a href="Reportes/reportes.html" data-page="reportes.html">
       <img src="../iconos/barra.png" alt="reportes" onerror="this.src='iconos/barra.png'">
     </a>
     <a href="../configuracion.html" data-page="configuracion.html">
@@ -188,7 +245,6 @@
     </a>
   </div>
 
-  <!-- SDK de Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
   <script src="Black.js"></script>

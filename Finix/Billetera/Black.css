@@ -354,7 +354,7 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
   position: absolute;
   left: 12.33%;
   top: 14.46%;
-  width: 15.55%;
+  width: 25%;
   color: #FFFFFF;
   font-weight: 500;
   font-size: 9px;
@@ -374,6 +374,51 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
   line-height: 1;
   white-space: nowrap;
   z-index: 3;
+}
+
+/* ---- Barra de progreso del balance de ahorro ---- */
+.balance-progreso {
+  position: absolute;
+  left: 12.33%;
+  top: 65%;
+  width: 40%;
+  height: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 4;
+}
+
+.balance-progreso-barra {
+  flex: 1;
+  height: 5px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: inset 0 0 4px rgba(102, 214, 166, 0.2);
+}
+
+.balance-progreso-relleno {
+  height: 100%;
+  width: 0%;
+  background-color: #66D6A6;
+  border-radius: 5px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 6px rgba(102, 214, 166, 0.9),
+              0 0 12px rgba(102, 214, 166, 0.5);
+}
+
+.balance-progreso-texto {
+  font-family: 'Inter', sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  color: #66D6A6;
+  line-height: 1;
+  min-width: 22px;
+  text-align: right;
+  white-space: nowrap;
+  text-shadow: 0 0 6px rgba(102, 214, 166, 0.9),
+               0 0 12px rgba(102, 214, 166, 0.5);
 }
 
 .linea-vertical-total {
@@ -713,6 +758,7 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: #FFFFFF;
 }
 
 .personalizada-icono { width: 18px; height: 18px; object-fit: contain; }
@@ -753,9 +799,10 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  color: #FFFFFF;
 }
 
-.personalizada-item-icono { width: 7px; height: 7px; object-fit: contain; }
+.personalizada-item-icono { width: 8px; height: 8px; object-fit: contain; }
 .personalizada-item-nombre { font-size: 11px; font-weight: 800; color: #000000; line-height: 1; }
 .personalizada-item-fecha { font-size: 8px; font-weight: 500; color: #000000; padding-left: 18px; line-height: 1; }
 
@@ -782,6 +829,21 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
   color: #000000;
   min-width: 25px;
   text-align: right;
+}
+
+/* ---- Íconos SVG de secciones personalizadas ---- */
+.personalizada-icono-svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  pointer-events: none;
+}
+
+.personalizada-item-icono-svg {
+  width: 8px;
+  height: 8px;
+  display: block;
+  pointer-events: none;
 }
 
 /* ============================================
@@ -1034,6 +1096,55 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
 .btn-cancelar:active, .btn-guardar:active { transform: scale(0.97); }
 
 /* ============================================
+   SELECTOR DE ÍCONOS
+   ============================================ */
+.icono-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.icono-opcion {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  border: 1.5px solid #E0E0E0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+  color: #0B2E34;
+}
+
+.icono-opcion:hover { border-color: #398869; transform: translateY(-1px); }
+
+.icono-opcion.activo {
+  border-color: #398869;
+  background-color: #E8F5EE;
+  color: #185540;
+}
+
+.icono-opcion svg { width: 22px; height: 22px; display: block; pointer-events: none; }
+
+body.dark-mode .icono-opcion {
+  background-color: #121315;
+  border-color: #2A2E33;
+  color: #FFFFFF;
+}
+
+body.dark-mode .icono-opcion:hover { border-color: #66D6A6; }
+
+body.dark-mode .icono-opcion.activo {
+  border-color: #66D6A6;
+  background-color: rgba(102, 214, 166, 0.15);
+  color: #66D6A6;
+}
+
+/* ============================================
    NAVEGACIÓN INFERIOR
    ============================================ */
 .bottom-nav {
@@ -1150,6 +1261,7 @@ body.dark-mode .seccion.total::before {
 body.dark-mode .seccion.total .circulo-billetera,
 body.dark-mode .seccion.total .titulo-balance,
 body.dark-mode .seccion.total .valor-balance,
+body.dark-mode .seccion.total .balance-progreso,
 body.dark-mode .seccion.total .linea-vertical-total,
 body.dark-mode .seccion.total .flecha-total,
 body.dark-mode .seccion.total .titulo-ahorro-total,
@@ -1296,6 +1408,7 @@ body.dark-mode .btn-cancelar { background-color: #2A2E33; color: #A8B8BE; }
   .seccion.personalizada { margin-left: 10px; margin-right: 10px; width: calc(100% - 20px); }
   .btn-agregar-mas { right: 10px; bottom: 84px; }
   .btn-lapiz { top: auto; left: auto; right: 21px; bottom: 138px; }
+  .balance-progreso { left: 12.33%; width: 42%; }
 }
 
 @media (max-width: 360px) {
