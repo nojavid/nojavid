@@ -1502,7 +1502,6 @@ body.dark-mode .balance-progreso-texto {
 
 /* ============================================
    NUEVOS ESTILOS PARA EL MODAL DE ABONO
-   (llave + monto copiables)
    ============================================ */
 
 .input-copy-wrapper {
@@ -1544,6 +1543,109 @@ body.dark-mode .balance-progreso-texto {
 }
 
 body.dark-mode .ayuda-pago { color: #A8B8BE; }
+
+/* ============================================
+   BOTÓN "YA PAGUÉ" Y CONFIRMACIÓN DE PAGO
+   ============================================ */
+#qrContainer {
+  display: none;
+  margin-top: 6px;
+}
+
+#qrCanvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.qr-ayuda {
+  font-size: 11px;
+  font-weight: 500;
+  color: #69747A;
+  text-align: center;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+body.dark-mode .qr-ayuda { color: #A8B8BE; }
+
+#btnPagarQR {
+  display: none;
+  width: 100%;
+  height: 44px;
+  margin-top: 14px;
+  font-size: 13px;
+  border-radius: 12px;
+}
+
+.confirmacion-pago {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.confirmacion-pago p {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0B2E34;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.confirmacion-pago .monto-destacado {
+  color: #185540;
+  font-weight: 800;
+}
+
+.confirmacion-botones {
+  display: flex;
+  gap: 10px;
+}
+
+.confirmacion-botones .btn-cancelar,
+.confirmacion-botones .btn-guardar {
+  flex: 1;
+  height: 42px;
+  font-size: 12px;
+}
+
+body.dark-mode .confirmacion-pago p { color: #FFFFFF; }
+body.dark-mode .confirmacion-pago .monto-destacado { color: #66D6A6; }
+
+/* Estado de éxito */
+.pago-exitoso {
+  text-align: center;
+  padding: 20px 0;
+  animation: fadeInDropdown 0.3s ease;
+}
+
+.pago-exitoso .check-grande {
+  font-size: 44px;
+  margin-bottom: 10px;
+  animation: popCheck 0.4s ease;
+}
+
+@keyframes popCheck {
+  0%   { transform: scale(0); }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.pago-exitoso p {
+  font-size: 14px;
+  font-weight: 700;
+  color: #185540;
+}
+
+.pago-exitoso .pago-detalle {
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 6px;
+  color: #69747A;
+}
+
+body.dark-mode .pago-exitoso p { color: #66D6A6; }
+body.dark-mode .pago-exitoso .pago-detalle { color: #A8B8BE; }
 
 /* ============================================
    RESPONSIVE

@@ -29,10 +29,13 @@ function mapRegistro(r) {
     seccion:         r.seccion,
     nombreSeccion:   r.nombre_seccion,
     colorSeccion:    r.color_seccion,
+    iconoSeccion:    r.icono_seccion,
     nombre:          r.nombre,
     monto:           Number(r.monto) || 0,
-    montoTotal:      r.monto_total  ? Number(r.monto_total)  : null,
-    montoPagado:     r.monto_pagado ? Number(r.monto_pagado) : null,
+    // 👇 AQUÍ ESTABA EL BUG — estas dos líneas faltaban
+    montoTotal:      r.monto_total  != null ? Number(r.monto_total)  : null,
+    montoPagado:     r.monto_pagado != null ? Number(r.monto_pagado) : 0,
+    // 👆 AQUÍ ESTABA EL BUG
     fecha:           r.fecha,
     recordatorio:    r.recordatorio,
     diaRecordatorio: r.dia_recordatorio,
@@ -41,7 +44,6 @@ function mapRegistro(r) {
 
 // ============================================
 // CONVERSIÓN camelCase → snake_case
-// (para insertar/actualizar en Supabase)
 // ============================================
 function mapRegistroToDB(registro) {
   const payload = {};
@@ -49,10 +51,11 @@ function mapRegistroToDB(registro) {
   if (registro.seccion         !== undefined) payload.seccion          = registro.seccion;
   if (registro.nombreSeccion   !== undefined) payload.nombre_seccion   = registro.nombreSeccion;
   if (registro.colorSeccion    !== undefined) payload.color_seccion    = registro.colorSeccion;
+  if (registro.iconoSeccion    !== undefined) payload.icono_seccion    = registro.iconoSeccion;
   if (registro.nombre          !== undefined) payload.nombre           = registro.nombre;
   if (registro.monto           !== undefined) payload.monto            = registro.monto;
-  if (registro.montoTotal      !== undefined) payload.monto_total      = registro.montoTotal  || null;
-  if (registro.montoPagado     !== undefined) payload.monto_pagado     = registro.montoPagado || null;
+  if (registro.montoTotal      !== undefined) payload.monto_total      = registro.montoTotal  != null ? registro.montoTotal  : null;
+  if (registro.montoPagado     !== undefined) payload.monto_pagado     = registro.montoPagado != null ? registro.montoPagado : 0;
   if (registro.fecha           !== undefined) payload.fecha            = registro.fecha;
   if (registro.recordatorio    !== undefined) payload.recordatorio     = registro.recordatorio;
   if (registro.diaRecordatorio !== undefined) payload.dia_recordatorio = registro.diaRecordatorio;
@@ -103,7 +106,9 @@ async function dbCrearRegistro(registro) {
   return mapRegistro(data);
 }
 
-// Acepta cambios en camelCase (desde editar.js) o snake_case (desde otros sitios)
+// ============================================
+// ACTUALIZAR REGISTRO CON DETECCIÓN DE RLS
+// ============================================
 async function dbActualizarRegistro(id, cambios) {
   if (!id) {
     console.error("dbActualizarRegistro: falta el id");
@@ -115,9 +120,12 @@ async function dbActualizarRegistro(id, cambios) {
     "montoTotal"      in cambios ||
     "montoPagado"     in cambios ||
     "nombreSeccion"   in cambios ||
-    "colorSeccion"    in cambios;
+    "colorSeccion"    in cambios ||
+    "iconoSeccion"    in cambios;
 
   const payload = esCamelCase ? mapRegistroToDB(cambios) : cambios;
+
+  console.log("🟠 dbActualizarRegistro → id:", id, "payload:", payload);
 
   const { data, error } = await supabaseClient
     .from("registros")
@@ -127,9 +135,46 @@ async function dbActualizarRegistro(id, cambios) {
     .single();
 
   if (error) {
-    console.error("Error actualizando registro:", error);
+    console.error("❌ Error actualizando registro:", error);
+    alert("Error al guardar: " + error.message);
     return null;
   }
+
+  // 🔍 DETECCIÓN DE FALLO SILENCIOSO POR RLS
+  let algunCampoNoActualizado = false;
+  const camposFallidos = [];
+
+  for (const key of Object.keys(payload)) {
+    const valorEnviado  = payload[key];
+    const valorRecibido = data[key];
+
+    const enviadoNum  = valorEnviado === null ? null : Number(valorEnviado);
+    const recibidoNum = valorRecibido === null ? null : Number(valorRecibido);
+
+    const sonIguales = (valorEnviado === valorRecibido) ||
+                       (enviadoNum !== null && recibidoNum !== null && enviadoNum === recibidoNum);
+
+    if (!sonIguales) {
+      algunCampoNoActualizado = true;
+      camposFallidos.push({
+        campo: key,
+        enviado: valorEnviado,
+        recibido: valorRecibido,
+      });
+    }
+  }
+
+  if (algunCampoNoActualizado) {
+    console.error("🚨 RLS bloqueó el UPDATE silenciosamente.");
+    console.error("Campos que NO se actualizaron:", camposFallidos);
+    alert(
+      "No se pudo guardar el cambio.\n\n" +
+      "Causa probable: falta la política RLS de UPDATE en Supabase."
+    );
+    return null;
+  }
+
+  console.log("🟠 dbActualizarRegistro → data:", data);
   return mapRegistro(data);
 }
 
@@ -174,10 +219,6 @@ async function dbObtenerPerfil() {
 // ============================================
 // GUARDAR PAYLOAD QR BRE-B EN EL PERFIL
 // ============================================
-// Nota: reutilizamos la columna `llave_bre_b` para almacenar
-// el payload EMVCo completo del QR (string largo de dígitos),
-// no la llave corta tipo "@usuario".
-// ============================================
 async function dbGuardarPayloadBreB(payload) {
   const user = await obtenerUsuarioActual();
   if (!user) return false;
@@ -210,8 +251,8 @@ async function dbCrearAbono(abono) {
       user_id: user.id,
       registro_id: abono.registro_id || null,
       monto: abono.monto,
-      llave_bre_b: abono.llave_bre_b,
-      payload_qr: abono.payload_qr,
+      llave_bre_b: abono.llave_bre_b || null,
+      payload_qr: abono.payload_qr || null,
     })
     .select()
     .single();

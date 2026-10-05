@@ -95,10 +95,26 @@ function formatearMonto(valor) {
   return "$" + numero.toLocaleString("es-CO");
 }
 
+// 🔧 Fallback a monto si montoTotal es null/0 + decimales para <1%
 function calcularPorcentaje(registro) {
-  if (registro.montoTotal && registro.montoPagado) {
-    return Math.min(100, Math.round((registro.montoPagado / registro.montoTotal) * 100));
+  if (!registro) return 0;
+
+  let total = Number(registro.montoTotal);
+  if (!total || total <= 0) total = Number(registro.monto) || 0;
+
+  const pagado = Number(registro.montoPagado) || 0;
+
+  if (total > 0) {
+    const pct = (pagado / total) * 100;
+
+    // Si es menor a 1% y mayor a 0, mostrar 1 decimal (ej: 0.1, 0.5)
+    if (pct > 0 && pct < 1) {
+      return Math.round(pct * 10) / 10;
+    }
+
+    return Math.min(100, Math.round(pct));
   }
+
   return 0;
 }
 
@@ -495,9 +511,15 @@ function actualizarTotales() {
 
   const totalAhorro = registros
     .filter(r => r.seccion === "ahorro")
-    .reduce((sum, r) => sum + (Number(r.monto) || 0), 0);
+    .reduce((sum, r) => {
+      const t = Number(r.montoTotal);
+      return sum + (t > 0 ? t : (Number(r.monto) || 0));
+    }, 0);
 
-  const totalAbonado = 0;
+  const totalAbonado = registros
+    .filter(r => r.seccion === "ahorro")
+    .reduce((sum, r) => sum + (Number(r.montoPagado) || 0), 0);
+
   const balanceAhorro = totalAbonado;
 
   let porcentaje = 0;
@@ -694,13 +716,17 @@ function inicializarModal() {
         iconoSeccionFinal = ejemplo?.iconoSeccion || "chart-bar";
       }
 
+      const montoIngresado = leerMontoLimpio();
+
       const nuevoRegistro = {
         seccion:         seccionFinal,
         nombreSeccion:   nombreSeccionFinal,
         colorSeccion:    colorSeccionFinal,
         iconoSeccion:    iconoSeccionFinal,
         nombre:          document.getElementById("inputNombre").value,
-        monto:           leerMontoLimpio(),
+        monto:           montoIngresado,
+        montoTotal:      montoIngresado,
+        montoPagado:     0,
         fecha:           document.getElementById("inputFecha").value,
         recordatorio:    tipoRecordatorio,
         diaRecordatorio: selectDiaRecordatorio ? selectDiaRecordatorio.value : null,
@@ -891,7 +917,12 @@ function abrirModalAbono(item) {
     item.querySelector(".personalizada-item-nombre")?.textContent ||
     "Sin nombre";
 
-  const registroId = item.dataset.registroId || null;
+  let registroId = item.dataset.registroId || null;
+  if (!registroId) {
+    const hijoConId = item.querySelector("[data-registro-id]");
+    if (hijoConId) registroId = hijoConId.dataset.registroId;
+  }
+
   registroAbonando = { nombre, elemento: item, registroId };
 
   const modal = document.getElementById("modalAbono");
@@ -900,11 +931,17 @@ function abrirModalAbono(item) {
   document.getElementById("abonoNombreSeccion").textContent = nombre;
   document.getElementById("inputMontoAbono").value = "";
 
-  // Limpiar QR previo
-  const contQR = document.getElementById("qrCanvas");
-  if (contQR) contQR.innerHTML = "";
-
-  document.getElementById("qrContainer").style.display = "none";
+  const contenedorQR = document.getElementById("qrContainer");
+  if (contenedorQR) {
+    contenedorQR.style.display = "none";
+    contenedorQR.innerHTML = `
+      <div id="qrCanvas"></div>
+      <p class="qr-ayuda">Escanea este QR para pagar</p>
+      <button type="button" class="btn-guardar" id="btnPagarQR">
+        ✅ Ya pagué
+      </button>
+    `;
+  }
 
   modal.classList.add("activo");
   document.body.style.overflow = "hidden";
@@ -953,6 +990,7 @@ async function generarQRAbono() {
   }
 
   const contenedorQR = document.getElementById("qrCanvas");
+  if (!contenedorQR) return;
   contenedorQR.innerHTML = "";
 
   const TAMANO_QR = 465;
@@ -994,7 +1032,11 @@ async function generarQRAbono() {
     imgGenerada.style.borderRadius = "12px";
   }
 
-  document.getElementById("qrContainer").style.display = "block";
+  const contenedor = document.getElementById("qrContainer");
+  if (contenedor) contenedor.style.display = "block";
+
+  const btnPagar = document.getElementById("btnPagarQR");
+  if (btnPagar) btnPagar.style.display = "block";
 
   try {
     await dbCrearAbono({
@@ -1010,19 +1052,142 @@ async function generarQRAbono() {
   }
 }
 
+// ============================================
+// CONFIRMAR PAGO DEL QR
+// ============================================
+function confirmarPagoQR() {
+  if (!registroAbonando) return;
+
+  const montoInput = document.getElementById("inputMontoAbono");
+  const monto = Number((montoInput.value || "").replace(/\D/g, "")) || 0;
+
+  if (monto <= 0) {
+    alert("Ingresa un monto válido");
+    return;
+  }
+
+  const contQR = document.getElementById("qrContainer");
+  if (!contQR) return;
+
+  contQR.innerHTML = `
+    <div class="confirmacion-pago">
+      <p>¿Ya realizaste el pago de
+        <span class="monto-destacado">${formatearMonto(monto)}</span>?
+      </p>
+      <div class="confirmacion-botones">
+        <button type="button" class="btn-cancelar" id="btnNoPague">No</button>
+        <button type="button" class="btn-guardar" id="btnSiPague">Sí, ya pagué</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("btnNoPague").addEventListener("click", () => {
+    contQR.innerHTML = `
+      <div id="qrCanvas"></div>
+      <p class="qr-ayuda">Escanea este QR para pagar</p>
+      <button type="button" class="btn-guardar" id="btnPagarQR">
+        ✅ Ya pagué
+      </button>
+    `;
+    document.getElementById("btnGenerarQR").click();
+  });
+
+  document.getElementById("btnSiPague").addEventListener("click", () => {
+    aplicarAbono(monto);
+  });
+}
+
+// ============================================
+// APLICAR ABONO AL REGISTRO (suma a montoPagado)
+// ============================================
+async function aplicarAbono(monto) {
+  if (!registroAbonando || !registroAbonando.registroId) {
+    alert("No se pudo identificar el registro a abonar.");
+    return;
+  }
+
+  const registroId = Number(registroAbonando.registroId);
+
+  const registro = cacheRegistros.find(r => Number(r.id) === registroId);
+  if (!registro) {
+    alert("Registro no encontrado.");
+    return;
+  }
+
+  // Cálculo robusto con fallback a monto
+  let montoTotal = Number(registro.montoTotal);
+  if (!montoTotal || montoTotal <= 0) montoTotal = Number(registro.monto) || 0;
+
+  const montoPagadoYa = Number(registro.montoPagado) || 0;
+  const nuevoMontoPagado = Math.min(montoTotal, montoPagadoYa + monto);
+
+  // ⭐ SIEMPRE enviar montoTotal y montoPagado
+  const cambios = {
+    montoPagado: nuevoMontoPagado,
+    montoTotal:  montoTotal,
+  };
+
+  const actualizado = await dbActualizarRegistro(registroId, cambios);
+
+  if (!actualizado) {
+    alert("No se pudo actualizar el registro. Intenta de nuevo.");
+    return;
+  }
+
+  // Actualizar caché local INMEDIATAMENTE
+  const idx = cacheRegistros.findIndex(r => Number(r.id) === registroId);
+  if (idx !== -1) {
+    cacheRegistros[idx].montoPagado = nuevoMontoPagado;
+    cacheRegistros[idx].montoTotal  = montoTotal;
+  }
+
+  // Re-renderizar inmediatamente
+  renderizarMetas();
+  renderizarDeudas();
+  renderizarSeccionesPersonalizadas();
+  actualizarTotales();
+
+  const contQR = document.getElementById("qrContainer");
+  if (contQR) {
+    contQR.innerHTML = `
+      <div class="pago-exitoso">
+        <div class="check-grande">✅</div>
+        <p>¡Pago registrado con éxito!</p>
+        <p class="pago-detalle">
+          Abono de ${formatearMonto(monto)} aplicado a "${registro.nombre}"
+        </p>
+      </div>
+    `;
+  }
+
+  setTimeout(async () => {
+    await refrescarRegistros();
+    cerrarModalAbono();
+  }, 1500);
+}
+
 function inicializarModalAbono() {
   const modal = document.getElementById("modalAbono");
   if (!modal) return;
 
   const input = document.getElementById("inputMontoAbono");
-  input.addEventListener("input", () => {
-    let v = input.value.replace(/\D/g, "");
-    input.value = v ? Number(v).toLocaleString("es-CO") : "";
-  });
+  if (input) {
+    input.addEventListener("input", () => {
+      let v = input.value.replace(/\D/g, "");
+      input.value = v ? Number(v).toLocaleString("es-CO") : "";
+    });
+  }
 
   document.getElementById("btnCerrarAbono").onclick   = cerrarModalAbono;
   document.getElementById("btnCancelarAbono").onclick = cerrarModalAbono;
   document.getElementById("btnGenerarQR").onclick     = generarQRAbono;
+
+  // Delegación para el botón "Ya pagué"
+  modal.addEventListener("click", (e) => {
+    if (e.target && e.target.id === "btnPagarQR") {
+      confirmarPagoQR();
+    }
+  });
 
   modal.addEventListener("click", (e) => {
     if (e.target === modal) cerrarModalAbono();
