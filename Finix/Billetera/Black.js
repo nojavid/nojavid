@@ -293,6 +293,7 @@ function renderizarDeudas() {
     const porcentaje = calcularPorcentaje(registro);
     const item = document.createElement("div");
     item.className = "deuda-item";
+    item.dataset.registroId = registro.id;
     item.innerHTML = `
       <div class="deuda-item-header">
         <div class="deuda-item-circulo">
@@ -333,6 +334,7 @@ function renderizarMetas() {
     const porcentaje = calcularPorcentaje(registro);
     const item = document.createElement("div");
     item.className = "meta-item";
+    item.dataset.registroId = registro.id;
     item.innerHTML = `
       <div class="meta-item-header">
         <div class="meta-item-circulo">
@@ -396,7 +398,7 @@ function renderizarSeccionesPersonalizadas() {
         const porcentaje = calcularPorcentaje(item);
         const svgItem = svgIcono.replace('class="personalizada-icono-svg"', 'class="personalizada-item-icono-svg"');
         itemsHTML += `
-          <div class="personalizada-item">
+          <div class="personalizada-item" data-registro-id="${item.id}">
             <div class="personalizada-item-header">
               <div class="personalizada-item-circulo" style="background-color:${data.color}; color:#FFFFFF;">
                 ${svgItem}
@@ -495,10 +497,7 @@ function actualizarTotales() {
     .filter(r => r.seccion === "ahorro")
     .reduce((sum, r) => sum + (Number(r.monto) || 0), 0);
 
-  // 👇 Cuando se implementen los abonos, este valor vendrá de la BD.
-  // Por ahora, siempre 0.
   const totalAbonado = 0;
-
   const balanceAhorro = totalAbonado;
 
   let porcentaje = 0;
@@ -816,6 +815,166 @@ function inicializarSwitchTema() {
 }
 
 // ============================================
+// SISTEMA DE ABONOS CON QR BRE-B
+// ============================================
+let registroAbonando = null;
+
+function inicializarLongPress() {
+  let timer = null;
+
+  const iniciar = (e) => {
+    const item = e.target.closest(".deuda-item, .meta-item, .personalizada-item");
+    if (!item) return;
+
+    timer = setTimeout(() => {
+      mostrarBotonAbonar(item);
+      if (navigator.vibrate) navigator.vibrate(30);
+    }, 600);
+  };
+
+  const cancelar = () => {
+    if (timer) { clearTimeout(timer); timer = null; }
+  };
+
+  document.body.addEventListener("touchstart", iniciar, { passive: true });
+  document.body.addEventListener("mousedown", iniciar);
+  document.body.addEventListener("touchend", cancelar);
+  document.body.addEventListener("mouseup", cancelar);
+  document.body.addEventListener("touchmove", cancelar);
+  document.body.addEventListener("mouseleave", cancelar);
+  document.body.addEventListener("scroll", cancelar, true);
+}
+
+function mostrarBotonAbonar(item) {
+  document.querySelectorAll(".btn-abonar-item").forEach(b => b.remove());
+  item.classList.add("item-desenfocado");
+
+  const btn = document.createElement("button");
+  btn.className = "btn-abonar-item";
+  btn.type = "button";
+  btn.innerHTML = "💸 Abonar";
+
+  const limpiar = () => {
+    btn.remove();
+    item.classList.remove("item-desenfocado");
+    document.removeEventListener("click", fueraClic, true);
+  };
+
+  const fueraClic = (ev) => {
+    if (!item.contains(ev.target)) limpiar();
+  };
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    abrirModalAbono(item);
+    limpiar();
+  });
+
+  item.style.position = "relative";
+  item.appendChild(btn);
+  setTimeout(() => document.addEventListener("click", fueraClic, true), 50);
+}
+
+function abrirModalAbono(item) {
+  const nombre =
+    item.querySelector("h4")?.textContent ||
+    item.querySelector(".personalizada-item-nombre")?.textContent ||
+    "Sin nombre";
+
+  const registroId = item.dataset.registroId || null;
+  registroAbonando = { nombre, elemento: item, registroId };
+
+  const modal = document.getElementById("modalAbono");
+  if (!modal) return;
+
+  document.getElementById("abonoNombreSeccion").textContent = nombre;
+  document.getElementById("inputMontoAbono").value = "";
+
+  const contQR = document.getElementById("qrCanvas");
+  if (contQR) contQR.innerHTML = "";
+
+  document.getElementById("qrContainer").style.display = "none";
+
+  modal.classList.add("activo");
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarModalAbono() {
+  const modal = document.getElementById("modalAbono");
+  if (modal) modal.classList.remove("activo");
+  document.body.style.overflow = "";
+  registroAbonando = null;
+}
+
+async function generarQRAbono() {
+  const input = document.getElementById("inputMontoAbono");
+  const monto = Number((input.value || "").replace(/\D/g, "")) || 0;
+
+  if (monto <= 0) {
+    alert("Ingresa un monto válido");
+    return;
+  }
+
+  const perfil = await dbObtenerPerfil();
+  const llave = perfil?.llave_bre_b;
+
+  if (!llave) {
+    alert("No tienes una llave Bre-B configurada. Ve a Configuración y agrégala.");
+    return;
+  }
+
+  const payload = generarPayloadBreB(llave, monto);
+
+  const contenedorQR = document.getElementById("qrCanvas");
+  contenedorQR.innerHTML = "";
+
+  new QRCode(contenedorQR, {
+    text: payload,
+    width: 240,
+    height: 240,
+    colorDark: "#000000",
+    colorLight: "#FFFFFF",
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  document.getElementById("qrContainer").style.display = "block";
+
+  await dbCrearAbono({
+    registro_id: registroAbonando?.registroId
+      ? Number(registroAbonando.registroId)
+      : null,
+    monto,
+    llave_bre_b: llave,
+    payload_qr: payload,
+  });
+}
+
+function inicializarModalAbono() {
+  const modal = document.getElementById("modalAbono");
+  if (!modal) return;
+
+  const input = document.getElementById("inputMontoAbono");
+  input.addEventListener("input", () => {
+    let v = input.value.replace(/\D/g, "");
+    input.value = v ? Number(v).toLocaleString("es-CO") : "";
+  });
+
+  document.getElementById("btnCerrarAbono").onclick   = cerrarModalAbono;
+  document.getElementById("btnCancelarAbono").onclick = cerrarModalAbono;
+  document.getElementById("btnGenerarQR").onclick     = generarQRAbono;
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) cerrarModalAbono();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("activo")) {
+      cerrarModalAbono();
+    }
+  });
+}
+
+// ============================================
 // INICIALIZAR TODO
 // ============================================
 document.addEventListener("DOMContentLoaded", async () => {
@@ -839,4 +998,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   inicializarSwitchTema();
   inicializarSelectorMes();
   inicializarFormateoMonto();
+
+  inicializarLongPress();
+  inicializarModalAbono();
 });

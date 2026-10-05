@@ -61,7 +61,7 @@ function mapRegistroToDB(registro) {
 }
 
 // ============================================
-// CRUD
+// CRUD — REGISTROS
 // ============================================
 async function dbObtenerRegistros() {
   const user = await obtenerUsuarioActual();
@@ -110,8 +110,6 @@ async function dbActualizarRegistro(id, cambios) {
     return null;
   }
 
-  // Si las claves vienen en snake_case tal cual, no las convertimos.
-  // Detectamos camelCase por la presencia de "diaRecordatorio" o "montoTotal".
   const esCamelCase =
     "diaRecordatorio" in cambios ||
     "montoTotal"      in cambios ||
@@ -171,4 +169,91 @@ async function dbObtenerPerfil() {
     return null;
   }
   return data;
+}
+
+// ============================================
+// 🆕 GUARDAR LLAVE BRE-B EN EL PERFIL
+// ============================================
+async function dbGuardarLlaveBreB(llave) {
+  const user = await obtenerUsuarioActual();
+  if (!user) return false;
+
+  const { error } = await supabaseClient
+    .from("profiles")
+    .update({ llave_bre_b: llave })
+    .eq("id", user.id);
+
+  if (error) {
+    console.error("Error guardando llave Bre-B:", error);
+    return false;
+  }
+  return true;
+}
+
+// ============================================
+// 🆕 ABONOS
+// ============================================
+async function dbCrearAbono(abono) {
+  const user = await obtenerUsuarioActual();
+  if (!user) return null;
+
+  const { data, error } = await supabaseClient
+    .from("abonos")
+    .insert({
+      user_id: user.id,
+      registro_id: abono.registro_id || null,
+      monto: abono.monto,
+      llave_bre_b: abono.llave_bre_b,
+      payload_qr: abono.payload_qr,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error creando abono:", error);
+    return null;
+  }
+  return data;
+}
+
+async function dbObtenerAbonos() {
+  const user = await obtenerUsuarioActual();
+  if (!user) return [];
+
+  const { data, error } = await supabaseClient
+    .from("abonos")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("creado_en", { ascending: false });
+
+  if (error) {
+    console.error("Error obteniendo abonos:", error);
+    return [];
+  }
+  return data || [];
+}
+
+async function dbObtenerAbonosPorRegistro(registroId) {
+  if (!registroId) return [];
+
+  const user = await obtenerUsuarioActual();
+  if (!user) return [];
+
+  const { data, error } = await supabaseClient
+    .from("abonos")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("registro_id", registroId)
+    .order("creado_en", { ascending: false });
+
+  if (error) {
+    console.error("Error obteniendo abonos del registro:", error);
+    return [];
+  }
+  return data || [];
+}
+
+async function dbTotalAbonadoPorRegistro(registroId) {
+  const abonos = await dbObtenerAbonosPorRegistro(registroId);
+  return abonos.reduce((sum, a) => sum + (Number(a.monto) || 0), 0);
 }

@@ -1397,6 +1397,100 @@ body.dark-mode .radio-opcion input[type="radio"]:checked ~ .radio-texto { color:
 body.dark-mode .btn-cancelar { background-color: #2A2E33; color: #A8B8BE; }
 
 /* ============================================
+   ABONOS CON QR BRE-B (modo oscuro)
+   ============================================ */
+
+/* Desenfoque del item al mantener pulsado.
+   El blur se aplica SOLO a los hijos para que el botón quede nítido. */
+.item-desenfocado {
+  position: relative;
+  transition: filter 0.25s ease;
+}
+
+.item-desenfocado > * {
+  filter: blur(3px);
+  transition: filter 0.25s ease;
+  pointer-events: none;
+}
+
+.item-desenfocado .btn-abonar-item {
+  filter: none !important;
+  pointer-events: auto !important;
+}
+
+/* Botón abonar flotante — centrado sobre el item */
+.btn-abonar-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  padding: 8px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  color: #FFFFFF;
+  background: #398869;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5),
+              0 0 12px rgba(102, 214, 166, 0.4);
+  opacity: 0;
+  animation: aparecerAbonar 0.25s ease forwards;
+  pointer-events: auto;
+  z-index: 30;
+  filter: none;
+}
+
+.btn-abonar-item:hover {
+  background: #4A9B7A;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5),
+              0 0 18px rgba(102, 214, 166, 0.7);
+}
+.btn-abonar-item:active { transform: translate(-50%, -50%) scale(0.95); }
+
+@keyframes aparecerAbonar {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Contenedor del QR dentro del modal */
+#qrContainer {
+  display: none;
+  text-align: center;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed #2A2E33;
+}
+
+#qrCanvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+#qrCanvas canvas,
+#qrContainer canvas {
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  background: #FFFFFF;
+  padding: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6),
+              0 0 20px rgba(102, 214, 166, 0.2);
+}
+
+.qr-ayuda {
+  font-size: 11px;
+  font-weight: 500;
+  color: #A8B8BE;
+  margin-top: 8px;
+  text-align: center;
+  text-shadow: 0 0 6px rgba(102, 214, 166, 0.3);
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 383px) {

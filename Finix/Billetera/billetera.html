@@ -258,6 +258,36 @@
   </div>
 
   <!-- ============================================
+       MODAL DE ABONO CON QR BRE-B
+       ============================================ -->
+  <div class="modal-overlay" id="modalAbono">
+    <div class="modal-registro">
+      <div class="modal-header">
+        <h2 class="modal-titulo">Abonar a <span id="abonoNombreSeccion"></span></h2>
+        <button class="modal-cerrar" id="btnCerrarAbono" aria-label="Cerrar">✕</button>
+      </div>
+
+      <div class="modal-form">
+        <div class="form-grupo">
+          <label class="form-label" for="inputMontoAbono">Monto del abono</label>
+          <input type="text" inputmode="numeric" class="form-input" id="inputMontoAbono" placeholder="Ej: 20.000">
+        </div>
+
+        <div class="form-botones">
+          <button type="button" class="btn-cancelar" id="btnCancelarAbono">Cancelar</button>
+          <button type="button" class="btn-guardar" id="btnGenerarQR">Generar QR</button>
+        </div>
+      </div>
+
+      <!-- ⚠️ Aquí usamos <div> en vez de <canvas> porque qrcodejs inyecta su propio canvas -->
+      <div id="qrContainer">
+        <div id="qrCanvas"></div>
+        <p class="qr-ayuda">Escanea este QR para pagar</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
        NAVEGACIÓN INFERIOR
        ============================================ -->
   <div class="bottom-nav">
@@ -282,7 +312,12 @@
 
   <!-- SDK de Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Generador de QR (local, ya descargado en la carpeta Billetera) -->
+  <script src="qrcode.min.js"></script>
+
   <script src="supabase-client.js"></script>
+  <script src="breb-qr.js"></script>
   <script src="billetera.js"></script>
 </body>
 </html>

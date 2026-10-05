@@ -1,0 +1,779 @@
+/* ============================================
+   RESET Y BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #FFFFFF;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  padding-bottom: 90px;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+  position: relative;
+  z-index: 50;
+  width: 100%;
+}
+
+.header-inner {
+  position: relative;
+  width: 100%;
+  max-width: 383px;
+  height: 90px;
+  margin: 0 auto;
+  padding: 0;
+  z-index: 50;
+}
+
+.saludo {
+  position: absolute;
+  top: 22px;
+  left: 15px;
+  color: #0B2E34;
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 30px;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+  z-index: 11;
+}
+
+.subtitulo {
+  position: absolute;
+  top: 48px;
+  left: 15px;
+  color: #69747A;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 23px;
+  z-index: 11;
+}
+
+/* ============================================
+   SECCIONES GENERALES
+   ============================================ */
+.seccion {
+  position: relative;
+  z-index: 10;
+  max-width: 373px;
+  margin: 16px auto;
+  padding: 16px;
+  background-color: #FFFFFF;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #F0F0F0;
+}
+
+/* ============================================
+   SECCIÓN PERFIL
+   ============================================ */
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.perfil-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #185540, #398869);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.perfil-avatar span {
+  color: #FFFFFF;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.perfil-nombre {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0B2E34;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.perfil-email {
+  font-size: 12px;
+  font-weight: 500;
+  color: #69747A;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================
+   SECCIÓN BRE-B
+   ============================================ */
+.breb-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.breb-circulo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #E8F5EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #185540;
+}
+
+.breb-icono {
+  width: 20px;
+  height: 20px;
+}
+
+.breb-titulo {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0B2E34;
+  line-height: 1;
+}
+
+.breb-descripcion {
+  font-size: 11px;
+  font-weight: 500;
+  color: #69747A;
+  margin-bottom: 14px;
+  padding-left: 46px;
+  line-height: 1.4;
+}
+
+.breb-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.breb-estado {
+  font-size: 11px;
+  font-weight: 600;
+  min-height: 16px;
+  text-align: center;
+  transition: color 0.2s ease;
+}
+
+.breb-estado.exito { color: #185540; }
+.breb-estado.error { color: #D80202; }
+
+/* ============================================
+   SECCIÓN QR DE PAGO
+   ============================================ */
+.qr-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.qr-circulo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #EEF5FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #025FD8;
+}
+
+.qr-icono {
+  width: 20px;
+  height: 20px;
+}
+
+.qr-titulo {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0B2E34;
+  line-height: 1;
+}
+
+.qr-descripcion {
+  font-size: 11px;
+  font-weight: 500;
+  color: #69747A;
+  margin-bottom: 14px;
+  padding-left: 46px;
+  line-height: 1.4;
+}
+
+.qr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================================
+   FORMULARIOS
+   ============================================ */
+.form-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0B2E34;
+  letter-spacing: -0.1px;
+}
+
+.form-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border: 1.5px solid #E0E0E0;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #0B2E34;
+  background-color: #FFFFFF;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #398869;
+  box-shadow: 0 0 0 3px rgba(57, 136, 105, 0.15);
+}
+
+.form-input::placeholder {
+  color: #A0A8AD;
+  font-weight: 400;
+}
+
+.form-input[readonly] {
+  background-color: #F8FAFB;
+  color: #185540;
+  font-weight: 700;
+  cursor: default;
+}
+
+/* ============================================
+   BOTONES
+   ============================================ */
+.btn-guardar-llave,
+.btn-generar-qr {
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-guardar-llave {
+  background-color: #185540;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(24, 85, 64, 0.3);
+}
+
+.btn-guardar-llave:hover {
+  background-color: #1E6B50;
+  transform: translateY(-1px);
+}
+
+.btn-generar-qr {
+  background-color: #025FD8;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(2, 95, 216, 0.3);
+}
+
+.btn-generar-qr:hover {
+  background-color: #0370FF;
+  transform: translateY(-1px);
+}
+
+.btn-guardar-llave:active,
+.btn-generar-qr:active {
+  transform: scale(0.97);
+}
+
+.btn-qr-icono {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================
+   SECCIÓN INFORMACIÓN
+   ============================================ */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #69747A;
+}
+
+.info-valor {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0B2E34;
+}
+
+/* ============================================
+   MODAL QR (idéntico a billetera.html)
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 200;
+  overflow-y: auto;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.modal-overlay.activo {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal-registro {
+  position: relative;
+  width: 100%;
+  max-width: 383px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: #FFFFFF;
+  border-radius: 22px 22px 0 0;
+  padding: 20px 18px 26px 18px;
+  box-shadow: 0 -6px 30px rgba(0, 0, 0, 0.2);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.modal-overlay.activo .modal-registro {
+  transform: translateY(0);
+}
+
+.modal-overlay.cerrando .modal-registro {
+  transform: translateY(100%);
+}
+
+.modal-overlay.cerrando {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-titulo {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0B2E34;
+  letter-spacing: -0.3px;
+}
+
+.modal-cerrar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #F0F0F0;
+  border: none;
+  color: #0B2E34;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.modal-cerrar:hover {
+  background-color: #E0E0E0;
+  transform: scale(1.05);
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.btn-cancelar,
+.btn-guardar {
+  flex: 1;
+  height: 44px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-cancelar {
+  background-color: #F0F0F0;
+  color: #69747A;
+}
+
+.btn-cancelar:hover {
+  background-color: #E4E4E4;
+}
+
+.btn-guardar {
+  background-color: #185540;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(24, 85, 64, 0.3);
+}
+
+.btn-guardar:hover {
+  background-color: #1E6B50;
+  transform: translateY(-1px);
+}
+
+.btn-cancelar:active,
+.btn-guardar:active {
+  transform: scale(0.97);
+}
+
+/* Contenedor del QR dentro del modal */
+#qrContainer {
+  display: none;
+  text-align: center;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed #E0E0E0;
+}
+
+#qrCanvas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+#qrCanvas canvas,
+#qrContainer canvas {
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  background: #FFFFFF;
+  padding: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.qr-ayuda {
+  font-size: 11px;
+  font-weight: 500;
+  color: #69747A;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* ============================================
+   NAVEGACIÓN INFERIOR
+   ============================================ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #FFFFFF;
+  border-top: 1px solid #185540;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.bottom-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+
+.bottom-nav a.active {
+  background-color: transparent;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+}
+
+.bottom-nav img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.nav-activo-rect {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 79px;
+  height: 29px;
+  background-color: #398869;
+  border-radius: 10px;
+  padding-left: 5px;
+  box-sizing: border-box;
+  gap: 2px;
+}
+
+.nav-activo-icono {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
+}
+
+.nav-activo-texto {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ============================================
+   MODO OSCURO
+   ============================================ */
+body.dark-mode {
+  background-color: #0B2E34;
+}
+
+body.dark-mode .seccion {
+  background-color: #123A42;
+  border-color: #1E4E58;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .saludo {
+  color: #FFFFFF;
+}
+
+body.dark-mode .subtitulo {
+  color: #A8B8BE;
+}
+
+body.dark-mode .perfil-nombre {
+  color: #FFFFFF;
+}
+
+body.dark-mode .perfil-email {
+  color: #A8B8BE;
+}
+
+body.dark-mode .breb-titulo,
+body.dark-mode .qr-titulo {
+  color: #FFFFFF;
+}
+
+body.dark-mode .breb-descripcion,
+body.dark-mode .qr-descripcion {
+  color: #A8B8BE;
+}
+
+body.dark-mode .breb-circulo {
+  background-color: #1E4E58;
+  color: #66D6A6;
+}
+
+body.dark-mode .qr-circulo {
+  background-color: #1A2A3A;
+  color: #88BBF5;
+}
+
+body.dark-mode .form-label {
+  color: #FFFFFF;
+}
+
+body.dark-mode .form-input {
+  background-color: #1E4E58;
+  border-color: #2A5A66;
+  color: #FFFFFF;
+}
+
+body.dark-mode .form-input::placeholder {
+  color: #7A8F96;
+}
+
+body.dark-mode .form-input[readonly] {
+  background-color: #1A3A42;
+  color: #66D6A6;
+}
+
+body.dark-mode .breb-estado.exito {
+  color: #66D6A6;
+}
+
+body.dark-mode .breb-estado.error {
+  color: #FFA1A1;
+}
+
+body.dark-mode .info-label {
+  color: #A8B8BE;
+}
+
+body.dark-mode .info-valor {
+  color: #FFFFFF;
+}
+
+body.dark-mode .modal-registro {
+  background-color: #123A42;
+}
+
+body.dark-mode .modal-titulo {
+  color: #FFFFFF;
+}
+
+body.dark-mode .modal-cerrar {
+  background-color: #1E4E58;
+  color: #FFFFFF;
+}
+
+body.dark-mode .btn-cancelar {
+  background-color: #1E4E58;
+  color: #A8B8BE;
+}
+
+body.dark-mode #qrContainer {
+  border-top-color: #2A5A66;
+}
+
+body.dark-mode .qr-ayuda {
+  color: #A8B8BE;
+}
+
+body.dark-mode .bottom-nav {
+  background-color: #123A42;
+  border-top-color: #185540;
+}
+
+body.dark-mode .bottom-nav a.active {
+  background-color: transparent;
+}
+
+body.dark-mode .nav-activo-rect {
+  background-color: #398869;
+}
+
+body.dark-mode .nav-activo-texto {
+  color: #FFFFFF;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 383px) {
+  .seccion {
+    max-width: 100%;
+    margin-left: 15px;
+    margin-right: 15px;
+    width: calc(100% - 30px);
+  }
+}
+
+@media (max-width: 360px) {
+  .saludo {
+    font-size: 20px;
+    height: 26px;
+    line-height: 26px;
+  }
+
+  .subtitulo {
+    font-size: 11px;
+    top: 44px;
+  }
+
+  .perfil-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .perfil-avatar span {
+    font-size: 18px;
+  }
+
+  .perfil-nombre {
+    font-size: 16px;
+  }
+}
