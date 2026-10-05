@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ajustes - Finix</title>
-  <link rel="stylesheet" href="billetera.css">
+  <link rel="stylesheet" href="../Billetera/billetera.css">
   <link rel="stylesheet" href="ajustes.css">
 </head>
 <body>
@@ -35,7 +35,7 @@
   </section>
 
   <!-- ============================================
-       SECCIÓN LLAVE BRE-B (SOLO LECTURA)
+       SECCIÓN QR BRE-B (payload)
        ============================================ -->
   <section class="seccion breb">
     <div class="breb-header">
@@ -48,25 +48,42 @@
           <path d="M17 17h3v3"/>
         </svg>
       </div>
-      <h2 class="breb-titulo">Llave Bre-B</h2>
+      <h2 class="breb-titulo">QR Bre-B</h2>
     </div>
 
-    <p class="breb-descripcion">Esta es la llave asociada a tu cuenta</p>
+    <p class="breb-descripcion">
+      Pega el contenido de tu QR Bre-B. Lo encuentras copiando el texto del QR
+      desde tu app bancaria (empieza con <code>0002010102…</code>).
+    </p>
 
     <div class="breb-form">
       <div class="form-grupo">
-        <label class="form-label" for="inputLlaveBreB">Tu llave Bre-B</label>
-        <input type="text" class="form-input" id="inputLlaveBreB" readonly placeholder="Cargando...">
+        <label class="form-label" for="inputLlaveBreB">Contenido del QR</label>
+        <textarea
+          class="form-input"
+          id="inputLlaveBreB"
+          rows="5"
+          placeholder="Pega aquí el texto completo del QR Bre-B"
+          spellcheck="false"
+          autocomplete="off"
+        ></textarea>
       </div>
-      <button type="button" class="btn-guardar-llave" id="btnCopiarLlave">
-        📋 Copiar llave
-      </button>
+
+      <div class="form-botones">
+        <button type="button" class="btn-cancelar" id="btnLimpiarQR">
+          Limpiar
+        </button>
+        <button type="button" class="btn-guardar" id="btnGuardarQR">
+          Guardar QR
+        </button>
+      </div>
+
       <p class="breb-estado" id="brebEstado"></p>
     </div>
   </section>
 
   <!-- ============================================
-       SECCIÓN QR DE PAGO (solo botón, sin descripción)
+       SECCIÓN QR DE PAGO (generador)
        ============================================ -->
   <section class="seccion qr-pago">
     <div class="qr-header">
@@ -113,8 +130,7 @@
   </section>
 
   <!-- ============================================
-       MODAL DE ABONO CON QR BRE-B
-       (idéntico al de billetera.html)
+       MODAL GENERAR QR DE PAGO
        ============================================ -->
   <div class="modal-overlay" id="modalAbono">
     <div class="modal-registro">
@@ -150,11 +166,11 @@
       <img src="../iconos/casa.png" alt="casa" onerror="this.src='iconos/casa.png'">
     </a>
 
-    <a href="billetera.html" data-page="billetera.html">
+    <a href="../Billetera/billetera.html" data-page="billetera.html">
       <img src="../iconos/billetera1.4.png" alt="billetera" onerror="this.src='iconos/billetera1.4.png'">
     </a>
 
-    <a href="Reportes/reportes.html" data-page="reportes.html">
+    <a href="../Billetera/Reportes/reportes.html" data-page="reportes.html">
       <img src="../iconos/barra.png" alt="barra" onerror="this.src='iconos/barra.png'">
     </a>
 
@@ -169,11 +185,14 @@
   <!-- SDK de Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Generador de QR -->
-  <script src="qrcode.min.js"></script>
+  <!-- Generador de QR (local, en carpeta Billetera) -->
+  <script src="../Billetera/qrcode.min.js"></script>
 
-  <script src="supabase-client.js"></script>
-  <script src="breb-qr.js"></script>
+  <!-- Módulos compartidos (en carpeta Billetera) -->
+  <script src="../Billetera/supabase-client.js"></script>
+  <script src="../Billetera/breb-qr.js"></script>
+
+  <!-- Script propio de esta página -->
   <script src="ajustes.js"></script>
 </body>
 </html>

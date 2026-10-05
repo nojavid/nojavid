@@ -192,6 +192,83 @@ body {
 .breb-estado.exito { color: #185540; }
 .breb-estado.error { color: #D80202; }
 
+/* --------------------------------------------
+   TEXTAREA QR BRE-B
+   -------------------------------------------- */
+.breb-form textarea.form-input {
+  height: auto;
+  min-height: 96px;
+  padding: 10px 12px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.2px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.breb-form textarea.form-input:focus {
+  border-color: #398869;
+  box-shadow: 0 0 0 3px rgba(57, 136, 105, 0.15);
+}
+
+.breb-form code {
+  background: #E8F5EE;
+  color: #185540;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Botones dentro del form Bre-B (Guardar / Limpiar) */
+.breb-form .form-botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.breb-form .btn-cancelar,
+.breb-form .btn-guardar {
+  flex: 1;
+  height: 44px;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.breb-form .btn-cancelar {
+  background-color: #F0F0F0;
+  color: #69747A;
+}
+
+.breb-form .btn-cancelar:hover {
+  background-color: #E4E4E4;
+}
+
+.breb-form .btn-guardar {
+  background-color: #185540;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(24, 85, 64, 0.3);
+}
+
+.breb-form .btn-guardar:hover {
+  background-color: #1E6B50;
+  transform: translateY(-1px);
+}
+
+.breb-form .btn-cancelar:active,
+.breb-form .btn-guardar:active {
+  transform: scale(0.97);
+}
+
 /* ============================================
    SECCIÓN QR DE PAGO
    ============================================ */
@@ -242,7 +319,7 @@ body {
 }
 
 /* ============================================
-   FORMULARIOS
+   FORMULARIOS (genéricos)
    ============================================ */
 .form-grupo {
   display: flex;
@@ -463,6 +540,7 @@ body {
   gap: 14px;
 }
 
+/* Botones genéricos (modal y otros) */
 .form-botones {
   display: flex;
   gap: 10px;
@@ -681,6 +759,27 @@ body.dark-mode .form-input[readonly] {
   color: #66D6A6;
 }
 
+/* Textarea Bre-B en dark mode */
+body.dark-mode .breb-form textarea.form-input {
+  background-color: #1E4E58;
+  border-color: #2A5A66;
+  color: #FFFFFF;
+}
+
+body.dark-mode .breb-form textarea.form-input::placeholder {
+  color: #7A8F96;
+}
+
+body.dark-mode .breb-form code {
+  background: #1E4E58;
+  color: #66D6A6;
+}
+
+body.dark-mode .breb-form .btn-cancelar {
+  background-color: #1E4E58;
+  color: #A8B8BE;
+}
+
 body.dark-mode .breb-estado.exito {
   color: #66D6A6;
 }
@@ -775,5 +874,10 @@ body.dark-mode .nav-activo-texto {
 
   .perfil-nombre {
     font-size: 16px;
+  }
+
+  .breb-form textarea.form-input {
+    font-size: 10px;
+    min-height: 84px;
   }
 }

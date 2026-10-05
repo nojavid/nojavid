@@ -1,5 +1,9 @@
 // ============================================
-// CARGAR PERFIL Y LLAVE BRE-B (igual que billetera.js)
+// ajustes.js — Perfil + QR Bre-B (payload) + Generar QR de pago
+// ============================================
+
+// ============================================
+// CARGAR PERFIL Y PAYLOAD QR BRE-B
 // ============================================
 async function cargarPerfil() {
   // Pintar lo que haya en localStorage primero (rápido)
@@ -7,16 +11,16 @@ async function cargarPerfil() {
   const emailLocal  = localStorage.getItem("emailUsuario")  || "usuario@finix.com";
   pintarPerfil(nombreLocal, emailLocal);
 
-  // Traer perfil desde Supabase (igual que billetera.js)
+  // Traer perfil desde Supabase
   const perfil = await dbObtenerPerfil();
 
   const nombre = perfil?.full_name || nombreLocal;
   const email  = perfil?.email     || emailLocal;
   pintarPerfil(nombre, email);
 
-  // LLAVE BRE-B — exactamente como en billetera.js
-  const llave = perfil?.llave_bre_b;
-  pintarLlave(llave);
+  // Payload QR Bre-B guardado (en columna llave_bre_b)
+  const payload = perfil?.llave_bre_b;
+  pintarPayload(payload);
 }
 
 function pintarPerfil(nombre, email) {
@@ -26,28 +30,81 @@ function pintarPerfil(nombre, email) {
 
   if (elNombre)  elNombre.textContent  = nombre;
   if (elEmail)   elEmail.textContent   = email;
-  if (elInicial) elInicial.textContent = nombre.charAt(0).toUpperCase();
+  if (elInicial) elInicial.textContent = (nombre || "N").charAt(0).toUpperCase();
 }
 
-function pintarLlave(llave) {
+function pintarPayload(payload) {
   const input  = document.getElementById("inputLlaveBreB");
   const estado = document.getElementById("brebEstado");
   if (!input) return;
 
-  if (llave) {
-    input.value = llave;
+  if (payload) {
+    input.value = payload;
     input.placeholder = "";
     if (estado) {
-      estado.textContent = "✓ Llave configurada en tu cuenta";
+      estado.textContent = "✓ QR Bre-B configurado en tu cuenta";
       estado.className = "breb-estado exito";
+      estado.style.color = "#185540";
     }
   } else {
     input.value = "";
-    input.placeholder = "No tienes llave configurada";
+    input.placeholder = "No tienes QR Bre-B configurado";
     if (estado) {
-      estado.textContent = "Ve a Configuración para agregar tu llave Bre-B";
+      estado.textContent = "Pega el contenido de tu QR y pulsa Guardar QR";
       estado.className = "breb-estado error";
+      estado.style.color = "#D80202";
     }
+  }
+}
+
+// ============================================
+// GUARDAR PAYLOAD QR BRE-B
+// ============================================
+async function guardarQRBreB() {
+  const input  = document.getElementById("inputLlaveBreB");
+  const estado = document.getElementById("brebEstado");
+  const raw    = (input?.value || "").trim();
+
+  if (!raw) {
+    estado.textContent = "❌ Pega primero el contenido del QR.";
+    estado.style.color = "#D80202";
+    return;
+  }
+
+  if (typeof validarPayloadEMVCo !== "function") {
+    estado.textContent = "❌ Error interno: falta breb-qr.js";
+    estado.style.color = "#D80202";
+    return;
+  }
+
+  // Limpiar solo espacios/saltos/tabs (no tocar letras ni puntos)
+  const limpio = raw.replace(/\s+/g, "");
+
+  const validacion = validarPayloadEMVCo(limpio);
+  if (!validacion.valido) {
+    estado.textContent = "❌ " + validacion.error;
+    estado.style.color = "#D80202";
+    return;
+  }
+
+  const ok = await dbGuardarPayloadBreB(validacion.payload);
+  if (ok) {
+    input.value = validacion.payload;
+    estado.textContent = "✅ QR guardado correctamente.";
+    estado.style.color = "#185540";
+  } else {
+    estado.textContent = "❌ No se pudo guardar. Intenta de nuevo.";
+    estado.style.color = "#D80202";
+  }
+}
+
+function limpiarQRBreB() {
+  const input  = document.getElementById("inputLlaveBreB");
+  const estado = document.getElementById("brebEstado");
+  if (input)  input.value = "";
+  if (estado) {
+    estado.textContent = "";
+    estado.style.color = "";
   }
 }
 
@@ -98,41 +155,12 @@ function leerMontoModal() {
 }
 
 // ============================================
-// COPIAR LLAVE BRE-B
-// ============================================
-async function copiarLlaveBreB() {
-  const input = document.getElementById("inputLlaveBreB");
-  const llave = input?.value?.trim();
-
-  if (!llave) {
-    alert("No hay llave para copiar");
-    return;
-  }
-
-  try {
-    await navigator.clipboard.writeText(llave);
-    const estado = document.getElementById("brebEstado");
-    if (estado) {
-      estado.textContent = "📋 Llave copiada al portapapeles";
-      estado.className = "breb-estado exito";
-      setTimeout(() => {
-        estado.textContent = "✓ Llave configurada en tu cuenta";
-      }, 2000);
-    }
-  } catch (error) {
-    input.select();
-    document.execCommand("copy");
-  }
-}
-
-// ============================================
-// MODAL QR — IGUAL QUE billetera.js
+// MODAL QR
 // ============================================
 function abrirModalQR() {
   const modal = document.getElementById("modalAbono");
   if (!modal) return;
 
-  // Limpiar monto y QR previo (igual que abrirModalAbono en billetera.js)
   const inputMonto = document.getElementById("inputMontoAbono");
   if (inputMonto) inputMonto.value = "";
 
@@ -153,7 +181,7 @@ function cerrarModalQR() {
 }
 
 // ============================================
-// GENERAR QR — EXACTAMENTE COMO generarQRAbono() DE billetera.js
+// GENERAR QR DE PAGO
 // ============================================
 async function generarQRModal() {
   const monto = leerMontoModal();
@@ -163,39 +191,83 @@ async function generarQRModal() {
     return;
   }
 
-  // IGUAL QUE EN billetera.js: leer la llave desde Supabase
   const perfil = await dbObtenerPerfil();
-  const llave = perfil?.llave_bre_b;
+  const payloadBase = perfil?.llave_bre_b;
 
-  if (!llave) {
-    alert("No tienes una llave Bre-B configurada. Ve a Configuración y agrégala.");
+  if (!payloadBase) {
+    alert("No tienes un QR Bre-B configurado. Pégalo arriba y pulsa Guardar QR.");
     return;
   }
 
-  const payload = generarPayloadBreB(llave, monto);
+  const validacion = validarPayloadEMVCo(payloadBase);
+  if (!validacion.valido) {
+    alert("Tu QR Bre-B guardado es inválido: " + validacion.error);
+    return;
+  }
 
-  // qrcodejs inyecta su propio <canvas> dentro del contenedor
+  let payload;
+  try {
+    payload = generarPayloadBreB(validacion.payload, monto);
+  } catch (err) {
+    console.error("Error generando payload Bre-B:", err);
+    alert("No se pudo generar el QR: " + err.message);
+    return;
+  }
+
   const contenedorQR = document.getElementById("qrCanvas");
   contenedorQR.innerHTML = "";
 
+  const TAMANO_QR = 465;
+
   new QRCode(contenedorQR, {
     text: payload,
-    width: 240,
-    height: 240,
+    width: TAMANO_QR,
+    height: TAMANO_QR,
     colorDark: "#000000",
     colorLight: "#FFFFFF",
     correctLevel: QRCode.CorrectLevel.M
   });
 
+  const canvasGenerado = contenedorQR.querySelector("canvas");
+  if (canvasGenerado) {
+    canvasGenerado.style.width = "100%";
+    canvasGenerado.style.height = "auto";
+    canvasGenerado.style.maxWidth = TAMANO_QR + "px";
+    canvasGenerado.style.imageRendering = "pixelated";
+    canvasGenerado.style.display = "block";
+    canvasGenerado.style.margin = "0 auto";
+    canvasGenerado.style.background = "#FFFFFF";
+    canvasGenerado.style.padding = "16px";
+    canvasGenerado.style.boxSizing = "content-box";
+    canvasGenerado.style.borderRadius = "12px";
+  }
+
+  const imgGenerada = contenedorQR.querySelector("img");
+  if (imgGenerada) {
+    imgGenerada.style.width = "100%";
+    imgGenerada.style.height = "auto";
+    imgGenerada.style.maxWidth = TAMANO_QR + "px";
+    imgGenerada.style.imageRendering = "pixelated";
+    imgGenerada.style.display = "block";
+    imgGenerada.style.margin = "0 auto";
+    imgGenerada.style.background = "#FFFFFF";
+    imgGenerada.style.padding = "16px";
+    imgGenerada.style.boxSizing = "content-box";
+    imgGenerada.style.borderRadius = "12px";
+  }
+
   document.getElementById("qrContainer").style.display = "block";
 
-  // Guardar abono en Supabase (igual que billetera.js)
-  await dbCrearAbono({
-    registro_id: null,
-    monto,
-    llave_bre_b: llave,
-    payload_qr: payload,
-  });
+  try {
+    await dbCrearAbono({
+      registro_id: null,
+      monto,
+      llave_bre_b: payloadBase,
+      payload_qr: payload,
+    });
+  } catch (e) {
+    console.warn("No se pudo guardar el abono:", e);
+  }
 }
 
 function inicializarModalQR() {
@@ -236,13 +308,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   inicializarFormateoMontoModal();
   inicializarModalQR();
 
-  // Botones
-  const btnCopiarLlave = document.getElementById("btnCopiarLlave");
-  if (btnCopiarLlave) btnCopiarLlave.addEventListener("click", copiarLlaveBreB);
+  // Botones QR Bre-B
+  const btnGuardarQR = document.getElementById("btnGuardarQR");
+  if (btnGuardarQR) btnGuardarQR.addEventListener("click", guardarQRBreB);
 
+  const btnLimpiarQR = document.getElementById("btnLimpiarQR");
+  if (btnLimpiarQR) btnLimpiarQR.addEventListener("click", limpiarQRBreB);
+
+  // Botón abrir modal QR de pago
   const btnGenerarQR = document.getElementById("btnGenerarQR");
   if (btnGenerarQR) btnGenerarQR.addEventListener("click", abrirModalQR);
 
-  // Perfil + llave (igual que billetera.js)
+  // Perfil + payload QR Bre-B
   await cargarPerfil();
 });

@@ -3,7 +3,7 @@
 // ============================================
 
 const SUPABASE_URL      = "https://dfhmekwkhsxvjuojuruv.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8"; // 👈 PEGA AQUÍ TU CLAVE COMPLETA
+const SUPABASE_ANON_KEY = "sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8";
 
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -172,26 +172,33 @@ async function dbObtenerPerfil() {
 }
 
 // ============================================
-// 🆕 GUARDAR LLAVE BRE-B EN EL PERFIL
+// GUARDAR PAYLOAD QR BRE-B EN EL PERFIL
 // ============================================
-async function dbGuardarLlaveBreB(llave) {
+// Nota: reutilizamos la columna `llave_bre_b` para almacenar
+// el payload EMVCo completo del QR (string largo de dígitos),
+// no la llave corta tipo "@usuario".
+// ============================================
+async function dbGuardarPayloadBreB(payload) {
   const user = await obtenerUsuarioActual();
   if (!user) return false;
 
   const { error } = await supabaseClient
     .from("profiles")
-    .update({ llave_bre_b: llave })
+    .update({ llave_bre_b: payload })
     .eq("id", user.id);
 
   if (error) {
-    console.error("Error guardando llave Bre-B:", error);
+    console.error("Error guardando payload Bre-B:", error);
     return false;
   }
   return true;
 }
 
+// Alias para compatibilidad con código anterior
+const dbGuardarLlaveBreB = dbGuardarPayloadBreB;
+
 // ============================================
-// 🆕 ABONOS
+// ABONOS
 // ============================================
 async function dbCrearAbono(abono) {
   const user = await obtenerUsuarioActual();

@@ -917,6 +917,9 @@ function cerrarModalAbono() {
   registroAbonando = null;
 }
 
+// ============================================
+// GENERAR QR DE ABONO
+// ============================================
 async function generarQRAbono() {
   const input = document.getElementById("inputMontoAbono");
   const monto = Number((input.value || "").replace(/\D/g, "")) || 0;
@@ -927,39 +930,84 @@ async function generarQRAbono() {
   }
 
   const perfil = await dbObtenerPerfil();
-  const llave = perfil?.llave_bre_b;
+  const payloadBase = perfil?.llave_bre_b;
 
-  if (!llave) {
-    alert("No tienes una llave Bre-B configurada. Ve a Configuración y agrégala.");
+  if (!payloadBase) {
+    alert("No tienes un QR Bre-B configurado. Ve a Ajustes y pégalo.");
     return;
   }
 
-  const payload = generarPayloadBreB(llave, monto);
+  const validacion = validarPayloadEMVCo(payloadBase);
+  if (!validacion.valido) {
+    alert("Tu QR Bre-B guardado es inválido: " + validacion.error + "\nVuelve a Ajustes y actualízalo.");
+    return;
+  }
 
-  // qrcodejs inyecta su propio <canvas> dentro del contenedor.
-  // Por eso usamos un <div> con id="qrCanvas" y limpiamos antes.
+  let payload;
+  try {
+    payload = generarPayloadBreB(validacion.payload, monto);
+  } catch (err) {
+    console.error("Error generando payload Bre-B:", err);
+    alert("No se pudo generar el QR: " + err.message);
+    return;
+  }
+
   const contenedorQR = document.getElementById("qrCanvas");
   contenedorQR.innerHTML = "";
 
+  const TAMANO_QR = 465;
+
   new QRCode(contenedorQR, {
     text: payload,
-    width: 240,
-    height: 240,
+    width: TAMANO_QR,
+    height: TAMANO_QR,
     colorDark: "#000000",
     colorLight: "#FFFFFF",
     correctLevel: QRCode.CorrectLevel.M
   });
 
+  const canvasGenerado = contenedorQR.querySelector("canvas");
+  if (canvasGenerado) {
+    canvasGenerado.style.width = "100%";
+    canvasGenerado.style.height = "auto";
+    canvasGenerado.style.maxWidth = TAMANO_QR + "px";
+    canvasGenerado.style.imageRendering = "pixelated";
+    canvasGenerado.style.display = "block";
+    canvasGenerado.style.margin = "0 auto";
+    canvasGenerado.style.background = "#FFFFFF";
+    canvasGenerado.style.padding = "16px";
+    canvasGenerado.style.boxSizing = "content-box";
+    canvasGenerado.style.borderRadius = "12px";
+  }
+
+  const imgGenerada = contenedorQR.querySelector("img");
+  if (imgGenerada) {
+    imgGenerada.style.width = "100%";
+    imgGenerada.style.height = "auto";
+    imgGenerada.style.maxWidth = TAMANO_QR + "px";
+    imgGenerada.style.imageRendering = "pixelated";
+    imgGenerada.style.display = "block";
+    imgGenerada.style.margin = "0 auto";
+    imgGenerada.style.background = "#FFFFFF";
+    imgGenerada.style.padding = "16px";
+    imgGenerada.style.boxSizing = "content-box";
+    imgGenerada.style.borderRadius = "12px";
+  }
+
   document.getElementById("qrContainer").style.display = "block";
 
-  await dbCrearAbono({
-    registro_id: registroAbonando?.registroId
-      ? Number(registroAbonando.registroId)
-      : null,
-    monto,
-    llave_bre_b: llave,
-    payload_qr: payload,
-  });
+  try {
+    await dbCrearAbono({
+      registro_id: registroAbonando?.registroId
+        ? Number(registroAbonando.registroId)
+        : null,
+      monto,
+      llave_bre_b: payloadBase,
+      payload_qr: payload,
+    });
+  } catch (e) {
+    console.warn("No se pudo guardar el abono:", e);
+  }
 }
 
 function inicializarModalAbono() {

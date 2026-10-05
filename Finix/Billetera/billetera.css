@@ -1212,7 +1212,7 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
   transition: color 0.2s ease;
 }
 
-.form-botones { display: flex; gap: 10px; margin-top: 6px; }
+.form-botones { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
 
 .btn-cancelar, .btn-guardar {
   flex: 1;
@@ -1224,6 +1224,7 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
   cursor: pointer;
   border: none;
   transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  min-width: 100px;
 }
 
 .btn-cancelar { background-color: #F0F0F0; color: #69747A; }
@@ -1450,12 +1451,9 @@ body.dark-mode .balance-progreso-texto {
 }
 
 /* ============================================
-   ABONOS CON QR BRE-B
+   ABONOS (Long press y botón abonar)
    ============================================ */
 
-/* Desenfoque del item al mantener pulsado.
-   IMPORTANTE: aplicamos el blur SOLO a los hijos del item
-   (no al item mismo) para que el botón quede nítido. */
 .item-desenfocado {
   position: relative;
   transition: filter 0.25s ease;
@@ -1467,13 +1465,11 @@ body.dark-mode .balance-progreso-texto {
   pointer-events: none;
 }
 
-/* El botón abonar NO se desenfoca */
 .item-desenfocado .btn-abonar-item {
   filter: none !important;
   pointer-events: auto !important;
 }
 
-/* Botón abonar flotante — centrado sobre el item */
 .btn-abonar-item {
   position: absolute;
   top: 50%;
@@ -1504,50 +1500,50 @@ body.dark-mode .balance-progreso-texto {
   to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* Contenedor del QR dentro del modal */
-#qrContainer {
-  display: none;
-  text-align: center;
-  margin-top: 18px;
-  padding-top: 14px;
-  border-top: 1px dashed #E0E0E0;
-}
+/* ============================================
+   NUEVOS ESTILOS PARA EL MODAL DE ABONO
+   (llave + monto copiables)
+   ============================================ */
 
-/* Centrar el canvas que genera qrcodejs */
-#qrCanvas {
+.input-copy-wrapper {
   display: flex;
-  justify-content: center;
+  gap: 8px;
   align-items: center;
-  width: 100%;
 }
 
-#qrCanvas canvas,
-#qrContainer canvas {
-  display: block;
-  margin: 0 auto;
-  border-radius: 12px;
-  background: #FFFFFF;
-  padding: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+.input-copy-wrapper .form-input {
+  flex: 1;
+  margin: 0;
 }
 
-.qr-ayuda {
+.btn-copiar {
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background-color: #398869;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-copiar:hover { background-color: #1E6B50; }
+.btn-copiar:active { transform: scale(0.96); }
+
+.ayuda-pago {
   font-size: 11px;
   font-weight: 500;
   color: #69747A;
-  margin-top: 8px;
   text-align: center;
+  margin-top: 6px;
+  line-height: 1.4;
 }
 
-body.dark-mode #qrContainer { border-top-color: #2A5A66; }
-body.dark-mode .qr-ayuda { color: #A8B8BE; }
-
-body.dark-mode .btn-abonar-item {
-  background: #398869;
-}
-body.dark-mode .btn-abonar-item:hover {
-  background: #4A9B7A;
-}
+body.dark-mode .ayuda-pago { color: #A8B8BE; }
 
 /* ============================================
    RESPONSIVE

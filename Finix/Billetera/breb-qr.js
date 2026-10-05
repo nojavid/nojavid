@@ -1,4 +1,12 @@
 // ============================================
+// breb-qr.js — Generador de payload QR Bre-B con monto
+// ============================================
+// El payload base (QR sin monto) se obtiene del perfil del usuario
+// (profiles.llave_bre_b) y se le inyecta el tag 54 antes del tag 58,
+// recalculando el CRC16-CCITT-FALSE.
+// ============================================
+
+// ============================================
 // CRC16-CCITT-FALSE (0x1021, init 0xFFFF)
 // ============================================
 function crc16(s) {
@@ -13,104 +21,92 @@ function crc16(s) {
 }
 
 // ============================================
-// 📌 PLANTILLA REAL (QR de $5.000 con tu llave 3138744066)
+// VALIDAR PAYLOAD EMVCo (QR Bre-B)
 // ============================================
-const PLANTILLA_QR_REAL =
-  "00020101021126320014CO.COM.RBM.LLA0210313874406649250014CO.COM.RBM.RED0103RBM" +
-  "50310013CO.COM.RBM.CU0110000000000051220013CO.COM.RBM.CA0101052040000530317054" +
-  "075000.00" +
-  "5802CO59010600106101062270710CC3D75AE64080200110363180270016CO.COM.RBM.CANAL0103APP" +
-  "81250015CO.COM.RBM.CIVA01020282260014CO.COM.RBM.IVA01040.00" +
-  "83270015CO.COM.RBM.BASE01040.0084250015CO.COM.RBM.CINC010202" +
-  "85260014CO.COM.RBM.INC01040.0090430016CO.COM.RBM.TRXID0119000002FSStDLs2ndrBr9" +
-  "1460014CO.COM.RBM.SEC0124eXnV6BwgdGNLszxps5ijFyfR6304A413";
-
+// IMPORTANTE: un payload EMVCo contiene letras, dígitos y puntos.
+// NO se debe validar con /^\d+$/ (eso era un error del código viejo).
 // ============================================
-// Parser TLV correcto (recorre etiquetas en orden)
-// ============================================
-function parsearTLV(payload) {
-  const bloques = [];
-  let i = 0;
-  while (i < payload.length) {
-    // Necesitamos al menos 4 caracteres: 2 de tag + 2 de largo
-    if (i + 4 > payload.length) {
-      // Residuo final: guardamos tal cual
-      bloques.push({ tag: null, valor: payload.substring(i) });
-      break;
-    }
-    const tag = payload.substring(i, i + 2);
-    const largoTxt = payload.substring(i + 2, i + 4);
-    const largo = parseInt(largoTxt, 10);
-
-    if (isNaN(largo)) {
-      // Si no es un TLV válido, guardamos el resto crudo
-      bloques.push({ tag: null, valor: payload.substring(i) });
-      break;
-    }
-
-    const valor = payload.substring(i + 4, i + 4 + largo);
-    bloques.push({ tag, largo, valor });
-    i += 4 + largo;
+function validarPayloadEMVCo(payload) {
+  if (!payload || typeof payload !== "string") {
+    return { valido: false, error: "El payload está vacío." };
   }
-  return bloques;
+
+  // Quitar espacios/saltos/tabs (pero NO tocar letras ni puntos)
+  const limpio = payload.replace(/\s+/g, "");
+
+  if (limpio.length < 20) {
+    return { valido: false, error: "El payload es demasiado corto." };
+  }
+
+  // Solo caracteres ASCII imprimibles (0x20 a 0x7E)
+  if (!/^[\x20-\x7E]+$/.test(limpio)) {
+    return { valido: false, error: "El payload contiene caracteres no válidos." };
+  }
+
+  // Debe tener el tag 63 (CRC) al final: "6304" + 4 hex
+  const idx6304 = limpio.lastIndexOf("6304");
+  if (idx6304 === -1) {
+    return { valido: false, error: "Falta el tag 63 (CRC) en el payload." };
+  }
+  if (idx6304 + 8 !== limpio.length) {
+    return { valido: false, error: "El CRC debe estar al final del payload." };
+  }
+
+  const body = limpio.slice(0, idx6304 + 4);
+  const crcDeclarado = limpio.slice(idx6304 + 4).toUpperCase();
+
+  // El CRC deben ser 4 caracteres hexadecimales
+  if (!/^[0-9A-F]{4}$/.test(crcDeclarado)) {
+    return { valido: false, error: "El CRC no tiene formato hexadecimal válido." };
+  }
+
+  const crcCalculado = crc16(body);
+
+  if (crcDeclarado !== crcCalculado) {
+    return {
+      valido: false,
+      error: `CRC inválido (esperado ${crcCalculado}, recibido ${crcDeclarado}).`
+    };
+  }
+
+  // Debe contener el tag 58 con "CO" (Colombia)
+  if (!limpio.includes("5802CO")) {
+    return { valido: false, error: "El payload no parece ser un QR Bre-B de Colombia." };
+  }
+
+  return { valido: true, payload: limpio };
 }
 
 // ============================================
-// Reconstruir payload (excluye tag 63 que es el CRC)
+// CONSTRUIR PAYLOAD CON MONTO
 // ============================================
-function construirPayload(bloques) {
-  let s = "";
-  for (const b of bloques) {
-    if (b.tag === "63") continue;   // saltamos el CRC viejo
-    if (b.tag === null) { s += b.valor; continue; }  // residuo
-    const largoTxt = String(b.valor.length).padStart(2, "0");
-    s += b.tag + largoTxt + b.valor;
+function construirPayloadConMonto(payloadBase, monto) {
+  const t = String(monto).replace(",", ".").trim();
+  if (!/^\d+(\.\d{1,2})?$/.test(t) || parseFloat(t) <= 0) {
+    return null;
   }
-  s += "6304";
-  return s + crc16(s);
+
+  const idx6304 = payloadBase.lastIndexOf("6304");
+  const sinCRC = payloadBase.slice(0, idx6304 + 4);
+
+  // Tag 54: "54" + longitud (2 dígitos) + valor
+  const tag54 = "54" + String(t.length).padStart(2, "0") + t;
+
+  // Insertar antes del tag 58 (país)
+  const body = sinCRC.replace("5802CO", tag54 + "5802CO");
+
+  return body + crc16(body);
 }
 
 // ============================================
-// Cambiar SOLO el monto (etiqueta 54)
+// API PÚBLICA
+// generarPayloadBreB(payloadBase, monto)
 // ============================================
-function cambiarMonto(payload, monto) {
-  const bloques = parsearTLV(payload);
-  let encontrado = false;
+function generarPayloadBreB(payloadBase, monto) {
+  if (!payloadBase) return null;
 
-  for (const b of bloques) {
-    if (b.tag === "54") {
-      b.valor = monto;
-      b.largo = monto.length;
-      encontrado = true;
-    }
-  }
+  const n = Number(monto);
+  if (!n || n <= 0) return payloadBase;
 
-  if (!encontrado) {
-    console.warn("⚠️ No se encontró la etiqueta 54 (monto)");
-  }
-
-  return construirPayload(bloques);
-}
-
-// ============================================
-// Generador final
-// ============================================
-function generarPayloadBreB(llave, valor) {
-  const montoStr = Number(valor).toFixed(2);   // "5000.00"
-  return cambiarMonto(PLANTILLA_QR_REAL, montoStr);
-}
-
-// ============================================
-// Validación en consola
-// ============================================
-function validarPlantilla() {
-  // Parsear la plantilla
-  const bloques = parsearTLV(PLANTILLA_QR_REAL);
-  console.log("Bloques parseados:", bloques);
-
-  // Reconstruir sin cambiar nada → debe dar exactamente la plantilla original
-  const reconstruido = construirPayload(bloques);
-  console.log("Reconstruido === Original?", reconstruido === PLANTILLA_QR_REAL);
-  console.log("CRC original:     ", PLANTILLA_QR_REAL.slice(-4));
-  console.log("CRC reconstruido: ", reconstruido.slice(-4));
+  return construirPayloadConMonto(payloadBase, n.toFixed(2)) || payloadBase;
 }

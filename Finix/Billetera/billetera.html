@@ -279,7 +279,7 @@
         </div>
       </div>
 
-      <!-- ⚠️ Aquí usamos <div> en vez de <canvas> porque qrcodejs inyecta su propio canvas -->
+      <!-- Contenedor del QR: qrcodejs inyecta su propio canvas aquí dentro -->
       <div id="qrContainer">
         <div id="qrCanvas"></div>
         <p class="qr-ayuda">Escanea este QR para pagar</p>
@@ -305,7 +305,8 @@
     <a href="Reportes/reportes.html" data-page="reportes.html">
       <img src="../iconos/barra.png" alt="reportes" onerror="this.src='iconos/barra.png'">
     </a>
-    <a href="../configuracion.html" data-page="configuracion.html">
+
+    <a href="ajustes.html" data-page="ajustes.html">
       <img src="../iconos/tuerca.png" alt="tuerca" onerror="this.src='iconos/tuerca.png'">
     </a>
   </div>
@@ -313,7 +314,8 @@
   <!-- SDK de Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Generador de QR (local, ya descargado en la carpeta Billetera) -->
+  <!-- ✅ Generador de QR (local) -->
+  <!-- IMPORTANTE: verifica que el nombre real del archivo coincida -->
   <script src="qrcode.min.js"></script>
 
   <script src="supabase-client.js"></script>
