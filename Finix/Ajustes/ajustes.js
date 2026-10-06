@@ -1,5 +1,5 @@
 // ============================================
-// ajustes.js — Perfil + QR Bre-B (payload) + Generar QR de pago
+// ajustes.js — Perfil + QR Bre-B (payload) + Plataformas
 // ============================================
 
 // ============================================
@@ -126,171 +126,10 @@ function marcarActivo() {
 }
 
 // ============================================
-// UTILIDADES
+// IR A PLATAFORMAS
 // ============================================
-function formatearMonto(valor) {
-  const numero = Number(valor) || 0;
-  return "$" + numero.toLocaleString("es-CO");
-}
-
-// ============================================
-// FORMATEO DE MONTO EN VIVO (modal QR)
-// ============================================
-function inicializarFormateoMontoModal() {
-  const input = document.getElementById("inputMontoAbono");
-  if (!input) return;
-
-  input.addEventListener("input", () => {
-    let v = input.value.replace(/\D/g, "");
-    if (v.length > 15) v = v.slice(0, 15);
-    input.value = v ? Number(v).toLocaleString("es-CO") : "";
-  });
-}
-
-function leerMontoModal() {
-  const input = document.getElementById("inputMontoAbono");
-  if (!input) return 0;
-  const limpio = input.value.replace(/\D/g, "");
-  return Number(limpio) || 0;
-}
-
-// ============================================
-// MODAL QR
-// ============================================
-function abrirModalQR() {
-  const modal = document.getElementById("modalAbono");
-  if (!modal) return;
-
-  const inputMonto = document.getElementById("inputMontoAbono");
-  if (inputMonto) inputMonto.value = "";
-
-  const contQR = document.getElementById("qrCanvas");
-  if (contQR) contQR.innerHTML = "";
-
-  const qrContainer = document.getElementById("qrContainer");
-  if (qrContainer) qrContainer.style.display = "none";
-
-  modal.classList.add("activo");
-  document.body.style.overflow = "hidden";
-}
-
-function cerrarModalQR() {
-  const modal = document.getElementById("modalAbono");
-  if (modal) modal.classList.remove("activo");
-  document.body.style.overflow = "";
-}
-
-// ============================================
-// GENERAR QR DE PAGO
-// ============================================
-async function generarQRModal() {
-  const monto = leerMontoModal();
-
-  if (monto <= 0) {
-    alert("Ingresa un monto válido");
-    return;
-  }
-
-  const perfil = await dbObtenerPerfil();
-  const payloadBase = perfil?.llave_bre_b;
-
-  if (!payloadBase) {
-    alert("No tienes un QR Bre-B configurado. Pégalo arriba y pulsa Guardar QR.");
-    return;
-  }
-
-  const validacion = validarPayloadEMVCo(payloadBase);
-  if (!validacion.valido) {
-    alert("Tu QR Bre-B guardado es inválido: " + validacion.error);
-    return;
-  }
-
-  let payload;
-  try {
-    payload = generarPayloadBreB(validacion.payload, monto);
-  } catch (err) {
-    console.error("Error generando payload Bre-B:", err);
-    alert("No se pudo generar el QR: " + err.message);
-    return;
-  }
-
-  const contenedorQR = document.getElementById("qrCanvas");
-  contenedorQR.innerHTML = "";
-
-  const TAMANO_QR = 465;
-
-  new QRCode(contenedorQR, {
-    text: payload,
-    width: TAMANO_QR,
-    height: TAMANO_QR,
-    colorDark: "#000000",
-    colorLight: "#FFFFFF",
-    correctLevel: QRCode.CorrectLevel.M
-  });
-
-  const canvasGenerado = contenedorQR.querySelector("canvas");
-  if (canvasGenerado) {
-    canvasGenerado.style.width = "100%";
-    canvasGenerado.style.height = "auto";
-    canvasGenerado.style.maxWidth = TAMANO_QR + "px";
-    canvasGenerado.style.imageRendering = "pixelated";
-    canvasGenerado.style.display = "block";
-    canvasGenerado.style.margin = "0 auto";
-    canvasGenerado.style.background = "#FFFFFF";
-    canvasGenerado.style.padding = "16px";
-    canvasGenerado.style.boxSizing = "content-box";
-    canvasGenerado.style.borderRadius = "12px";
-  }
-
-  const imgGenerada = contenedorQR.querySelector("img");
-  if (imgGenerada) {
-    imgGenerada.style.width = "100%";
-    imgGenerada.style.height = "auto";
-    imgGenerada.style.maxWidth = TAMANO_QR + "px";
-    imgGenerada.style.imageRendering = "pixelated";
-    imgGenerada.style.display = "block";
-    imgGenerada.style.margin = "0 auto";
-    imgGenerada.style.background = "#FFFFFF";
-    imgGenerada.style.padding = "16px";
-    imgGenerada.style.boxSizing = "content-box";
-    imgGenerada.style.borderRadius = "12px";
-  }
-
-  document.getElementById("qrContainer").style.display = "block";
-
-  try {
-    await dbCrearAbono({
-      registro_id: null,
-      monto,
-      llave_bre_b: payloadBase,
-      payload_qr: payload,
-    });
-  } catch (e) {
-    console.warn("No se pudo guardar el abono:", e);
-  }
-}
-
-function inicializarModalQR() {
-  const modal = document.getElementById("modalAbono");
-  if (!modal) return;
-
-  const btnCerrar   = document.getElementById("btnCerrarAbono");
-  const btnCancelar = document.getElementById("btnCancelarAbono");
-  const btnGenerar  = document.getElementById("btnGenerarQRModal");
-
-  if (btnCerrar)   btnCerrar.onclick   = cerrarModalQR;
-  if (btnCancelar) btnCancelar.onclick = cerrarModalQR;
-  if (btnGenerar)  btnGenerar.onclick  = generarQRModal;
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) cerrarModalQR();
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal.classList.contains("activo")) {
-      cerrarModalQR();
-    }
-  });
+function irAPlataformas() {
+  window.location.href = "../Plataformas/Plataforma.html";
 }
 
 // ============================================
@@ -305,8 +144,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // UI primero
   marcarActivo();
-  inicializarFormateoMontoModal();
-  inicializarModalQR();
 
   // Botones QR Bre-B
   const btnGuardarQR = document.getElementById("btnGuardarQR");
@@ -315,9 +152,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const btnLimpiarQR = document.getElementById("btnLimpiarQR");
   if (btnLimpiarQR) btnLimpiarQR.addEventListener("click", limpiarQRBreB);
 
-  // Botón abrir modal QR de pago
-  const btnGenerarQR = document.getElementById("btnGenerarQR");
-  if (btnGenerarQR) btnGenerarQR.addEventListener("click", abrirModalQR);
+  // Botón Plataformas
+  const btnPlataformas = document.getElementById("btnPlataformas");
+  if (btnPlataformas) btnPlataformas.addEventListener("click", irAPlataformas);
 
   // Perfil + payload QR Bre-B
   await cargarPerfil();

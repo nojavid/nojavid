@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plataformas QR</title>
+    <link rel="stylesheet" href="Plataforma.css">
+    
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Cliente Supabase (desde la carpeta billetera) -->
+    <script src="../billetera/supabase-client.js"></script>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ============================================ -->
+        <!-- ICONO HOME (esquina superior derecha)        -->
+        <!-- Al hacer clic → ../finix.html                -->
+        <!-- ============================================ -->
+        <a href="../finix.html" class="home-icon" aria-label="Inicio" title="Ir al inicio">
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 width="32" 
+                 height="32" 
+                 viewBox="0 0 24 24" 
+                 fill="none" 
+                 stroke="#244240" 
+                 stroke-width="2" 
+                 stroke-linecap="round" 
+                 stroke-linejoin="round">
+                <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+                <path d="M9 21V12h6v9"/>
+            </svg>
+        </a>
+
+        <!-- Saludo -->
+        <h1 class="saludo">Hola,</h1>
+        
+        <!-- Nombre del usuario -->
+        <h2 class="nombre-usuario" id="nombreUsuario">...</h2>
+        
+        <!-- Mensaje QR -->
+        <p class="mensaje-qr">Aquí está tu QR listo para usar</p>
+        
+        <!-- Rectángulo del valor -->
+        <div class="rectangulo-valor">
+            <label class="label-valor" for="inputValor">Ingresa el valor</label>
+            <input 
+                type="text" 
+                id="inputValor" 
+                class="input-valor" 
+                placeholder="Valor"
+                inputmode="numeric"
+            >
+            <span class="texto-cop">Cop</span>
+        </div>
+        
+        <!-- Fila Código (botón) + Selector + Totales -->
+        <div class="fila-codigo-total">
+            <button class="btn-codigo" id="btnCodigo">Código</button>
+            
+            <select class="selector-movimiento" id="selectorMovimiento">
+                <optgroup label="Ingreso">
+                    <option value="ingreso|Didi">Didi</option>
+                    <option value="ingreso|Uber">Uber</option>
+                    <option value="ingreso|Indrive">Indrive</option>
+                    <option value="ingreso|Yango">Yango</option>
+                    <option value="ingreso|Otro">Otro</option>
+                </optgroup>
+                <optgroup label="Gastos">
+                    <option value="gasto|Gasolina">Gasolina</option>
+                    <option value="gasto|Pinchada">Pinchada</option>
+                    <option value="gasto|Otro">Otro</option>
+                </optgroup>
+            </select>
+            
+            <!-- Dos rectángulos: Ingresos y Gastos -->
+            <div class="totales-container">
+                <div class="total-box total-box-ingreso">
+                    <span class="total-label">Ingresos</span>
+                    <span class="total-valor" id="totalIngreso">+$0</span>
+                </div>
+                <div class="total-box total-box-gasto">
+                    <span class="total-label">Gastos</span>
+                    <span class="total-valor" id="totalGasto">-$0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Input para "Otro" (oculto por defecto) -->
+        <div class="contenedor-otro" id="contenedorOtro">
+            <input 
+                type="text" 
+                id="inputOtro" 
+                class="input-otro" 
+                placeholder="¿Qué fue? (ej: Propina, Peaje, Lavada...)"
+                maxlength="40"
+            >
+        </div>
+        
+        <!-- Contenedor del QR -->
+        <div class="contenedor-qr" id="contenedorQR">
+            <div class="qr-placeholder" id="qrPlaceholder">
+                <p>Tu QR aparecerá aquí</p>
+            </div>
+        </div>
+        
+        <!-- Botones -->
+        <div class="contenedor-botones">
+            <button class="btn btn-pagado" id="btnPagado">Pagado</button>
+            <button class="btn btn-cancelar" id="btnCancelar">Cancelar</button>
+        </div>
+        
+        <!-- Rectángulo inferior: LISTA DE MOVIMIENTOS -->
+        <div class="rectangulo-inferior" id="listaMovimientos">
+            <p class="movimientos-vacio" id="movimientosVacio">Aquí verás tus movimientos</p>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- OVERLAY DE ADVERTENCIA (blur + 50% opacidad)  -->
+    <!-- ============================================ -->
+    <div class="overlay-advertencia" id="overlayAdvertencia">
+        <div class="tarjeta-advertencia">
+            <div class="advertencia-icono">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#B52525" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </div>
+            <h3 class="advertencia-titulo">Valor requerido</h3>
+            <p class="advertencia-texto" id="advertenciaTexto">
+                Por favor ingresa un valor válido antes de continuar.
+            </p>
+            <button type="button" class="advertencia-btn" id="btnCerrarAdvertencia">Entendido</button>
+        </div>
+    </div>
+    
+    <script src="Plataforma.js"></script>
+</body>
+</html>

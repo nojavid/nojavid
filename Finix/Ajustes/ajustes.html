@@ -83,34 +83,32 @@
   </section>
 
   <!-- ============================================
-       SECCIÓN QR DE PAGO (generador)
+       SECCIÓN PLATAFORMAS
        ============================================ -->
-  <section class="seccion qr-pago">
+  <section class="seccion plataformas">
     <div class="qr-header">
       <div class="qr-circulo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="qr-icono">
-          <rect x="3" y="3" width="7" height="7" rx="1"/>
-          <rect x="14" y="3" width="7" height="7" rx="1"/>
-          <rect x="3" y="14" width="7" height="7" rx="1"/>
-          <rect x="14" y="14" width="3" height="3"/>
-          <path d="M17 17h3v3"/>
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8"/>
+          <path d="M12 17v4"/>
         </svg>
       </div>
-      <h2 class="qr-titulo">QR de Pago</h2>
+      <h2 class="qr-titulo">Plataformas</h2>
     </div>
 
-    <p class="qr-descripcion">Genera un código QR para recibir pagos</p>
+    <p class="qr-descripcion">
+      Si trabajas con plataformas digitales, esto te servirá para gestionar tus ingresos.
+    </p>
 
     <div class="qr-form">
-      <button type="button" class="btn-generar-qr" id="btnGenerarQR">
+      <button type="button" class="btn-generar-qr" id="btnPlataformas">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-qr-icono">
-          <rect x="3" y="3" width="7" height="7" rx="1"/>
-          <rect x="14" y="3" width="7" height="7" rx="1"/>
-          <rect x="3" y="14" width="7" height="7" rx="1"/>
-          <rect x="14" y="14" width="3" height="3"/>
-          <path d="M17 17h3v3"/>
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <path d="M8 21h8"/>
+          <path d="M12 17v4"/>
         </svg>
-        Generar QR de pago
+        Ir a Plataformas
       </button>
     </div>
   </section>
@@ -128,35 +126,6 @@
       <span class="info-valor">Finix</span>
     </div>
   </section>
-
-  <!-- ============================================
-       MODAL GENERAR QR DE PAGO
-       ============================================ -->
-  <div class="modal-overlay" id="modalAbono">
-    <div class="modal-registro">
-      <div class="modal-header">
-        <h2 class="modal-titulo">Generar QR de pago</h2>
-        <button class="modal-cerrar" id="btnCerrarAbono" aria-label="Cerrar">✕</button>
-      </div>
-
-      <div class="modal-form">
-        <div class="form-grupo">
-          <label class="form-label" for="inputMontoAbono">Monto a recibir</label>
-          <input type="text" inputmode="numeric" class="form-input" id="inputMontoAbono" placeholder="Ej: 20.000">
-        </div>
-
-        <div class="form-botones">
-          <button type="button" class="btn-cancelar" id="btnCancelarAbono">Cancelar</button>
-          <button type="button" class="btn-guardar" id="btnGenerarQRModal">Generar QR</button>
-        </div>
-      </div>
-
-      <div id="qrContainer">
-        <div id="qrCanvas"></div>
-        <p class="qr-ayuda">Escanea este QR para pagar</p>
-      </div>
-    </div>
-  </div>
 
   <!-- ============================================
        NAVEGACIÓN INFERIOR
@@ -184,9 +153,6 @@
 
   <!-- SDK de Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Generador de QR (local, en carpeta Billetera) -->
-  <script src="../Billetera/qrcode.min.js"></script>
 
   <!-- Módulos compartidos (en carpeta Billetera) -->
   <script src="../Billetera/supabase-client.js"></script>

@@ -1,15 +1,13 @@
 // ============================================================
-// CONFIGURACIÓN DE SUPABASE
+// REFERENCIA AL CLIENTE DE SUPABASE
 // ============================================================
-const SUPABASE_URL = 'https://dfhmekwkhsxvjuojuruv.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_TxNdB8vq6tv0c12IWJ8GwQ_zCoUN4v8';
+// supabaseClient, SUPABASE_URL y SUPABASE_ANON_KEY ya están definidos
+// en Billetera/supabase-client.js (cargado antes en finix.html).
 
-let supabaseClient = null;
-if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('✅ Supabase inicializado en finixjs.js');
+if (typeof supabaseClient === 'undefined') {
+    console.warn('⚠️ supabaseClient no está disponible. Verifica que Billetera/supabase-client.js esté cargado.');
 } else {
-    console.warn('⚠️ Librería de Supabase no detectada.');
+    console.log('✅ Cliente Supabase disponible desde supabase-client.js');
 }
 
 // ============================================================
@@ -26,7 +24,7 @@ async function cargarNombreUsuario() {
 
     let nombreCompleto = '';
 
-    if (supabaseClient) {
+    if (typeof supabaseClient !== 'undefined' && supabaseClient) {
         try {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (user) {
@@ -71,10 +69,10 @@ function leerMovimientos() {
 }
 
 // ============================================================
-// 3.1 CARGAR MOVIMIENTOS DESDE SUPABASE
+// 3.1 CARGAR MOVIMIENTOS DESDE SUPABASE (ORDENADOS POR creado_en)
 // ============================================================
 async function cargarMovimientosDesdeSupabase() {
-    if (!supabaseClient) {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) {
         try {
             cacheMovimientos = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
         } catch (e) {
@@ -97,17 +95,17 @@ async function cargarMovimientosDesdeSupabase() {
             return;
         }
 
+        // 👇 ORDENAR POR creado_en (más reciente primero)
         const { data, error } = await supabaseClient
             .from('movimientos')
             .select('*')
-            .order('fecha', { ascending: false });
+            .order('creado_en', { ascending: false });
 
         if (error) {
             console.error('❌ Error leyendo movimientos:', error.message);
             return;
         }
 
-        // 👇 Eliminar duplicados por id
         const mapa = new Map();
         (data || []).forEach(m => {
             mapa.set(m.id, {
@@ -116,7 +114,8 @@ async function cargarMovimientosDesdeSupabase() {
                 precio: Number(m.precio) || 0,
                 tipo: m.tipo,
                 icono: m.icono || '💸',
-                fecha: m.fecha
+                fecha: m.fecha,
+                creado_en: m.creado_en    // 👈 AGREGADO
             });
         });
 
@@ -137,7 +136,7 @@ async function cargarMovimientosDesdeSupabase() {
 // 3.2 GUARDAR MOVIMIENTOS EN SUPABASE
 // ============================================================
 async function guardarMovimientosEnSupabase(lista) {
-    if (!supabaseClient) {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) {
         const existentes = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
         localStorage.setItem('finix_movimientos', JSON.stringify([...existentes, ...lista]));
         return true;
@@ -159,7 +158,8 @@ async function guardarMovimientosEnSupabase(lista) {
             precio: Number(m.precio) || 0,
             tipo: m.tipo,
             icono: m.icono || '💸',
-            fecha: m.fecha || new Date().toISOString()
+            fecha: m.fecha || new Date().toISOString(),
+            creado_en: new Date().toISOString()    // 👈 AGREGADO
         }));
 
         const { error } = await supabaseClient
@@ -184,7 +184,7 @@ async function guardarMovimientosEnSupabase(lista) {
 // 3.3 ELIMINAR MOVIMIENTO
 // ============================================================
 async function eliminarMovimientoEnSupabase(id) {
-    if (!supabaseClient) {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) {
         let movs = JSON.parse(localStorage.getItem('finix_movimientos') || '[]');
         movs = movs.filter(m => String(m.id) !== String(id));
         localStorage.setItem('finix_movimientos', JSON.stringify(movs));
@@ -207,6 +207,77 @@ async function eliminarMovimientoEnSupabase(id) {
     } catch (e) {
         console.error('❌ Excepción eliminando:', e);
         return false;
+    }
+}
+
+// ============================================================
+// 3.4 SINCRONIZAR MOVIMIENTOS DE PLATAFORMAS (después de 24h)
+// ============================================================
+async function sincronizarMovimientosPlataformas() {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) return;
+
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return;
+
+        const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+        const { data: pendientes, error: errBuscar } = await supabaseClient
+            .from('movimientos_plataformas')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('sincronizado', false)
+            .lt('fecha', hace24h);
+
+        if (errBuscar) {
+            console.error('❌ Error buscando pendientes:', errBuscar.message);
+            return;
+        }
+
+        if (!pendientes || pendientes.length === 0) {
+            console.log('📦 No hay movimientos de plataformas para sincronizar');
+            return;
+        }
+
+        console.log(`📦 Sincronizando ${pendientes.length} movimientos de plataformas...`);
+
+        const ahora = new Date().toISOString();
+
+        // 👇 CON creado_en para que aparezcan arriba
+        const filas = pendientes.map(m => ({
+            user_id: user.id,
+            nombre: m.descripcion ? `${m.categoria}: ${m.descripcion}` : m.categoria,
+            precio: Number(m.monto) || 0,
+            tipo: m.tipo,
+            icono: m.icono || '💸',
+            fecha: m.fecha,
+            creado_en: ahora    // 👈 AGREGADO
+        }));
+
+        const { error: errInsert } = await supabaseClient
+            .from('movimientos')
+            .insert(filas);
+
+        if (errInsert) {
+            console.error('❌ Error insertando movimientos:', errInsert.message);
+            return;
+        }
+
+        const ids = pendientes.map(m => m.id);
+        const { error: errUpdate } = await supabaseClient
+            .from('movimientos_plataformas')
+            .update({ sincronizado: true })
+            .in('id', ids);
+
+        if (errUpdate) {
+            console.error('❌ Error marcando sincronizados:', errUpdate.message);
+            return;
+        }
+
+        console.log(`✅ ${pendientes.length} movimientos sincronizados correctamente`);
+
+    } catch (e) {
+        console.error('❌ Excepción sincronizando:', e);
     }
 }
 
@@ -340,7 +411,7 @@ function actualizarGrafica() {
 }
 
 // ============================================================
-// 8. METAS DE AHORRO (desde Supabase)
+// 8. METAS DE AHORRO
 // ============================================================
 async function renderizarMetas() {
     const contenedor = document.getElementById('metasLista');
@@ -348,7 +419,7 @@ async function renderizarMetas() {
 
     let metas = [];
 
-    if (supabaseClient) {
+    if (typeof supabaseClient !== 'undefined' && supabaseClient) {
         try {
             const { data, error } = await supabaseClient
                 .from('registros')
@@ -413,7 +484,7 @@ async function renderizarMetas() {
 }
 
 // ============================================================
-// 9. MOVIMIENTOS (solo 5 últimos)
+// 9. MOVIMIENTOS (solo 5 últimos) — ORDENADOS POR creado_en
 // ============================================================
 function renderizarMovimientos() {
     const contenedor = document.getElementById('movimientosLista');
@@ -430,8 +501,11 @@ function renderizarMovimientos() {
 
     if (vacio) vacio.style.display = 'none';
 
+    // 👇 ORDENAR POR creado_en (más reciente primero)
     const ordenados = [...movs].sort((a, b) => {
-        return new Date(b.fecha) - new Date(a.fecha);
+        const fechaA = new Date(a.creado_en || a.fecha);
+        const fechaB = new Date(b.creado_en || b.fecha);
+        return fechaB - fechaA;
     }).slice(0, 5);
 
     contenedor.innerHTML = '';
@@ -999,7 +1073,6 @@ function inicializarPantallaTexto() {
     btnEnviar.addEventListener('click', async () => {
         if (movimientosPendientes.length === 0) return;
 
-        // 👇 Evitar doble click
         btnEnviar.disabled = true;
         btnEnviar.style.opacity = '0.5';
 
@@ -1105,6 +1178,9 @@ async function init() {
     else document.body.classList.remove('dark-mode');
 
     await cargarNombreUsuario();
+
+    await sincronizarMovimientosPlataformas();
+
     await cargarMovimientosDesdeSupabase();
 
     actualizarSaldo();
@@ -1129,6 +1205,8 @@ if (document.readyState === 'loading') {
 // 15. FOCUS
 // ============================================================
 window.addEventListener('focus', async () => {
+    await sincronizarMovimientosPlataformas();
+
     await cargarMovimientosDesdeSupabase();
     actualizarSaldo();
     actualizarResumen();

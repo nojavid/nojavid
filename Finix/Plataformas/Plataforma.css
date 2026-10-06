@@ -1,0 +1,732 @@
+/* ============================================ */
+/* RESET Y BASE                                  */
+/* ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background-color: #FFFFFF;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.container {
+    width: 100%;
+    max-width: 430px;
+    padding: 20px 19px;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* ============================================ */
+/* ICONO HOME (esquina superior derecha)         */
+/* ============================================ */
+.home-icon {
+    position: absolute;
+    top: 20px;
+    right: 19px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.15s ease, background-color 0.2s ease, opacity 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 10;
+    text-decoration: none;
+}
+
+.home-icon svg {
+    width: 32px;
+    height: 32px;
+    display: block;
+}
+
+.home-icon:hover {
+    background-color: rgba(36, 66, 64, 0.08);
+    transform: scale(1.05);
+}
+
+.home-icon:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+/* ============================================ */
+/* 2. SALUDO "Hola,"                             */
+/* ============================================ */
+.saludo {
+    font-size: 24px;
+    font-weight: 500;
+    color: #13302E;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+/* ============================================ */
+/* 3. NOMBRE DEL USUARIO                         */
+/* ============================================ */
+.nombre-usuario {
+    font-size: 48px;
+    font-weight: 700;
+    color: #13302E;
+    line-height: 1.05;
+    margin-bottom: 12px;
+    word-break: break-word;
+}
+
+/* ============================================ */
+/* 4. MENSAJE QR                                 */
+/* ============================================ */
+.mensaje-qr {
+    font-size: 16px;
+    font-weight: 500;
+    color: #13302E;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+/* ============================================ */
+/* 5. RECTÁNGULO DEL VALOR                       */
+/* ============================================ */
+.rectangulo-valor {
+    background-color: #244240;
+    border-radius: 10px;
+    width: 100%;
+    height: 92px;
+    padding: 8px 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+/* ============================================ */
+/* 6. LABEL "Ingresa el valor"                   */
+/* ============================================ */
+.label-valor {
+    font-size: 10px;
+    font-weight: 600;
+    color: #FFFFFF;
+    position: absolute;
+    top: 8px;
+    left: 12px;
+}
+
+/* ============================================ */
+/* 7. INPUT DEL VALOR (centrado)                 */
+/* ============================================ */
+.input-valor {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 36px;
+    font-weight: 700;
+    color: #5F9184;
+    text-align: center;
+    width: 100%;
+    max-width: 200px;
+    padding: 0;
+    caret-color: #5F9184;
+    margin-top: 6px;
+}
+
+.input-valor::placeholder {
+    color: #5F9184;
+    opacity: 0.7;
+    text-align: center;
+}
+
+.input-valor:focus::placeholder {
+    color: transparent;
+}
+
+/* ============================================ */
+/* 8. TEXTO "Cop"                                */
+/* ============================================ */
+.texto-cop {
+    font-size: 16px;
+    font-weight: 300;
+    color: #FFFFFF;
+    text-align: center;
+    margin-top: 2px;
+    position: static;
+}
+
+/* ============================================ */
+/* 9 y 10. FILA: BOTÓN CÓDIGO + SELECTOR + TOTAL */
+/* ============================================ */
+.fila-codigo-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 8px;
+}
+
+/* Botón "Código" */
+.btn-codigo {
+    background-color: #13302E;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-codigo:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+}
+
+/* Selector de movimiento (desplegable) */
+.selector-movimiento {
+    flex: 1;
+    background-color: #244240;
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 26px 10px 10px;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    min-width: 0;
+    text-overflow: ellipsis;
+}
+
+.selector-movimiento:focus {
+    outline: 2px solid #5F9184;
+}
+
+.selector-movimiento option {
+    background-color: #FFFFFF;
+    color: #13302E;
+    font-weight: 500;
+}
+
+.selector-movimiento optgroup {
+    background-color: #F0F0F0;
+    color: #13302E;
+    font-weight: 700;
+}
+
+/* ============================================ */
+/* RECTÁNGULOS TOTAL (Ingresos / Gastos)         */
+/* ============================================ */
+.totales-container {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.total-box {
+    background-color: #244240;
+    border-radius: 10px;
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 62px;
+    line-height: 1.1;
+}
+
+.total-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: #B3C9D9;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.total-valor {
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.total-box-ingreso .total-valor {
+    color: #5EEE4B;
+}
+
+.total-box-gasto .total-valor {
+    color: #FF8A8A;
+}
+
+/* ============================================ */
+/* INPUT "OTRO" (aparece al seleccionar Otro)   */
+/* ============================================ */
+.contenedor-otro {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin-bottom: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin-bottom 0.3s ease;
+}
+
+.contenedor-otro.visible {
+    max-height: 60px;
+    opacity: 1;
+    margin-bottom: 15px;
+}
+
+.input-otro {
+    width: 100%;
+    background-color: #F0F4F7;
+    border: 2px solid #244240;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #13302E;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.input-otro::placeholder {
+    color: #8A9AA8;
+    font-weight: 400;
+}
+
+.input-otro:focus {
+    border-color: #5F9184;
+    background-color: #FFFFFF;
+}
+
+/* ============================================ */
+/* 11. CONTENEDOR DEL QR                         */
+/* ============================================ */
+.contenedor-qr {
+    width: 100%;
+    background-color: #FFFFFF;
+    border: 2px dashed #244240;
+    border-radius: 10px;
+    min-height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.contenedor-qr.activo {
+    border-style: solid;
+}
+
+.contenedor-qr img {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 6px;
+}
+
+.qr-placeholder {
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ============================================ */
+/* 12. BOTONES PAGADO / CANCELAR                 */
+/* ============================================ */
+.contenedor-botones {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.btn {
+    flex: 1;
+    padding: 14px 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+}
+
+.btn-pagado {
+    background-color: #5EEE4B;
+    color: #13302E;
+}
+
+.btn-cancelar {
+    background-color: #B52525;
+}
+
+/* ============================================ */
+/* 13. RECTÁNGULO INFERIOR: LISTA MOVIMIENTOS    */
+/* ============================================ */
+.rectangulo-inferior {
+    background-color: #13302E;
+    border-radius: 10px;
+    width: 100%;
+    min-height: 182px;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 30px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rectangulo-inferior::-webkit-scrollbar {
+    width: 6px;
+}
+
+.rectangulo-inferior::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.rectangulo-inferior::-webkit-scrollbar-thumb {
+    background: #7A8E9E;
+    border-radius: 3px;
+}
+
+.movimientos-vacio {
+    text-align: center;
+    color: #B3C9D9;
+    font-size: 14px;
+    font-weight: 500;
+    margin: auto;
+}
+
+/* ============================================ */
+/* CADA ITEM DE MOVIMIENTO                       */
+/* ============================================ */
+.movimiento-item {
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    animation: aparecer 0.3s ease;
+}
+
+.movimiento-item.ingreso {
+    background-color: #D1E9CF;
+}
+
+.movimiento-item.gasto {
+    background-color: #EFE0E0;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.movimiento-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+}
+
+.movimiento-categoria {
+    font-size: 14px;
+    font-weight: 700;
+    color: #13302E;
+    word-break: break-word;
+}
+
+.movimiento-tipo {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6B7C8A;
+    text-transform: capitalize;
+}
+
+.movimiento-monto {
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.movimiento-monto.ingreso {
+    color: #1E8C36;
+}
+
+.movimiento-monto.gasto {
+    color: #B52525;
+}
+
+/* ============================================ */
+/* OVERLAY DE ADVERTENCIA (blur + 50% opacidad)  */
+/* ============================================ */
+.overlay-advertencia {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 9999;
+
+    /* Fondo con desenfoque + 50% opacidad */
+    background-color: rgba(11, 46, 52, 0.5);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+
+    /* Oculto por defecto */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.overlay-advertencia.activo {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tarjeta-advertencia {
+    background-color: #FFFFFF;
+    border-radius: 18px;
+    padding: 24px 22px 20px;
+    width: 100%;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    transform: translateY(15px) scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    border: 1px solid #F0F0F0;
+}
+
+.overlay-advertencia.activo .tarjeta-advertencia {
+    transform: translateY(0) scale(1);
+}
+
+.advertencia-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background-color: #FDECEC;
+}
+
+.advertencia-titulo {
+    font-size: 18px;
+    font-weight: 800;
+    color: #13302E;
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+}
+
+.advertencia-texto {
+    font-size: 13px;
+    font-weight: 500;
+    color: #5A6B72;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    padding: 0 6px;
+}
+
+.advertencia-btn {
+    width: 100%;
+    height: 46px;
+    border: none;
+    border-radius: 12px;
+    background-color: #B52525;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(181, 37, 37, 0.3);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.advertencia-btn:hover {
+    background-color: #C93A3A;
+    transform: translateY(-1px);
+}
+
+.advertencia-btn:active {
+    transform: scale(0.97);
+}
+
+/* ============================================ */
+/* AJUSTES RESPONSIVE                            */
+/* ============================================ */
+
+@media (max-width: 400px) {
+    .btn-codigo {
+        font-size: 14px;
+        padding: 9px 12px;
+    }
+
+    .selector-movimiento {
+        font-size: 12px;
+        padding: 9px 22px 9px 8px;
+        background-size: 10px;
+        background-position: right 6px center;
+    }
+
+    .total-box {
+        min-width: 55px;
+        padding: 5px 6px;
+    }
+
+    .total-label {
+        font-size: 8px;
+    }
+
+    .total-valor {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 380px) {
+    .nombre-usuario {
+        font-size: 40px;
+    }
+
+    .input-valor {
+        font-size: 30px;
+    }
+
+    .rectangulo-valor {
+        height: 84px;
+    }
+
+    .btn-codigo {
+        font-size: 13px;
+        padding: 9px 10px;
+    }
+
+    .selector-movimiento {
+        font-size: 11px;
+        padding: 8px 20px 8px 8px;
+    }
+
+    .total-box {
+        min-width: 50px;
+        padding: 5px 5px;
+    }
+
+    .total-label {
+        font-size: 7px;
+    }
+
+    .total-valor {
+        font-size: 10px;
+    }
+
+    .movimiento-categoria {
+        font-size: 13px;
+    }
+
+    .movimiento-monto {
+        font-size: 14px;
+    }
+
+    .home-icon {
+        top: 18px;
+        right: 15px;
+        width: 28px;
+        height: 28px;
+    }
+    .home-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+@media (max-width: 320px) {
+    .nombre-usuario {
+        font-size: 34px;
+    }
+
+    .saludo {
+        font-size: 20px;
+    }
+
+    .input-valor {
+        font-size: 26px;
+    }
+
+    .btn-codigo {
+        font-size: 12px;
+        padding: 8px 8px;
+    }
+
+    .selector-movimiento {
+        font-size: 10px;
+        padding: 7px 18px 7px 6px;
+    }
+
+    .total-box {
+        min-width: 45px;
+        padding: 4px 4px;
+    }
+
+    .total-label {
+        font-size: 6px;
+    }
+
+    .total-valor {
+        font-size: 9px;
+    }
+
+    .movimiento-categoria {
+        font-size: 12px;
+    }
+
+    .movimiento-tipo {
+        font-size: 10px;
+    }
+
+    .movimiento-monto {
+        font-size: 13px;
+    }
+}
