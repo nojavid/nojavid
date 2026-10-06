@@ -69,14 +69,12 @@ if (btnCerrarAdvertencia) {
     btnCerrarAdvertencia.addEventListener('click', cerrarAdvertencia);
 }
 
-// Cerrar al hacer clic en el fondo
 if (overlayAdvertencia) {
     overlayAdvertencia.addEventListener('click', (e) => {
         if (e.target === overlayAdvertencia) cerrarAdvertencia();
     });
 }
 
-// Cerrar con Escape
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && overlayAdvertencia?.classList.contains('activo')) {
         cerrarAdvertencia();
@@ -84,39 +82,62 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================
-// 1. CARGAR NOMBRE DEL USUARIO DESDE SUPABASE
+// 1. CARGAR NOMBRE DEL USUARIO
 // ============================================
 async function cargarUsuario() {
     try {
+        // 1) Pintar primero desde localStorage (rápido y confiable)
+        const nombreLocal = localStorage.getItem("nombreUsuario");
+        if (nombreLocal) {
+            nombreUsuario.textContent = nombreLocal;
+        }
+
+        // 2) Verificar dependencias
         if (typeof supabaseClient === 'undefined') {
             console.error('❌ supabaseClient no está definido.');
-            nombreUsuario.textContent = 'Usuario';
+            if (!nombreLocal) nombreUsuario.textContent = 'Usuario';
             return;
         }
         if (typeof dbObtenerPerfil !== 'function') {
             console.error('❌ dbObtenerPerfil no está disponible.');
-            nombreUsuario.textContent = 'Usuario';
+            if (!nombreLocal) nombreUsuario.textContent = 'Usuario';
             return;
         }
 
+        // 3) Traer perfil desde Supabase
         const perfil = await dbObtenerPerfil();
+        console.log('🔎 PERFIL RECIBIDO:', perfil); // ← temporal para depurar
+
         if (!perfil) {
-            nombreUsuario.textContent = 'Invitado';
+            if (!nombreLocal) nombreUsuario.textContent = 'Invitado';
             return;
         }
 
+        // 4) Buscar el nombre en TODAS las posibles propiedades
         const nombre =
-            perfil.nombre          ||
-            perfil.nombre_completo ||
-            perfil.full_name       ||
-            perfil.username        ||
-            perfil.display_name    ||
+            perfil.full_name                 ||
+            perfil.nombre                    ||
+            perfil.nombre_completo           ||
+            perfil.name                      ||
+            perfil.username                  ||
+            perfil.display_name              ||
+            perfil.user_metadata?.full_name  ||
+            perfil.user_metadata?.name       ||
+            nombreLocal                      ||
             'Usuario';
 
+        console.log('✅ NOMBRE USADO:', nombre); // ← temporal para depurar
         nombreUsuario.textContent = nombre;
+
+        // 5) Guardar en localStorage para la próxima carga
+        if (nombre && nombre !== 'Usuario' && nombre !== 'Invitado') {
+            localStorage.setItem("nombreUsuario", nombre);
+        }
+
     } catch (error) {
         console.error('❌ Error cargando usuario:', error);
-        nombreUsuario.textContent = 'Usuario';
+        const nombreLocal = localStorage.getItem("nombreUsuario");
+        nombreUsuario.textContent = nombreLocal || 'Usuario';
     }
 }
 
