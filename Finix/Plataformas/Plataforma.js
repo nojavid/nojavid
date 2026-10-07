@@ -57,7 +57,6 @@ function cerrarAdvertencia() {
     overlayAdvertencia.classList.remove('activo');
     document.body.style.overflow = '';
 
-    // Devolver el foco al input correspondiente
     if (inputEnfocado === 'otro' && inputOtro) {
         inputOtro.focus();
     } else if (inputValor) {
@@ -94,7 +93,7 @@ async function cargarUsuario() {
             return;
         }
 
-        // 2) Traer perfil desde Supabase (SIEMPRE, para tener el dato más reciente)
+        // 2) Traer perfil desde Supabase
         const perfil = await dbObtenerPerfil();
         console.log('🔎 PERFIL RECIBIDO:', perfil); 
 
@@ -104,7 +103,7 @@ async function cargarUsuario() {
             return;
         }
 
-        // 3) Buscar el nombre. Si no hay full_name, usamos el email
+        // 3) Buscar el nombre en todas las propiedades posibles
         let nombre = 
             perfil.full_name ||
             perfil.nombre ||
@@ -126,7 +125,7 @@ async function cargarUsuario() {
         console.log('✅ NOMBRE USADO:', nombre);
         nombreUsuario.textContent = nombre;
 
-        // 4) Guardar en localStorage (solo si es un nombre real)
+        // 4) Guardar en localStorage
         if (nombre && nombre !== 'Usuario' && nombre !== 'Invitado') {
             localStorage.setItem("nombreUsuario", nombre);
         }
