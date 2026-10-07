@@ -657,6 +657,46 @@ body.dark-mode .mes-opcion.vacio:hover { background-color: transparent; }
 }
 
 /* ============================================
+   DEUDA PAGADA AL 100%
+   ============================================ */
+.deuda-item.deuda-pagada .deuda-item-nombre {
+  color: #2E9E5B;
+}
+
+.deuda-item.deuda-pagada .deuda-item-fecha {
+  color: #2E9E5B;
+}
+
+.deuda-item.deuda-pagada .deuda-progreso-texto {
+  color: #2E9E5B;
+  font-weight: 800;
+}
+
+.deuda-item.deuda-pagada .deuda-item-circulo {
+  background-color: #A8E6B8;
+}
+
+/* ⭐ Ícono de la tarjeta en verde */
+.deuda-item.deuda-pagada .deuda-item-icono {
+  filter: brightness(0) saturate(100%) invert(48%) sepia(85%) saturate(455%) hue-rotate(95deg) brightness(92%) contrast(88%);
+}
+
+/* Modo oscuro */
+body.dark-mode .deuda-item.deuda-pagada .deuda-item-nombre,
+body.dark-mode .deuda-item.deuda-pagada .deuda-item-fecha,
+body.dark-mode .deuda-item.deuda-pagada .deuda-progreso-texto {
+  color: #66D6A6;
+}
+
+body.dark-mode .deuda-item.deuda-pagada .deuda-item-circulo {
+  background-color: #2E7D5B;
+}
+
+body.dark-mode .deuda-item.deuda-pagada .deuda-item-icono {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(30%) saturate(600%) hue-rotate(95deg) brightness(95%) contrast(90%);
+}
+
+/* ============================================
    SECCIÓN METAS
    ============================================ */
 .seccion.metas {

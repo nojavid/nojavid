@@ -82,54 +82,51 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================
-// 1. CARGAR NOMBRE DEL USUARIO
+// 1. CARGAR NOMBRE DEL USUARIO (CORREGIDO)
 // ============================================
 async function cargarUsuario() {
     try {
-        // 1) Pintar primero desde localStorage (rápido y confiable)
-        const nombreLocal = localStorage.getItem("nombreUsuario");
-        if (nombreLocal) {
-            nombreUsuario.textContent = nombreLocal;
-        }
-
-        // 2) Verificar dependencias
-        if (typeof supabaseClient === 'undefined') {
-            console.error('❌ supabaseClient no está definido.');
-            if (!nombreLocal) nombreUsuario.textContent = 'Usuario';
-            return;
-        }
-        if (typeof dbObtenerPerfil !== 'function') {
-            console.error('❌ dbObtenerPerfil no está disponible.');
-            if (!nombreLocal) nombreUsuario.textContent = 'Usuario';
+        // 1) Verificar dependencias
+        if (typeof supabaseClient === 'undefined' || typeof dbObtenerPerfil !== 'function') {
+            console.error('❌ Supabase o dbObtenerPerfil no están disponibles.');
+            const nombreLocal = localStorage.getItem("nombreUsuario");
+            nombreUsuario.textContent = nombreLocal || 'Usuario';
             return;
         }
 
-        // 3) Traer perfil desde Supabase
+        // 2) Traer perfil desde Supabase (SIEMPRE, para tener el dato más reciente)
         const perfil = await dbObtenerPerfil();
-        console.log('🔎 PERFIL RECIBIDO:', perfil); // ← temporal para depurar
+        console.log('🔎 PERFIL RECIBIDO:', perfil); 
 
         if (!perfil) {
-            if (!nombreLocal) nombreUsuario.textContent = 'Invitado';
+            const nombreLocal = localStorage.getItem("nombreUsuario");
+            nombreUsuario.textContent = nombreLocal || 'Invitado';
             return;
         }
 
-        // 4) Buscar el nombre en TODAS las posibles propiedades
-        const nombre =
-            perfil.full_name                 ||
-            perfil.nombre                    ||
-            perfil.nombre_completo           ||
-            perfil.name                      ||
-            perfil.username                  ||
-            perfil.display_name              ||
-            perfil.user_metadata?.full_name  ||
-            perfil.user_metadata?.name       ||
-            nombreLocal                      ||
-            'Usuario';
+        // 3) Buscar el nombre. Si no hay full_name, usamos el email
+        let nombre = 
+            perfil.full_name ||
+            perfil.nombre ||
+            perfil.nombre_completo ||
+            perfil.name ||
+            perfil.username ||
+            perfil.display_name;
 
-        console.log('✅ NOMBRE USADO:', nombre); // ← temporal para depurar
+        // Si no hay nombre, usamos la parte antes del @ del email
+        if (!nombre && perfil.email) {
+            nombre = perfil.email.split('@')[0]; 
+        }
+
+        // Si aún así no hay nada, usamos "Usuario"
+        if (!nombre) {
+            nombre = 'Usuario';
+        }
+
+        console.log('✅ NOMBRE USADO:', nombre);
         nombreUsuario.textContent = nombre;
 
-        // 5) Guardar en localStorage para la próxima carga
+        // 4) Guardar en localStorage (solo si es un nombre real)
         if (nombre && nombre !== 'Usuario' && nombre !== 'Invitado') {
             localStorage.setItem("nombreUsuario", nombre);
         }

@@ -95,13 +95,11 @@ function formatearMonto(valor) {
   return "$" + numero.toLocaleString("es-CO");
 }
 
-// 🔧 Fallback a monto si montoTotal es null/0 + decimales para <1%
+// ⭐ El total real SIEMPRE es `monto` (fuente de verdad)
 function calcularPorcentaje(registro) {
   if (!registro) return 0;
 
-  let total = Number(registro.montoTotal);
-  if (!total || total <= 0) total = Number(registro.monto) || 0;
-
+  const total = Number(registro.monto) || 0;
   const pagado = Number(registro.montoPagado) || 0;
 
   if (total > 0) {
@@ -307,20 +305,25 @@ function renderizarDeudas() {
 
   registros.forEach((registro) => {
     const porcentaje = calcularPorcentaje(registro);
+    const pagada = porcentaje >= 100;
+
     const item = document.createElement("div");
-    item.className = "deuda-item";
+    item.className = "deuda-item" + (pagada ? " deuda-pagada" : "");
     item.dataset.registroId = registro.id;
+
+    const colorBarra = pagada ? "#2E9E5B" : "#D80202";
+
     item.innerHTML = `
       <div class="deuda-item-header">
         <div class="deuda-item-circulo">
           <img src="../iconos/tarjeta.png" alt="tarjeta" class="deuda-item-icono">
         </div>
-        <h4 class="deuda-item-nombre">${registro.nombre}</h4>
+        <h4 class="deuda-item-nombre">${registro.nombre}${pagada ? ' ✅' : ''}</h4>
       </div>
       <p class="deuda-item-fecha">Vence ${formatearFecha(registro.fecha)} · ${formatearMonto(registro.monto)}</p>
       <div class="deuda-progreso-container">
         <div class="deuda-progreso-barra">
-          <div class="deuda-progreso-relleno" style="width: ${porcentaje}%;"></div>
+          <div class="deuda-progreso-relleno" style="width: ${porcentaje}%; background-color: ${colorBarra};"></div>
         </div>
         <span class="deuda-progreso-texto">${porcentaje}%</span>
       </div>
@@ -505,16 +508,16 @@ function rellenarSelectSecciones() {
 function actualizarTotales() {
   const registros = filtrarRegistrosPorMes(cacheRegistros);
 
+  // ⭐ Deudas: solo las que NO están 100% pagadas, usando `monto` como total real
   const totalDeudas = registros
     .filter(r => r.seccion === "deudas")
+    .filter(r => calcularPorcentaje(r) < 100)
     .reduce((sum, r) => sum + (Number(r.monto) || 0), 0);
 
+  // ⭐ Ahorro: usar `monto` como total real (NO montoTotal)
   const totalAhorro = registros
     .filter(r => r.seccion === "ahorro")
-    .reduce((sum, r) => {
-      const t = Number(r.montoTotal);
-      return sum + (t > 0 ? t : (Number(r.monto) || 0));
-    }, 0);
+    .reduce((sum, r) => sum + (Number(r.monto) || 0), 0);
 
   const totalAbonado = registros
     .filter(r => r.seccion === "ahorro")
@@ -725,7 +728,7 @@ function inicializarModal() {
         iconoSeccion:    iconoSeccionFinal,
         nombre:          document.getElementById("inputNombre").value,
         monto:           montoIngresado,
-        montoTotal:      montoIngresado,
+        montoTotal:      montoIngresado,   // siempre igual a monto al crear
         montoPagado:     0,
         fecha:           document.getElementById("inputFecha").value,
         recordatorio:    tipoRecordatorio,
@@ -1114,14 +1117,13 @@ async function aplicarAbono(monto) {
     return;
   }
 
-  // Cálculo robusto con fallback a monto
-  let montoTotal = Number(registro.montoTotal);
-  if (!montoTotal || montoTotal <= 0) montoTotal = Number(registro.monto) || 0;
+  // ⭐ FUENTE DE VERDAD: siempre `monto`. `montoTotal` se sincroniza con él.
+  const montoTotal = Number(registro.monto) || 0;
 
   const montoPagadoYa = Number(registro.montoPagado) || 0;
   const nuevoMontoPagado = Math.min(montoTotal, montoPagadoYa + monto);
 
-  // ⭐ SIEMPRE enviar montoTotal y montoPagado
+  // ⭐ SIEMPRE sincronizar montoTotal = monto (corrige registros viejos)
   const cambios = {
     montoPagado: nuevoMontoPagado,
     montoTotal:  montoTotal,
