@@ -81,11 +81,83 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================================
-// 1. CARGAR NOMBRE DEL USUARIO (CORREGIDO)
+// 0.5 CARGAR MOVIMIENTOS DE HOY DESDE SUPABASE
+// ============================================
+async function cargarMovimientosDeHoy() {
+    if (typeof supabaseClient === 'undefined') {
+        console.warn('⚠️ Supabase no disponible, no se cargan movimientos');
+        return;
+    }
+
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+            console.warn('⚠️ No hay usuario logueado');
+            return;
+        }
+
+        // Calcular la medianoche de HOY (00:00 hora local)
+        const hoyMedianoche = new Date();
+        hoyMedianoche.setHours(0, 0, 0, 0);
+        const fechaCorte = hoyMedianoche.toISOString();
+
+        // Traer solo los movimientos NO sincronizados y de HOY
+        const { data, error } = await supabaseClient
+            .from('movimientos_plataformas')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('sincronizado', false)
+            .gte('fecha', fechaCorte)
+            .order('fecha', { ascending: true });
+
+        if (error) {
+            console.error('❌ Error cargando movimientos:', error.message);
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            console.log('📦 No hay movimientos de hoy todavía');
+            movimientos = [];
+            totalIngresos = 0;
+            totalGastos = 0;
+            actualizarTotal();
+            renderizarMovimientos();
+            return;
+        }
+
+        // Reconstruir el array de movimientos con los datos de Supabase
+        movimientos = data.map(m => ({
+            id: m.id,
+            tipo: m.tipo,
+            categoria: m.categoria,
+            monto: Number(m.monto) || 0,
+            descripcion: m.descripcion || '',
+            fecha: m.fecha,
+        }));
+
+        // Recalcular totales
+        totalIngresos = 0;
+        totalGastos = 0;
+        movimientos.forEach(m => {
+            if (m.tipo === 'ingreso') totalIngresos += m.monto;
+            else if (m.tipo === 'gasto') totalGastos += m.monto;
+        });
+
+        actualizarTotal();
+        renderizarMovimientos();
+
+        console.log(`✅ ${movimientos.length} movimientos de hoy cargados (ingresos: ${totalIngresos}, gastos: ${totalGastos})`);
+
+    } catch (e) {
+        console.error('❌ Excepción cargando movimientos:', e);
+    }
+}
+
+// ============================================
+// 1. CARGAR NOMBRE DEL USUARIO
 // ============================================
 async function cargarUsuario() {
     try {
-        // 1) Verificar dependencias
         if (typeof supabaseClient === 'undefined' || typeof dbObtenerPerfil !== 'function') {
             console.error('❌ Supabase o dbObtenerPerfil no están disponibles.');
             const nombreLocal = localStorage.getItem("nombreUsuario");
@@ -93,9 +165,8 @@ async function cargarUsuario() {
             return;
         }
 
-        // 2) Traer perfil desde Supabase
         const perfil = await dbObtenerPerfil();
-        console.log('🔎 PERFIL RECIBIDO:', perfil); 
+        console.log('🔎 PERFIL RECIBIDO:', perfil);
 
         if (!perfil) {
             const nombreLocal = localStorage.getItem("nombreUsuario");
@@ -103,8 +174,7 @@ async function cargarUsuario() {
             return;
         }
 
-        // 3) Buscar el nombre en todas las propiedades posibles
-        let nombre = 
+        let nombre =
             perfil.full_name ||
             perfil.nombre ||
             perfil.nombre_completo ||
@@ -112,12 +182,10 @@ async function cargarUsuario() {
             perfil.username ||
             perfil.display_name;
 
-        // Si no hay nombre, usamos la parte antes del @ del email
         if (!nombre && perfil.email) {
-            nombre = perfil.email.split('@')[0]; 
+            nombre = perfil.email.split('@')[0];
         }
 
-        // Si aún así no hay nada, usamos "Usuario"
         if (!nombre) {
             nombre = 'Usuario';
         }
@@ -125,7 +193,6 @@ async function cargarUsuario() {
         console.log('✅ NOMBRE USADO:', nombre);
         nombreUsuario.textContent = nombre;
 
-        // 4) Guardar en localStorage
         if (nombre && nombre !== 'Usuario' && nombre !== 'Invitado') {
             localStorage.setItem("nombreUsuario", nombre);
         }
@@ -426,6 +493,5 @@ btnCancelar.addEventListener('click', () => {
 // ============================================
 document.addEventListener('DOMContentLoaded', async () => {
     await cargarUsuario();
-    actualizarTotal();
-    renderizarMovimientos();
+    await cargarMovimientosDeHoy();  // 👈 Carga los movimientos de hoy desde Supabase
 });
