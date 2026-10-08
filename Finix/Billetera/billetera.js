@@ -58,6 +58,25 @@ function obtenerIconoSVG(nombre) {
 }
 
 // ============================================
+// UTILIDAD: Detectar si un color hex es claro
+// ============================================
+function esColorClaro(hex) {
+  if (!hex) return false;
+
+  const clean = hex.replace("#", "");
+
+  const r = parseInt(clean.substring(0, 2), 16);
+  const g = parseInt(clean.substring(2, 4), 16);
+  const b = parseInt(clean.substring(4, 6), 16);
+
+  // Luminosidad perceptual (W3C)
+  const luminosidad = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // Umbral: > 0.6 = claro
+  return luminosidad > 0.6;
+}
+
+// ============================================
 // NOMBRE DEL USUARIO
 // ============================================
 async function cargarNombre() {
@@ -95,7 +114,7 @@ function formatearMonto(valor) {
   return "$" + numero.toLocaleString("es-CO");
 }
 
-// ⭐ El total real SIEMPRE es `monto` (fuente de verdad)
+// ⭐ Calcula el porcentaje basado en `montoPagado` (suma de abonos)
 function calcularPorcentaje(registro) {
   if (!registro) return 0;
 
@@ -105,8 +124,10 @@ function calcularPorcentaje(registro) {
   if (total > 0) {
     const pct = (pagado / total) * 100;
 
-    // Si es menor a 1% y mayor a 0, mostrar 1 decimal (ej: 0.1, 0.5)
     if (pct > 0 && pct < 1) {
+      if (pct < 0.1) {
+        return Math.round(pct * 100) / 100;
+      }
       return Math.round(pct * 10) / 10;
     }
 
@@ -114,6 +135,14 @@ function calcularPorcentaje(registro) {
   }
 
   return 0;
+}
+
+// ⭐ Calcula el saldo pendiente (monto - abonos)
+function calcularSaldoPendiente(registro) {
+  const total = Number(registro.monto) || 0;
+  const pagado = Number(registro.montoPagado) || 0;
+  const pendiente = total - pagado;
+  return pendiente < 0 ? 0 : pendiente;
 }
 
 function formatearFecha(fechaISO) {
@@ -274,10 +303,26 @@ function inicializarSelectorMes() {
 }
 
 // ============================================
-// REFRESCAR REGISTROS
+// REFRESCAR REGISTROS (con abonos incluidos)
 // ============================================
 async function refrescarRegistros() {
-  cacheRegistros = await dbObtenerRegistros();
+  const [registros, abonos] = await Promise.all([
+    dbObtenerRegistros(),
+    dbObtenerTodosLosAbonos()
+  ]);
+
+  const abonosPorRegistro = {};
+  abonos.forEach(a => {
+    const rid = a.registro_id;
+    if (!rid) return;
+    if (!abonosPorRegistro[rid]) abonosPorRegistro[rid] = 0;
+    abonosPorRegistro[rid] += Number(a.monto) || 0;
+  });
+
+  cacheRegistros = registros.map(r => ({
+    ...r,
+    montoPagado: abonosPorRegistro[r.id] || 0
+  }));
 
   renderizarDeudas();
   renderizarMetas();
@@ -375,6 +420,8 @@ function renderizarMetas() {
 
 // ============================================
 // SECCIONES PERSONALIZADAS
+// ⭐ AHORA INCLUYE SU PROPIO "TOTAL" (monto - abonos)
+//    + Detecta si el color es claro para usar texto negro (solo en modo claro)
 // ============================================
 function renderizarSeccionesPersonalizadas() {
   const contenedor = document.getElementById("seccionesPersonalizadas");
@@ -404,6 +451,17 @@ function renderizarSeccionesPersonalizadas() {
     const itemsFiltrados = filtrarRegistrosPorMes(data.items);
     const svgIcono = obtenerIconoSVG(data.icono);
 
+    // ⭐ Calcular el total pendiente de esta sección personalizada
+    const totalPendiente = itemsFiltrados
+      .filter(item => calcularPorcentaje(item) < 100)
+      .reduce((sum, item) => sum + calcularSaldoPendiente(item), 0);
+
+    // ⭐ Detectar si el color es claro para cambiar texto a negro
+    //    (solo aplica en modo claro; en oscuro se mantiene el color original)
+    const esModoOscuro = document.body.classList.contains("dark-mode");
+    const colorEsClaro = esColorClaro(data.color);
+    const colorTexto = (!esModoOscuro && colorEsClaro) ? "#000000" : data.color;
+
     const seccion = document.createElement("section");
     seccion.className = "seccion personalizada";
     seccion.style.backgroundColor = hexToRgba(data.color, 0.1);
@@ -419,7 +477,7 @@ function renderizarSeccionesPersonalizadas() {
         itemsHTML += `
           <div class="personalizada-item" data-registro-id="${item.id}">
             <div class="personalizada-item-header">
-              <div class="personalizada-item-circulo" style="background-color:${data.color}; color:#FFFFFF;">
+              <div class="personalizada-item-circulo" style="background-color:${data.color}; color:${colorTexto};">
                 ${svgItem}
               </div>
               <h4 class="personalizada-item-nombre">${item.nombre}</h4>
@@ -437,8 +495,11 @@ function renderizarSeccionesPersonalizadas() {
     }
 
     seccion.innerHTML = `
+      <div class="total-personalizada-box" style="background-color: ${hexToRgba(data.color, 0.35)}; color: ${colorTexto};">
+        Total: ${formatearMonto(totalPendiente)}
+      </div>
       <div class="personalizada-header">
-        <div class="personalizada-circulo" style="background-color:${data.color}; color:#FFFFFF;">
+        <div class="personalizada-circulo" style="background-color:${data.color}; color:${colorTexto};">
           ${svgIcono}
         </div>
         <h2 class="personalizada-titulo">${nombre}</h2>
@@ -503,31 +564,38 @@ function rellenarSelectSecciones() {
 }
 
 // ============================================
-// ACTUALIZAR TOTALES
+// ACTUALIZAR TOTALES (en el header y secciones)
+// ⭐ AHORA RESTA LOS ABONOS (saldo pendiente)
 // ============================================
 function actualizarTotales() {
   const registros = filtrarRegistrosPorMes(cacheRegistros);
 
-  // ⭐ Deudas: solo las que NO están 100% pagadas, usando `monto` como total real
+  // ⭐ Deudas: sumar solo el SALDO PENDIENTE (monto - abonos)
   const totalDeudas = registros
     .filter(r => r.seccion === "deudas")
     .filter(r => calcularPorcentaje(r) < 100)
-    .reduce((sum, r) => sum + (Number(r.monto) || 0), 0);
+    .reduce((sum, r) => sum + calcularSaldoPendiente(r), 0);
 
-  // ⭐ Ahorro: usar `monto` como total real (NO montoTotal)
+  // ⭐ Ahorro: sumar solo el SALDO PENDIENTE (monto - abonos)
   const totalAhorro = registros
     .filter(r => r.seccion === "ahorro")
-    .reduce((sum, r) => sum + (Number(r.monto) || 0), 0);
+    .reduce((sum, r) => sum + calcularSaldoPendiente(r), 0);
 
+  // ⭐ Total abonado en ahorro (para la barra de progreso)
   const totalAbonado = registros
     .filter(r => r.seccion === "ahorro")
     .reduce((sum, r) => sum + (Number(r.montoPagado) || 0), 0);
 
+  // ⭐ Total original de ahorro (para calcular %)
+  const totalAhorroOriginal = registros
+    .filter(r => r.seccion === "ahorro")
+    .reduce((sum, r) => sum + (Number(r.monto) || 0), 0);
+
   const balanceAhorro = totalAbonado;
 
   let porcentaje = 0;
-  if (totalAhorro > 0) {
-    porcentaje = Math.min(100, Math.round((totalAbonado / totalAhorro) * 100));
+  if (totalAhorroOriginal > 0) {
+    porcentaje = Math.min(100, Math.round((totalAbonado / totalAhorroOriginal) * 100));
   }
 
   const elBalance = document.getElementById("balanceTotal");
@@ -728,7 +796,7 @@ function inicializarModal() {
         iconoSeccion:    iconoSeccionFinal,
         nombre:          document.getElementById("inputNombre").value,
         monto:           montoIngresado,
-        montoTotal:      montoIngresado,   // siempre igual a monto al crear
+        montoTotal:      montoIngresado,
         montoPagado:     0,
         fecha:           document.getElementById("inputFecha").value,
         recordatorio:    tipoRecordatorio,
@@ -959,6 +1027,8 @@ function cerrarModalAbono() {
 
 // ============================================
 // GENERAR QR DE ABONO
+// ⭐ YA NO GUARDA EL ABONO AQUÍ. Solo genera el QR.
+//    El abono se guarda cuando el usuario confirma "Sí, ya pagué".
 // ============================================
 async function generarQRAbono() {
   const input = document.getElementById("inputMontoAbono");
@@ -991,6 +1061,8 @@ async function generarQRAbono() {
     alert("No se pudo generar el QR: " + err.message);
     return;
   }
+
+  registroAbonando.payloadGenerado = payload;
 
   const contenedorQR = document.getElementById("qrCanvas");
   if (!contenedorQR) return;
@@ -1040,19 +1112,6 @@ async function generarQRAbono() {
 
   const btnPagar = document.getElementById("btnPagarQR");
   if (btnPagar) btnPagar.style.display = "block";
-
-  try {
-    await dbCrearAbono({
-      registro_id: registroAbonando?.registroId
-        ? Number(registroAbonando.registroId)
-        : null,
-      monto,
-      llave_bre_b: payloadBase,
-      payload_qr: payload,
-    });
-  } catch (e) {
-    console.warn("No se pudo guardar el abono:", e);
-  }
 }
 
 // ============================================
@@ -1101,7 +1160,8 @@ function confirmarPagoQR() {
 }
 
 // ============================================
-// APLICAR ABONO AL REGISTRO (suma a montoPagado)
+// APLICAR ABONO AL REGISTRO
+// ⭐ AQUÍ SE GUARDA EL ABONO EN SUPABASE
 // ============================================
 async function aplicarAbono(monto) {
   if (!registroAbonando || !registroAbonando.registroId) {
@@ -1110,40 +1170,43 @@ async function aplicarAbono(monto) {
   }
 
   const registroId = Number(registroAbonando.registroId);
-
   const registro = cacheRegistros.find(r => Number(r.id) === registroId);
   if (!registro) {
     alert("Registro no encontrado.");
     return;
   }
 
-  // ⭐ FUENTE DE VERDAD: siempre `monto`. `montoTotal` se sincroniza con él.
-  const montoTotal = Number(registro.monto) || 0;
+  const perfil = await dbObtenerPerfil();
+  const payloadBase = perfil?.llave_bre_b;
 
-  const montoPagadoYa = Number(registro.montoPagado) || 0;
-  const nuevoMontoPagado = Math.min(montoTotal, montoPagadoYa + monto);
+  try {
+    const abonoGuardado = await dbCrearAbono({
+      registro_id: registroId,
+      monto: monto,
+      llave_bre_b: payloadBase || null,
+      payload_qr: registroAbonando.payloadGenerado || null,
+    });
 
-  // ⭐ SIEMPRE sincronizar montoTotal = monto (corrige registros viejos)
-  const cambios = {
-    montoPagado: nuevoMontoPagado,
-    montoTotal:  montoTotal,
-  };
-
-  const actualizado = await dbActualizarRegistro(registroId, cambios);
-
-  if (!actualizado) {
-    alert("No se pudo actualizar el registro. Intenta de nuevo.");
+    if (!abonoGuardado) {
+      alert("No se pudo guardar el abono. Intenta de nuevo.");
+      return;
+    }
+  } catch (e) {
+    console.error("Error guardando el abono:", e);
+    alert("No se pudo guardar el abono. Intenta de nuevo.");
     return;
   }
 
-  // Actualizar caché local INMEDIATAMENTE
+  // Feedback visual inmediato (se corrige al refrescar desde Supabase)
+  const montoTotal = Number(registro.monto) || 0;
+  const montoPagadoYa = Number(registro.montoPagado) || 0;
+  const nuevoMontoPagado = Math.min(montoTotal, montoPagadoYa + monto);
+
   const idx = cacheRegistros.findIndex(r => Number(r.id) === registroId);
   if (idx !== -1) {
     cacheRegistros[idx].montoPagado = nuevoMontoPagado;
-    cacheRegistros[idx].montoTotal  = montoTotal;
   }
 
-  // Re-renderizar inmediatamente
   renderizarMetas();
   renderizarDeudas();
   renderizarSeccionesPersonalizadas();
@@ -1184,7 +1247,6 @@ function inicializarModalAbono() {
   document.getElementById("btnCancelarAbono").onclick = cerrarModalAbono;
   document.getElementById("btnGenerarQR").onclick     = generarQRAbono;
 
-  // Delegación para el botón "Ya pagué"
   modal.addEventListener("click", (e) => {
     if (e.target && e.target.id === "btnPagarQR") {
       confirmarPagoQR();

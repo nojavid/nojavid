@@ -1,5 +1,5 @@
 // ============================================
-// ajustes.js — Perfil + QR Bre-B (payload) + Plataformas
+// ajustes.js — Perfil + QR Bre-B + Plataformas + Cerrar Sesión (modal)
 // ============================================
 
 // ============================================
@@ -109,6 +109,48 @@ function limpiarQRBreB() {
 }
 
 // ============================================
+// MODAL CERRAR SESIÓN
+// ============================================
+function mostrarModalCerrar() {
+  const modal = document.getElementById("modalCerrarSesion");
+  if (!modal) return;
+  modal.classList.add("activo");
+  document.body.style.overflow = "hidden";
+}
+
+function ocultarModalCerrar() {
+  const modal = document.getElementById("modalCerrarSesion");
+  if (!modal) return;
+  modal.classList.remove("activo");
+  document.body.style.overflow = "";
+}
+
+async function ejecutarCerrarSesion() {
+  // 1. Cerrar sesión en Supabase (si está disponible)
+  try {
+    if (typeof supabaseClient !== "undefined" && supabaseClient) {
+      await supabaseClient.auth.signOut();
+      console.log("✅ Sesión cerrada en Supabase");
+    }
+  } catch (e) {
+    console.warn("⚠️ Error cerrando sesión en Supabase:", e);
+  }
+
+  // 2. Limpiar TODO el localStorage relacionado con la sesión
+  try {
+    localStorage.removeItem("finix_user");
+    localStorage.removeItem("nombreUsuario");
+    localStorage.removeItem("emailUsuario");
+    localStorage.removeItem("finix_usuario");
+  } catch (e) {
+    console.warn("⚠️ Error limpiando localStorage:", e);
+  }
+
+  // 3. Redirigir al login (está en la raíz, un nivel arriba de Ajustes)
+  window.location.href = "../Login.html";
+}
+
+// ============================================
 // MARCAR NAVEGACIÓN ACTIVA
 // ============================================
 function marcarActivo() {
@@ -155,6 +197,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Botón Plataformas
   const btnPlataformas = document.getElementById("btnPlataformas");
   if (btnPlataformas) btnPlataformas.addEventListener("click", irAPlataformas);
+
+  // ----- Modal Cerrar Sesión -----
+  const btnCerrarSesion     = document.getElementById("btnCerrarSesion");
+  const modalCerrar         = document.getElementById("modalCerrarSesion");
+  const btnCancelarCerrar   = document.getElementById("btnCancelarCerrar");
+  const btnConfirmarCerrar  = document.getElementById("btnConfirmarCerrar");
+
+  if (btnCerrarSesion) {
+    btnCerrarSesion.addEventListener("click", mostrarModalCerrar);
+  }
+
+  if (btnCancelarCerrar) {
+    btnCancelarCerrar.addEventListener("click", ocultarModalCerrar);
+  }
+
+  if (btnConfirmarCerrar) {
+    btnConfirmarCerrar.addEventListener("click", async () => {
+      await ejecutarCerrarSesion();
+    });
+  }
+
+  // Cerrar el modal al hacer clic fuera de la tarjeta
+  if (modalCerrar) {
+    modalCerrar.addEventListener("click", (e) => {
+      if (e.target === modalCerrar) ocultarModalCerrar();
+    });
+  }
+
+  // Cerrar el modal con la tecla Escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modalCerrar?.classList.contains("activo")) {
+      ocultarModalCerrar();
+    }
+  });
 
   // Perfil + payload QR Bre-B
   await cargarPerfil();

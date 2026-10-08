@@ -420,6 +420,48 @@ body {
 }
 
 /* ============================================
+   SECCIÓN CERRAR SESIÓN
+   ============================================ */
+.seccion.cerrar-sesion {
+  padding: 16px;
+}
+
+.btn-cerrar-sesion {
+  width: 100%;
+  height: 48px;
+  border: 1.5px solid #D80202;
+  border-radius: 12px;
+  background-color: #FFFFFF;
+  color: #D80202;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.btn-cerrar-sesion:hover {
+  background-color: #D80202;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(216, 2, 2, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-cerrar-sesion:active {
+  transform: scale(0.97);
+}
+
+.btn-cerrar-icono {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ============================================
    SECCIÓN INFORMACIÓN
    ============================================ */
 .info {
@@ -444,6 +486,131 @@ body {
   font-size: 12px;
   font-weight: 700;
   color: #0B2E34;
+}
+
+/* ============================================
+   MODAL CERRAR SESIÓN
+   ============================================ */
+.modal-cerrar-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 9999;
+
+  /* Fondo con desenfoque + 50% opacidad */
+  background-color: rgba(11, 46, 52, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+
+  /* Oculto por defecto */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-cerrar-overlay.activo {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-cerrar-card {
+  background-color: #FFFFFF;
+  border-radius: 18px;
+  padding: 24px 22px 20px;
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  transform: translateY(15px) scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  border: 1px solid #F0F0F0;
+}
+
+.modal-cerrar-overlay.activo .modal-cerrar-card {
+  transform: translateY(0) scale(1);
+}
+
+.modal-cerrar-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background-color: #FDECEC;
+}
+
+.modal-cerrar-icono svg {
+  width: 36px;
+  height: 36px;
+}
+
+.modal-cerrar-titulo {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0B2E34;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.modal-cerrar-texto {
+  font-size: 13px;
+  font-weight: 500;
+  color: #5A6B72;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  padding: 0 6px;
+}
+
+.modal-cerrar-botones {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.modal-btn-cancelar,
+.modal-btn-confirmar {
+  flex: 1;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modal-btn-cancelar {
+  background-color: #F0F0F0;
+  color: #3F5050;
+}
+
+.modal-btn-cancelar:hover {
+  background-color: #E4E4E4;
+}
+
+.modal-btn-confirmar {
+  background-color: #D80202;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(216, 2, 2, 0.35);
+}
+
+.modal-btn-confirmar:hover {
+  background-color: #E62A2A;
+  transform: translateY(-1px);
+}
+
+.modal-btn-cancelar:active,
+.modal-btn-confirmar:active {
+  transform: scale(0.97);
 }
 
 /* ============================================
@@ -613,6 +780,46 @@ body.dark-mode .breb-estado.exito {
 
 body.dark-mode .breb-estado.error {
   color: #FFA1A1;
+}
+
+/* Botón cerrar sesión en dark mode */
+body.dark-mode .btn-cerrar-sesion {
+  background-color: #2A1A1A;
+  border-color: #FF6B6B;
+  color: #FF6B6B;
+}
+
+body.dark-mode .btn-cerrar-sesion:hover {
+  background-color: #D80202;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(216, 2, 2, 0.5);
+}
+
+/* Modal cerrar sesión en dark mode */
+body.dark-mode .modal-cerrar-card {
+  background-color: #1A1D21;
+  border-color: #2A2E33;
+}
+
+body.dark-mode .modal-cerrar-titulo {
+  color: #FFFFFF;
+}
+
+body.dark-mode .modal-cerrar-texto {
+  color: #A8B8BE;
+}
+
+body.dark-mode .modal-cerrar-icono {
+  background-color: rgba(216, 2, 2, 0.18);
+}
+
+body.dark-mode .modal-btn-cancelar {
+  background-color: #2A2E33;
+  color: #A8B8BE;
+}
+
+body.dark-mode .modal-btn-cancelar:hover {
+  background-color: #33383E;
 }
 
 body.dark-mode .info-label {

@@ -114,6 +114,20 @@
   </section>
 
   <!-- ============================================
+       SECCIÓN CERRAR SESIÓN
+       ============================================ -->
+  <section class="seccion cerrar-sesion">
+    <button type="button" class="btn-cerrar-sesion" id="btnCerrarSesion">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-cerrar-icono">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Cerrar sesión
+    </button>
+  </section>
+
+  <!-- ============================================
        SECCIÓN INFORMACIÓN
        ============================================ -->
   <section class="seccion info">
@@ -149,6 +163,33 @@
         <span class="nav-activo-texto">Ajustes</span>
       </div>
     </a>
+  </div>
+
+  <!-- ============================================
+       MODAL CERRAR SESIÓN
+       ============================================ -->
+  <div class="modal-cerrar-overlay" id="modalCerrarSesion">
+    <div class="modal-cerrar-card">
+      <div class="modal-cerrar-icono">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D80202" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </div>
+      <h3 class="modal-cerrar-titulo">Cerrar sesión</h3>
+      <p class="modal-cerrar-texto">
+        ¿Estás seguro de que quieres cerrar sesión? Tendrás que volver a iniciar sesión para acceder a tu cuenta.
+      </p>
+      <div class="modal-cerrar-botones">
+        <button type="button" class="modal-btn-cancelar" id="btnCancelarCerrar">
+          Cancelar
+        </button>
+        <button type="button" class="modal-btn-confirmar" id="btnConfirmarCerrar">
+          Sí, cerrar sesión
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- SDK de Supabase -->

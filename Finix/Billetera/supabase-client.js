@@ -305,3 +305,25 @@ async function dbTotalAbonadoPorRegistro(registroId) {
   const abonos = await dbObtenerAbonosPorRegistro(registroId);
   return abonos.reduce((sum, a) => sum + (Number(a.monto) || 0), 0);
 }
+
+// ============================================
+// OBTENER TODOS LOS ABONOS DEL USUARIO (NUEVO)
+// ============================================
+// Esta función trae TODOS los abonos del usuario de una sola vez,
+// para que billetera.js los sume y actualice las barras de progreso
+// de TODAS las secciones (deudas, ahorro, personalizadas).
+async function dbObtenerTodosLosAbonos() {
+  const user = await obtenerUsuarioActual();
+  if (!user) return [];
+
+  const { data, error } = await supabaseClient
+    .from("abonos")
+    .select("registro_id, monto")
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Error obteniendo todos los abonos:", error);
+    return [];
+  }
+  return data || [];
+}
