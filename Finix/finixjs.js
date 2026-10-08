@@ -211,7 +211,7 @@ async function eliminarMovimientoEnSupabase(id) {
 }
 
 // ============================================================
-// 3.4 SINCRONIZAR MOVIMIENTOS DE PLATAFORMAS (después de 24h)
+// 3.4 SINCRONIZAR MOVIMIENTOS DE PLATAFORMAS (DESPUÉS DE MEDIANOCHE)
 // ============================================================
 async function sincronizarMovimientosPlataformas() {
     if (typeof supabaseClient === 'undefined' || !supabaseClient) return;
@@ -220,14 +220,18 @@ async function sincronizarMovimientosPlataformas() {
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) return;
 
-        const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+        // 👇 CAMBIO: Calcular la medianoche de HOY (00:00 hora local)
+        const hoyMedianoche = new Date();
+        hoyMedianoche.setHours(0, 0, 0, 0); 
+        const fechaCorte = hoyMedianoche.toISOString();
 
+        // Buscar movimientos que sean ANTERIORES a la medianoche de hoy
         const { data: pendientes, error: errBuscar } = await supabaseClient
             .from('movimientos_plataformas')
             .select('*')
             .eq('user_id', user.id)
             .eq('sincronizado', false)
-            .lt('fecha', hace24h);
+            .lt('fecha', fechaCorte); // 👈 Filtro por medianoche
 
         if (errBuscar) {
             console.error('❌ Error buscando pendientes:', errBuscar.message);
@@ -235,15 +239,14 @@ async function sincronizarMovimientosPlataformas() {
         }
 
         if (!pendientes || pendientes.length === 0) {
-            console.log('📦 No hay movimientos de plataformas para sincronizar');
+            console.log('📦 No hay movimientos de plataformas para sincronizar (los de hoy pasan mañana a las 00:00)');
             return;
         }
 
         console.log(`📦 Sincronizando ${pendientes.length} movimientos de plataformas...`);
 
-        const ahora = new Date().toISOString();
-
-        // 👇 CON creado_en para que aparezcan arriba
+        // 👇 Usamos la fecha original del movimiento para que no aparezcan todos como "ahora"
+        // y así respeten el orden cronológico en Finix.
         const filas = pendientes.map(m => ({
             user_id: user.id,
             nombre: m.descripcion ? `${m.categoria}: ${m.descripcion}` : m.categoria,
@@ -251,7 +254,7 @@ async function sincronizarMovimientosPlataformas() {
             tipo: m.tipo,
             icono: m.icono || '💸',
             fecha: m.fecha,
-            creado_en: ahora    // 👈 AGREGADO
+            creado_en: m.fecha // Usamos la fecha original del movimiento
         }));
 
         const { error: errInsert } = await supabaseClient
