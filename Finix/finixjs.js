@@ -220,18 +220,21 @@ async function sincronizarMovimientosPlataformas() {
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) return;
 
-        // 👇 CAMBIO: Calcular la medianoche de HOY (00:00 hora local)
+        // ✅ CAMBIO 1: Calcular la medianoche de HOY en hora LOCAL correctamente
         const hoyMedianoche = new Date();
-        hoyMedianoche.setHours(0, 0, 0, 0); 
+        hoyMedianoche.setHours(0, 0, 0, 0);
         const fechaCorte = hoyMedianoche.toISOString();
 
-        // Buscar movimientos que sean ANTERIORES a la medianoche de hoy
+        console.log('🕐 [SINCRONIZAR] Medianoche local de hoy:', hoyMedianoche.toString());
+        console.log('🕐 [SINCRONIZAR] fechaCorte (UTC):', fechaCorte);
+
+        // ✅ CAMBIO 2: Usar .lte() en lugar de .lt() para incluir la medianoche exacta
         const { data: pendientes, error: errBuscar } = await supabaseClient
             .from('movimientos_plataformas')
             .select('*')
             .eq('user_id', user.id)
             .eq('sincronizado', false)
-            .lt('fecha', fechaCorte); // 👈 Filtro por medianoche
+            .lte('fecha', fechaCorte);   // 👈 lte en lugar de lt
 
         if (errBuscar) {
             console.error('❌ Error buscando pendientes:', errBuscar.message);
@@ -239,14 +242,16 @@ async function sincronizarMovimientosPlataformas() {
         }
 
         if (!pendientes || pendientes.length === 0) {
-            console.log('📦 No hay movimientos de plataformas para sincronizar (los de hoy pasan mañana a las 00:00)');
+            console.log('📦 [SINCRONIZAR] No hay movimientos de plataformas pendientes');
             return;
         }
 
-        console.log(`📦 Sincronizando ${pendientes.length} movimientos de plataformas...`);
+        console.log(`📦 [SINCRONIZAR] ${pendientes.length} movimientos pendientes encontrados:`);
+        pendientes.forEach(p => {
+            console.log(`   → ${p.categoria} (${p.tipo}) $${p.monto} — fecha: ${p.fecha}`);
+        });
 
-        // 👇 Usamos la fecha original del movimiento para que no aparezcan todos como "ahora"
-        // y así respeten el orden cronológico en Finix.
+        // Insertar en la tabla `movimientos` respetando la fecha original
         const filas = pendientes.map(m => ({
             user_id: user.id,
             nombre: m.descripcion ? `${m.categoria}: ${m.descripcion}` : m.categoria,
@@ -254,7 +259,7 @@ async function sincronizarMovimientosPlataformas() {
             tipo: m.tipo,
             icono: m.icono || '💸',
             fecha: m.fecha,
-            creado_en: m.fecha // Usamos la fecha original del movimiento
+            creado_en: m.fecha
         }));
 
         const { error: errInsert } = await supabaseClient
@@ -266,6 +271,7 @@ async function sincronizarMovimientosPlataformas() {
             return;
         }
 
+        // Marcar como sincronizados
         const ids = pendientes.map(m => m.id);
         const { error: errUpdate } = await supabaseClient
             .from('movimientos_plataformas')
@@ -277,12 +283,58 @@ async function sincronizarMovimientosPlataformas() {
             return;
         }
 
-        console.log(`✅ ${pendientes.length} movimientos sincronizados correctamente`);
+        console.log(`✅ [SINCRONIZAR] ${pendientes.length} movimientos sincronizados correctamente`);
 
     } catch (e) {
         console.error('❌ Excepción sincronizando:', e);
     }
 }
+
+// ============================================================
+// 3.5 DIAGNÓSTICO MANUAL DE MOVIMIENTOS DE PLATAFORMAS
+// ============================================================
+// Ejecuta en consola: diagnosticarPlataformas()
+window.diagnosticarPlataformas = async function () {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) {
+        console.warn('⚠️ Supabase no disponible');
+        return;
+    }
+
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) {
+        console.warn('⚠️ No hay usuario logueado');
+        return;
+    }
+
+    console.log('👤 Usuario:', user.id);
+
+    const { data, error } = await supabaseClient
+        .from('movimientos_plataformas')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('fecha', { ascending: true });
+
+    if (error) {
+        console.error('❌ Error:', error);
+        return;
+    }
+
+    console.log('📦 TODOS los movimientos de plataformas:', data?.length || 0);
+    console.table(data);
+
+    const noSincronizados = (data || []).filter(m => !m.sincronizado);
+    console.log('📦 NO sincronizados:', noSincronizados.length);
+    console.table(noSincronizados);
+
+    const hoyMedianoche = new Date();
+    hoyMedianoche.setHours(0, 0, 0, 0);
+    console.log('🕐 Medianoche local HOY:', hoyMedianoche.toString());
+    console.log('🕐 fechaCorte (UTC):', hoyMedianoche.toISOString());
+
+    const elegibles = noSincronizados.filter(m => new Date(m.fecha) <= hoyMedianoche);
+    console.log('✅ Elegibles para sincronizar (fecha <= medianoche HOY):', elegibles.length);
+    console.table(elegibles);
+};
 
 // ============================================================
 // 4. CALCULAR TOTALES
