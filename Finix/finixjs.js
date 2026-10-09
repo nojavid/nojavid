@@ -1128,9 +1128,42 @@ function inicializarPantallaTexto() {
         }
     }
 
+    // ============================================================
+    // PARSEADOR LOCAL MEJORADO — DETECTA INGRESOS CON/SIN TILDES
+    // ============================================================
     function parsearTextoLocal(texto) {
         const partes = texto.split(/[+,]/).map(p => p.trim()).filter(Boolean);
         const resultados = [];
+
+        // 👇 Función auxiliar para quitar tildes/diacríticos
+        function normalizar(str) {
+            return str
+                .toLowerCase()
+                .normalize('NFD')                     // descompone letras con tilde
+                .replace(/[\u0300-\u036f]/g, '')      // elimina los diacríticos
+                .trim();
+        }
+
+        // 👇 Palabras clave de INGRESO (todas sin tilde, en minúsculas)
+        const PALABRAS_INGRESO = [
+            'ingreso', 'ingrese', 'ingresaron', 'ingresos',
+            'recibi', 'recibido', 'recibida', 'recibimos',
+            'me pagaron', 'me pago', 'pagaron',
+            'consignaron', 'consignacion', 'consigna',
+            'depositaron', 'deposito', 'depositar',
+            'transferencia recibida', 'transferencia',
+            'ganancia', 'gane', 'ganancias',
+            'sueldo', 'salario', 'nomina', 'pago de nomina',
+            'venta', 'ventas', 'vendi',
+            'cobre', 'cobrado', 'cobro',
+            'abono', 'abonaron',
+            'entrada', 'entradas',
+            'devolucion', 'reembolso',
+            'bono', 'bonificacion', 'prima',
+            'intereses', 'rendimiento', 'dividendo',
+            'mesada', 'propina', 'regalo',
+            'reembolsaron', 'me devolvieron'
+        ];
 
         partes.forEach(parte => {
             const match = parte.match(/(\d{1,3}(?:[.,]\d{3})+|\d+(?:[.,]\d+)?)\s*(k|mil|millones?)?/i);
@@ -1149,16 +1182,28 @@ function inicializarPantallaTexto() {
 
             if (!nombre || valor <= 0) return;
 
-            const n = nombre.toLowerCase();
-            const esIngreso = /\b(ingreso|recibí|recibi|me pagaron|consignaron|ganancia|sueldo|salario|venta|cobré|cobre)\b/.test(n);
+            // 👇 Normalizamos el nombre (sin tildes) para comparar
+            const n = normalizar(nombre);
 
+            // 👇 Detección de ingreso: si el texto normalizado CONTIENE alguna palabra clave
+            const esIngreso = PALABRAS_INGRESO.some(palabra => n.includes(palabra));
+
+            // 👇 Íconos
             let icono = esIngreso ? '💰' : '💸';
-            if (n.includes('almuerzo') || n.includes('comida') || n.includes('cena')) icono = '🍽️';
-            else if (n.includes('uber') || n.includes('taxi') || n.includes('bus') || n.includes('didi')) icono = '🚗';
-            else if (n.includes('café') || n.includes('cafe')) icono = '☕';
-            else if (n.includes('mercado') || n.includes('supermercado')) icono = '🛒';
-            else if (n.includes('gasolina')) icono = '⛽';
-            else if (n.includes('sueldo') || n.includes('salario')) icono = '💰';
+            if (n.includes('almuerzo') || n.includes('comida') || n.includes('cena') || n.includes('desayuno')) icono = '🍽️';
+            else if (n.includes('uber') || n.includes('taxi') || n.includes('bus') || n.includes('didi') || n.includes('transporte')) icono = '🚗';
+            else if (n.includes('cafe') || n.includes('cafeteria')) icono = '☕';
+            else if (n.includes('mercado') || n.includes('supermercado') || n.includes('super')) icono = '🛒';
+            else if (n.includes('gasolina') || n.includes('combustible') || n.includes('nafta')) icono = '⛽';
+            else if (n.includes('sueldo') || n.includes('salario') || n.includes('nomina')) icono = '💰';
+            else if (n.includes('venta') || n.includes('vendi')) icono = '🏷️';
+            else if (n.includes('transferencia') || n.includes('deposito') || n.includes('consignacion')) icono = '🏦';
+            else if (n.includes('regalo') || n.includes('bono') || n.includes('propina')) icono = '🎁';
+            else if (n.includes('arriendo') || n.includes('renta') || n.includes('alquiler')) icono = '🏠';
+            else if (n.includes('luz') || n.includes('agua') || n.includes('internet') || n.includes('servicio')) icono = '💡';
+            else if (n.includes('farmacia') || n.includes('medicina') || n.includes('salud')) icono = '💊';
+            else if (n.includes('ropa') || n.includes('zapatos')) icono = '👕';
+            else if (n.includes('cine') || n.includes('netflix') || n.includes('spotify') || n.includes('entretenimiento')) icono = '🎬';
 
             resultados.push({
                 nombre: nombre.charAt(0).toUpperCase() + nombre.slice(1),
